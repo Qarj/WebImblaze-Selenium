@@ -12,8 +12,8 @@ $VERSION = '0.0.1';
 
 use File::Copy qw(copy), qw(move);
 
-copy 'plugins/WebInjectSelenium.pm', '../webinject/plugins/';
+copy 'plugins/WebInjectSelenium.pm', '../WebInject/plugins/';
 
 my $testfile_full = './../WebInject-Selenium/'.$ARGV[0];
 
-my $status = system '..\webinject\webinject.pl', $testfile_full, "-o ./../../WebInject-Selenium/output/";
+my $status = system 'perl ..\WebInject\webinject.pl', $testfile_full, "-o ./../../WebInject-Selenium/output/";
