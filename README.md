@@ -80,6 +80,62 @@ and place it in `C:\selenium`
     perl webinject.pl selftest/selenium.xml
     ```    
 
+### Mac
+
+1. Install Chrome, run it and decide whether you want it to be the default browser or not.
+
+2. Install Homebrew
+    ```
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    ```
+
+3. Install wget
+    ```
+    brew install wget
+    ```
+
+4. Obtain ChromeDriver and put it in a folder called ~/selenium by running these commands
+    ```
+    mkdir ~/selenium
+    wget -N http://chromedriver.storage.googleapis.com/2.27/chromedriver_mac64.zip -P ~/selenium
+    unzip ~/selenium/chromedriver_mac64.zip -d ~/selenium
+    chmod +x ~/selenium/chromedriver
+    ```
+
+5. Now obtain the Selenium Standalone Server and put it in ~/selenium with this command
+    ```
+    wget -N http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.1.jar -P ~/selenium
+    ```
+
+6. Install JRE from http://www.oracle.com/technetwork/java/javase/downloads/index.html
+    * click on the JRE link
+    * download the .dmg file for Mac OS X
+    * double click on the downloaded dmg file
+    * double click on the Java icon to start the installer
+    * export it
+    ```
+    export JAVA_HOME="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"
+    ```
+    * check everything ok
+    ```
+    java -version
+    ```
+
+7. Install Selenium::Remote::Driver from cpan
+    ```
+    sudo cpan Selenium::Remote::Driver
+    ```
+
+8. A few extra commands are needed to ensure the dependencies are covered
+    ```
+    sudo apt install gnome-terminal
+    ```
+
+9. You can check that it all works by running the Selenium self test. You should see Chrome open twice and run a quick test. The first time will be using Selenium Server Standalone. The second time will be using ChromeDriver directly without Selenium Server Standalone.
+    ```
+    perl webinject.pl selftest/selenium.xml
+    ```    
+
 #### Run the Selenium WebDriver example
 
 1. You can run the example through ChromeDriver directly as follows:
