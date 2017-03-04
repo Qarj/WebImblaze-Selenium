@@ -46,7 +46,7 @@ and place it in `C:\selenium`
 1. First obtain ChromeDriver and put it in a folder called ~/selenium by running these commands
     ```
     mkdir ~/selenium
-    wget -N http://chromedriver.storage.googleapis.com/2.25/chromedriver_linux64.zip -P ~/selenium
+    wget -N http://chromedriver.storage.googleapis.com/2.27/chromedriver_linux64.zip -P ~/selenium
     sudo apt install unzip
     unzip ~/selenium/chromedriver_linux64.zip -d ~/selenium
     chmod +x ~/selenium/chromedriver
@@ -80,7 +80,7 @@ and place it in `C:\selenium`
     perl webinject.pl selftest/selenium.xml
     ```    
 
-### Mac
+### Mac - not yet supported, still need to implement Mac equivalent of gnome-terminal in WebInjectSelenium.pm
 
 1. Install Chrome, run it and decide whether you want it to be the default browser or not.
 
@@ -121,14 +121,16 @@ and place it in `C:\selenium`
     java -version
     ```
 
-7. Install Selenium::Remote::Driver from cpan
+7. Install perlbrew
     ```
-    sudo cpan Selenium::Remote::Driver
+    sudo cpan App::perlbrew
+    sudo perlbrew init
+    sudo perlbrew install --switch stable
     ```
 
-8. A few extra commands are needed to ensure the dependencies are covered
+8. Install Selenium::Remote::Driver from cpan
     ```
-    sudo apt install gnome-terminal
+    sudo cpan Selenium::Remote::Driver
     ```
 
 9. You can check that it all works by running the Selenium self test. You should see Chrome open twice and run a quick test. The first time will be using Selenium Server Standalone. The second time will be using ChromeDriver directly without Selenium Server Standalone.
