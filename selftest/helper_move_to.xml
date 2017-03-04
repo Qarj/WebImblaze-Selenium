@@ -8,7 +8,7 @@ Self test master file. All test steps in this file should pass.
 
 <include
     id="10"
-    file="./../WebInject-Selenium/selftest/helpers/selenium_runner.xml"
+    file="./../WebInject-Selenium/selftest/helpers/chromedriver_direct_runner.xml"
 />
 
 </testcases>
