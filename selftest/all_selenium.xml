@@ -1,0 +1,58 @@
+<testcases repeat="1">
+
+<!--
+Run all WebInject Selenium self tests
+-->
+
+<case
+    varFEATURE="selenium_core"
+    varPROJECT="./../WebInject-Selenium/"
+    id="100"
+    description1="{FEATURE}"
+    method="cmd"
+    command=".\webinject.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.xml"
+    verifypositive="TEST CASE PASSED"
+    verifynegative="TEST CASE FAILED"
+/>
+
+<case
+    varFEATURE="helper_click"
+    id="110"
+    description1="{FEATURE}"
+    method="cmd"
+    command=".\webinject.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.xml"
+    verifypositive="TEST CASE PASSED"
+    verifynegative="TEST CASE FAILED"
+/>
+
+<case
+    varFEATURE="helper_keys_to_element"
+    id="120"
+    description1="{FEATURE}"
+    method="cmd"
+    command=".\webinject.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.xml"
+    verifypositive="TEST CASE PASSED"
+    verifynegative="TEST CASE FAILED"
+/>
+
+<case
+    varFEATURE="helper_move_to"
+    id="130"
+    description1="{FEATURE}"
+    method="cmd"
+    command=".\webinject.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.xml"
+    verifypositive="TEST CASE PASSED"
+    verifynegative="TEST CASE FAILED"
+/>
+
+<case
+    varFEATURE="helper_wait_visible"
+    id="140"
+    description1="{FEATURE}"
+    method="cmd"
+    command=".\webinject.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.xml"
+    verifypositive="TEST CASE PASSED"
+    verifynegative="TEST CASE FAILED"
+/>
+
+</testcases>
