@@ -1,10 +1,12 @@
 # WebInject-Selenium
-Selenium plugin for WebInject
+WebInject, the project found at [https://github.com/Qarj/WebInject](https://github.com/Qarj/WebInject), can also drive Selenium using the Chrome browser.
+
+You have the choice of using the Selenium Server (which I find to be more robust), or you can drive ChromeDriver directly (Java not required!).
 
 Selenium WebDriver using ChromeDriver
 -------------------------------------
 
-WebInject can also drive Chrome using using ChromeDriver. A bit of extra setup is needed.
+Download this project and copy `WebInjectSelenium.pm` from the plugins folder to the plugins folder of the WebInject project.
 
 ### Windows
 
@@ -22,10 +24,10 @@ it somewhere. For simplicity, ensure that there are no spaces in the path.
 and place it in `C:\selenium`
 
 #### Run the Selenium WebDriver example
-1. Open a command prompt as an administrator and issue the following command:
+1. Open a command prompt as an administrator, change directory to where webinject.pl is located, then issue the following command:
 
     ```
-    perl webinject.pl examples\selenium.xml --driver chromedriver --binary C:\selenium\chromedriver.exe
+    perl webinject.pl examples\selenium.xml --driver chromedriver --chromedriver-binary C:\selenium\chromedriver.exe
     ```
 
     You should see Chrome open along with a process chromedriver.exe in the taskbar.
@@ -35,14 +37,8 @@ and place it in `C:\selenium`
 
 2. Optional - Run the same example through Selenium Server (in my experience this is more robust)
 
-    First you need to start the server in a separate process, in this example we'll start it on port 9988
-    ```    
-    wmic process call create 'cmd /c java -Dwebdriver.chrome.driver="C:\selenium\chromedriver.exe" -jar C:\selenium\selenium-server-standalone-2.53.1.jar -port 9988 -trustAllSSLCertificates'
     ```
-
-    Then you call WebInject telling it what port to find Selenium Server on
-    ```
-    perl webinject.pl examples\selenium.xml --port 9988 --driver chrome
+    perl webinject.pl --driver chrome --chromedriver-binary C:\selenium\chromedriver.exe --selenium-binary C:\selenium\selenium-server-standalone-2.53.1.jar examples/selenium.xml
     ```
 
 ### Linux
@@ -89,24 +85,13 @@ and place it in `C:\selenium`
 1. You can run the example through ChromeDriver directly as follows:
 
     ```
-    perl webinject.pl -d chromedriver --binary ~/selenium/chromedriver examples/selenium.xml
+    perl webinject.pl -d chromedriver --chromedriver-binary ~/selenium/chromedriver examples/selenium.xml
     ```
 
 2. In my experience, the Selenium Standalone Server is more reliable. You can run the same example test through Selenium Server.
    
-    First start the Selenium Standalone Server in a background terminal
     ```
-    (gnome-terminal -e "java -Dwebdriver.chrome.driver=$HOME/selenium/chromedriver -jar $HOME/selenium/selenium-server-standalone-2.53.1.jar -port 9988 -trustAllSSLCertificates" &)
-    ```
-
-    Now run the example, selecting to use the Selenium Standalone Server running on port 9988
-    ```
-    perl webinject.pl --port 9988 --driver chrome examples/selenium.xml
-    ```
-
-    Once you are finished running all the Selenium tests, you can shut down the Selenium Standalone Server as follows
-    ```
-    curl http://localhost:9988/selenium-server/driver/?cmd=shutDownSeleniumServer
+    perl webinject.pl --driver chrome --chromedriver-binary $HOME/selenium/chromedriver --selenium-binary $HOME/selenium/selenium-server-standalone-2.53.1.jar examples/selenium.xml
     ```
 
 Plugins
