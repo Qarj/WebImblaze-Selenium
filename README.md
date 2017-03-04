@@ -80,7 +80,7 @@ and place it in `C:\selenium`
     perl webinject.pl selftest/selenium.xml
     ```    
 
-### Mac - not yet supported, still need to implement Mac equivalent of gnome-terminal in WebInjectSelenium.pm
+### Mac - (only supports driving Chrome directly without Selenium Server)
 
 1. Install Chrome, run it and decide whether you want it to be the default browser or not.
 
@@ -121,11 +121,19 @@ and place it in `C:\selenium`
     java -version
     ```
 
-7. Install perlbrew
+7. Install perlbrew and switch shell to latest stable perl version
     ```
     sudo cpan App::perlbrew
     sudo perlbrew init
     sudo perlbrew install --switch stable
+    ```
+
+8. Reinstall the packages needed for WebInject in the perlbrew sub system
+    ```
+    cpan File::Slurp
+    cpan XML::Simple
+    cpan Math::Random::ISAAC
+    cpan IO::Socket::SSL
     ```
 
 8. Install Selenium::Remote::Driver from cpan
@@ -133,9 +141,9 @@ and place it in `C:\selenium`
     sudo cpan Selenium::Remote::Driver
     ```
 
-9. You can check that it all works by running the Selenium self test. You should see Chrome open twice and run a quick test. The first time will be using Selenium Server Standalone. The second time will be using ChromeDriver directly without Selenium Server Standalone.
+9. Check that it works
     ```
-    perl webinject.pl selftest/selenium.xml
+    perl webinject.pl -d chromedriver --chromedriver-binary ~/selenium/chromedriver examples/selenium.xml
     ```    
 
 #### Run the Selenium WebDriver example
