@@ -1203,9 +1203,14 @@ sub _start_selenium_server {
 
     my $_abs_selenium_log_full = File::Spec->rel2abs( $main::output_folder.'/selenium_log.txt' );
 
+    my $_os = $^O;
     if ($main::is_windows) {
         my $_abs_chromedriver_full = File::Spec->rel2abs( "$main::output_folder/chromedriver.eXe" );
         my $_pid = _start_windows_process(qq{cmd /c java -Dwebdriver.chrome.driver="$_abs_chromedriver_full" -Dwebdriver.chrome.logfile="$_abs_selenium_log_full" -jar $main::opt_selenium_binary -port $_selenium_port -trustAllSSLCertificates});
+    } elsif ($_os eq 'darwin') {
+        my $_abs_chromedriver_full = File::Spec->rel2abs( "$main::output_folder/chromedriver" );
+        chmod 0775, $_abs_chromedriver_full; # Linux loses the write permission with file copy
+        _start_osx_process(qq{java -Dwebdriver.chrome.driver="$_abs_chromedriver_full" -Dwebdriver.chrome.logfile="$_abs_selenium_log_full" -jar $main::opt_selenium_binary -port $_selenium_port -trustAllSSLCertificates});
     } else {
         my $_abs_chromedriver_full = File::Spec->rel2abs( "$main::output_folder/chromedriver" );
         chmod 0775, $_abs_chromedriver_full; # Linux loses the write permission with file copy
@@ -1244,6 +1249,17 @@ sub _start_linux_process {
     return;
 }
 
+sub _start_osx_process {
+    my ($_command) = @_;
+
+    #osascript -e 'tell application "Terminal" to do script "cd /tmp;pwd"'
+    my $_term = qq{(osascript -e 'tell application "Terminal" to do script "$_command"' &)}; #
+    my $_result = `$_term`;
+    print "_term:_term\n";
+    print "$_result\n";
+
+    return;
+}
 
 sub shutdown_selenium {
     if ($main::opt_driver) {
