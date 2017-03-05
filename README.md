@@ -276,6 +276,11 @@ The [WebInject-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the h
     ```
     export JAVA_HOME="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"
     ```
+    * put JAVA_HOME in your bash profile
+    ```
+    touch ~/.bash_profile; open ~/.bash_profile
+    ```
+    copy paste `export JAVA_HOME="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"` into the file and save it (otherwise you have to export every time)
     * check everything ok
     ```
     java -version
@@ -303,8 +308,18 @@ The [WebInject-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the h
 
 9. Check that it works
     ```
-    perl webinject.pl examples/selenium.xml
+    sudo perl webinject.pl examples/selenium.xml --driver chrome
     ```    
+
+Later, when you need to start perlbrew again:
+```
+perlbrew list
+```
+
+Check the output, e.g. if it is `* perl-5.24.1` then just:
+```
+perlbrew use perl-5.24.1
+```
 
 
 Plugins
