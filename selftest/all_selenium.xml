@@ -10,7 +10,7 @@ Run all WebInject Selenium self tests
     id="100"
     description1="{FEATURE}"
     method="cmd"
-    command=".\webinject.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.xml"
+    command="perl webinject.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.xml"
     verifypositive="TEST CASE PASSED"
     verifynegative="TEST CASE FAILED"
 />
@@ -20,7 +20,7 @@ Run all WebInject Selenium self tests
     id="110"
     description1="{FEATURE}"
     method="cmd"
-    command=".\webinject.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.xml"
+    command="perl webinject.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.xml"
     verifypositive="TEST CASE PASSED"
     verifynegative="TEST CASE FAILED"
 />
@@ -30,7 +30,7 @@ Run all WebInject Selenium self tests
     id="120"
     description1="{FEATURE}"
     method="cmd"
-    command=".\webinject.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.xml"
+    command="perl webinject.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.xml"
     verifypositive="TEST CASE PASSED"
     verifynegative="TEST CASE FAILED"
 />
@@ -40,7 +40,7 @@ Run all WebInject Selenium self tests
     id="130"
     description1="{FEATURE}"
     method="cmd"
-    command=".\webinject.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.xml"
+    command="perl webinject.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.xml"
     verifypositive="TEST CASE PASSED"
     verifynegative="TEST CASE FAILED"
 />
@@ -50,7 +50,7 @@ Run all WebInject Selenium self tests
     id="140"
     description1="{FEATURE}"
     method="cmd"
-    command=".\webinject.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.xml"
+    command="perl webinject.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.xml"
     verifypositive="TEST CASE PASSED"
     verifynegative="TEST CASE FAILED"
 />

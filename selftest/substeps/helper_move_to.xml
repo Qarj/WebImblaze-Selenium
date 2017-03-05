@@ -13,38 +13,46 @@
 
 <case
     id="20"
-    description1="Move mouse to middle section"
+    description1="Check that Register CV is in viewport (top right)"
     method="selenium"
-    command1="$selresp = helper_get_element('Register now');"
-    command2="$selresp = helper_move_to('Get instant');"
-    command3="$selresp = helper_get_element('Register now');"
+    command1="$selresp = helper_get_element('Register CV');"
     verifytext="get_current_url"
-    verifypositive1="inViewport\[0]"
-    verifypositive2="inViewport\[1]"
+    verifypositive1="inViewport\[1]"
 />
 
 <case
     id="30"
-    description1="Move mouse to iPhone picture"
+    description1="Check that StepStone Deutschland is not in viewport (very bottom of page left)"
     method="selenium"
-    command1="$selresp = helper_get_element('Save jobs and searches');"
-    command2="$selresp = helper_move_to('Download the job app now');"
-    command3="$selresp = helper_get_element('Save jobs and searches');"
+    command1="$selresp = helper_get_element('StepStone Deutschland');"
     verifytext="get_current_url"
     verifypositive1="inViewport\[0]"
-    verifypositive2="inViewport\[1]"
 />
 
 <case
     id="40"
-    description1="Move mouse to bottom of page"
+    description1="Move mouse to Copyright message"
     method="selenium"
-    command1="$selresp = helper_get_element('Deutschland');"
-    command2="$selresp = helper_move_to('Copyright and database rights');"
-    command3="$selresp = helper_get_element('Deutschland');"
+    command1="$selresp = helper_move_to('Copyright and database rights');"
+    verifytext="get_current_url"
+/>
+
+<case
+    id="50"
+    description1="Check that Register CV is now NOT in viewport (top right)"
+    method="selenium"
+    command1="$selresp = helper_get_element('Register CV');"
     verifytext="get_current_url"
     verifypositive1="inViewport\[0]"
-    verifypositive2="inViewport\[1]"
+/>
+
+<case
+    id="60"
+    description1="Check that StepStone Deutschland is now IN viewport (very bottom of page left)"
+    method="selenium"
+    command1="$selresp = helper_get_element('StepStone Deutschland');"
+    verifytext="get_current_url"
+    verifypositive1="inViewport\[1]"
 />
 
 </testcases>
