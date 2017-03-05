@@ -6,40 +6,194 @@ You have the choice of using the Selenium Server (which I find to be more robust
 Selenium WebDriver using ChromeDriver
 -------------------------------------
 
-Download this project and copy `WebInjectSelenium.pm` from the plugins folder to the plugins folder of the WebInject project.
+### All platforms
 
-### Windows
+1. Download this project and copy `WebInjectSelenium.pm` from the plugins folder to the plugins folder of the WebInject project.
+
+### Windows (instructions for Linux and Mac below)
 
 1. Open a command prompt as an administrator and issue the following command:
     ```
     cpan Selenium::Remote::Driver
     ```
 
-2. Obtain ChromeDriver.exe from https://sites.google.com/a/chromium.org/chromedriver/ and save
-it somewhere. For simplicity, ensure that there are no spaces in the path.
-
-    For this example, we'll put it here: `C:\selenium\chromedriver.exe`
+2. Obtain chromedriver.exe from https://sites.google.com/a/chromium.org/chromedriver/ and place it in `C:\selenium\`
 
 3. Optional - download selenium-server-standalone-2.53.1.jar from http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.1.jar
 and place it in `C:\selenium`
 
-#### Run the Selenium WebDriver example
-1. Open a command prompt as an administrator, change directory to where webinject.pl is located, then issue the following command:
+### Create your first WebInject-Selenium test
 
-    ```
-    perl webinject.pl examples\selenium.xml --driver chromedriver --chromedriver-binary C:\selenium\chromedriver.exe
-    ```
+In the `tests` folder, create a file called `test_jobs.xml`.
 
-    You should see Chrome open along with a process chromedriver.exe in the taskbar.
+Copy and paste the following into the file and save it.
 
-    After the tests run, you will see in the `output` folder that screenshots for each step
-    are automatically taken.
+```
+<testcases repeat="1">
 
-2. Optional - Run the same example through Selenium Server (in my experience this is more robust)
+<case
+    id="10"
+    description1="Get CWJobs home page and fill out search form"
+    method="selenium"
+    command1='$selresp = $driver->get("https://www.cwjobs.co.uk/");'
+    command2="$selresp = helper_keys_to_element_after('What','test');"
+    command3="$selresp = helper_keys_to_element('Town, city or postcode','London');"
+    command4="$selresp = helper_keys_to_element_after('Where','20 miles','SELECT');"
+    verifytext="get_current_url,get_body_text"
+    verifypositive1="home for tech jobs"
+    verifypositive2="Companies hiring"
+/>
 
-    ```
-    perl webinject.pl --driver chrome --chromedriver-binary C:\selenium\chromedriver.exe --selenium-binary C:\selenium\selenium-server-standalone-2.53.1.jar examples/selenium.xml
-    ```
+<case
+    id="20"
+    description1="Click Search"
+    method="selenium"
+    command1="$selresp = helper_click('Search');"
+    command2="$selresp = helper_wait_for_text_visible('Explore results',25);"
+    verifytext="get_current_url,get_body_text,get_page_source"
+    verifypositive1="Found sought text"
+    verifypositive2="Test jobs in London \+ 20 miles"
+/>
+
+<case
+    id="30"
+    description1="Click on heading for first job ad on search results to see job details"
+    method="selenium"
+    command1="$selresp = helper_click('See details for');"
+    command2="$selresp = helper_wait_for_text_visible('Back to search results',25);"
+    verifytext="get_current_url,get_body_text"
+    verifypositive1="Found sought text"
+    verifypositive2="Next job"
+/>
+
+</testcases>
+```
+
+### Run your first WebInject-Selenium test
+
+1. From an administrator command prompt, `cd C:\git\WebInject`
+
+2. Run the tests with `webinject.pl tests/test_jobs.xml`
+
+If all is ok, you'll see Chrome open and run the test steps. You'll also see output like the following
+at the command prompt:
+
+```
+C:\git\WebInject>webinject.pl tests/test_jobs.xml
+
+Starting WebInject Engine...
+
+-------------------------------------------------------
+Test:  tests\test_jobs.xml - 10
+Get CWJobs home page and fill out search form
+Verify Positive: "home for tech jobs"
+Verify Positive: "Companies hiring"
+GET_BODY_TEXT:get_body_text
+    [Starting ChromeDriver without Selenium Server]
+SELRESP:1
+SELRESP:Focused and clicked tag INPUT AFTER[What] OK (exact match) id[keywords] then sent keys OK
+SELRESP:Focused and clicked tag INPUT WITH[Town, city or postcode] OK (exact match) id[location] then sent keys OK
+SELRESP:Focused and clicked tag SELECT AFTER[Where] OK (exact match) id[Radius] then sent keys OK
+get_current_url
+get_body_text
+Passed Positive Verification
+Passed Positive Verification
+Passed HTTP Response Code Verification
+TEST CASE PASSED
+Response Time = 1 sec
+Verification Time = 0 sec
+Screenshot Time = 2 sec
+-------------------------------------------------------
+Test:  tests\test_jobs.xml - 20
+Click Search
+Verify Positive: "Found sought text"
+Verify Positive: "Test jobs in London \+ 20 miles"
+GET_BODY_TEXT:get_body_text
+SELRESP:Focused and clicked tag INPUT WITH[Search] OK (exact match) id[search-button]
+VISIBLE SEARCH TEXT:Explore results
+TIMEOUT:25
+SELRESP:Found sought text visible after 1 seconds
+get_current_url
+get_body_text
+get_page_source
+Passed Positive Verification
+Passed Positive Verification
+Passed HTTP Response Code Verification
+TEST CASE PASSED
+Response Time = 2 sec
+Verification Time = 0 sec
+Screenshot Time = 1 sec
+-------------------------------------------------------
+Test:  tests\test_jobs.xml - 30
+Click on heading for first job ad on search results to see job details
+Verify Positive: "Found sought text"
+Verify Positive: "Next job"
+GET_BODY_TEXT:get_body_text
+SELRESP:Focused and clicked tag A WITH[See details for] OK (text index 0)
+VISIBLE SEARCH TEXT:Back to search results
+TIMEOUT:25
+SELRESP:Found sought text visible after 1 seconds
+get_current_url
+get_body_text
+Passed Positive Verification
+Passed Positive Verification
+Passed HTTP Response Code Verification
+TEST CASE PASSED
+Response Time = 1 sec
+Verification Time = 0 sec
+Screenshot Time = 0 sec
+-------------------------------------------------------
+Start Time: Sun 05 Mar 2017, 11:37:06
+Total Run Time: 11.677 seconds
+
+Total Response Time: 4.000 seconds
+
+Test Cases Run: 3
+Test Cases Passed: 3
+Test Cases Failed: 0
+Verifications Passed: 12
+Verifications Failed: 0
+
+Results at: output\results.html
+```
+
+### Examining the results
+
+If your WebInject/output folder was empty before running the test, you'll now see 10 files there:
+* 10.png, 20.png, 30.png - automatic screen shots taken after each test step was executed
+* 10.html, 20.html, 30.html - a html file showing the individual results for each test step (including the screen shot)
+* results.html - a html version of the output to the console, it links to each individual test step
+* results.xml - an xml version of the results, needed by WebInject-Framework
+* http.txt - verbose log of raw WebInject test output
+* chromedriver.log
+
+Generally the best way to view the results is to open `output\results.xml` in a browser and click on the links to the
+individual resuls.
+
+### Using the Selenium Server
+
+In my experience, running tests using Selenium Server is more robust than running through Chrome directly.
+
+You can excute the tests using Selenium Server as in the following example:
+
+```
+webinject.pl examples/selenium.xml --driver chrome --chromedriver-binary C:\selenium\chromedriver.exe --selenium-binary C:\selenium\selenium-server-standalone-2.53.1.jar
+```
+
+Or more simply, because the locations of the chromedriver and selenium binaries are specified in config.xml:
+
+```
+webinject.pl examples/selenium.xml --driver chrome
+```
+
+### Resources for creating your own tests
+
+You can see the many Selenium commands you can use by checking the documentation for the Perl bindings:
+http://search.cpan.org/perldoc/Selenium::Remote::Driver
+
+There are further examples in the `examples` and `selftest\substeps` folders of this project.
+
+The [WebInject-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the helper_ functions available.
 
 ### Linux
 
@@ -75,12 +229,18 @@ and place it in `C:\selenium`
 
 5. Important - Run Chrome at least once and choose whether you want it to be the default browser or not. You can then close it or leave it open. If you don't do this, then it will hang when you try to run a test with ChromeDriver.
 
-6. You can check that it all works by running the Selenium self test. You should see Chrome open twice and run a quick test. The first time will be using Selenium Server Standalone. The second time will be using ChromeDriver directly without Selenium Server Standalone.
+6. You can check that it works by running an example:
     ```
-    perl webinject.pl selftest/selenium.xml
+    perl webinject.pl examples/selenium.xml
     ```    
 
-### Mac - (only supports driving Chrome directly without Selenium Server)
+    or using Selenium Server
+
+    ```
+    perl webinject.pl examples/selenium.xml --driver chrome
+    ```    
+
+### Mac - (currently only supports driving Chrome directly without Selenium Server)
 
 1. Install Chrome, run it and decide whether you want it to be the default browser or not.
 
@@ -143,22 +303,9 @@ and place it in `C:\selenium`
 
 9. Check that it works
     ```
-    perl webinject.pl -d chromedriver --chromedriver-binary ~/selenium/chromedriver examples/selenium.xml
+    perl webinject.pl examples/selenium.xml
     ```    
 
-#### Run the Selenium WebDriver example
-
-1. You can run the example through ChromeDriver directly as follows:
-
-    ```
-    perl webinject.pl -d chromedriver --chromedriver-binary ~/selenium/chromedriver examples/selenium.xml
-    ```
-
-2. In my experience, the Selenium Standalone Server is more reliable. You can run the same example test through Selenium Server.
-   
-    ```
-    perl webinject.pl --driver chrome --chromedriver-binary $HOME/selenium/chromedriver --selenium-binary $HOME/selenium/selenium-server-standalone-2.53.1.jar examples/selenium.xml
-    ```
 
 Plugins
 -------
@@ -172,7 +319,7 @@ See https://github.com/Qarj/search-image for full installation instructions.
 To test that it works, run the following. If all test steps pass, then everything is setup ok.
 
 ```
-webinject.pl -d chromedriver --chromedriver-binary C:\selenium\chromedriver.exe ./../WebInject-Selenium/examples/searchimage.xml
+webinject.pl ./../WebInject-Selenium/examples/searchimage.xml
 ```
 
 You can also check the result by looking at `output\100.png' and also `output\200.png`. You'll see that
