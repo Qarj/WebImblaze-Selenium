@@ -28,7 +28,7 @@ In the `tests` folder, create a file called `test_jobs.xml`.
 
 Copy and paste the following into the file and save it.
 
-```
+```xml
 <testcases repeat="1">
 
 <case

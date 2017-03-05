@@ -1013,6 +1013,7 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
         die "\n\nYou must specify --chromedriver-binary for Selenium tests\n\n";
     }
 
+    $main::opt_chromedriver_binary =~ s/(\$[\w{}""]+)/$1/eeg; ## expand perl environment variables like $ENV{"HOME"} / $ENV{"HOMEPATH"}
     if (not -e $main::opt_chromedriver_binary) {
         die "\n\nCannot find ChromeDriver at $main::opt_chromedriver_binary\n\n";
     }
@@ -1188,6 +1189,7 @@ sub shutdown_selenium_server {
 #------------------------------------------------------------------
 sub _start_selenium_server {
 
+    $main::opt_selenium_binary =~ s/(\$[\w{}""]+)/$1/eeg; ## expand perl environment variables like $ENV{"HOME"} / $ENV{"HOMEPATH"}
     if (not -e $main::opt_selenium_binary) {
         die "\nCannot find Selenium Server at $main::opt_selenium_binary\n";
     }
