@@ -5,6 +5,7 @@ Run all WebInject Selenium self tests
 -->
 
 <case
+    varPROJECT="./../WebInject-Selenium/"
     varFEATURE="helper_click"
     id="110"
     description1="{FEATURE}"
