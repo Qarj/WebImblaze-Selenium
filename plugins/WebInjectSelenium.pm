@@ -1130,7 +1130,7 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
         $main::results_xml .= qq|            <responsetime>0.001</responsetime>\n|;
         $main::results_xml .= qq|        </testcase>\n|;
         $main::case_failed_count++;
-        write_final_xml();
+        main::write_final_xml();
         die "\n\nWebInject Aborted - could not connect to Selenium Server\n";
     }
 
