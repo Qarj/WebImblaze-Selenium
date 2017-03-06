@@ -15,7 +15,7 @@ $VERSION = '0.1.0';
 use File::Copy qw(copy), qw(move);
 use Socket qw( PF_INET SOCK_STREAM INADDR_ANY sockaddr_in );
 
-our ($selresp, $driver); ## support for Selenium WebDriver test cases
+our ($selresp, $driver, $selenium_port);
 
 ## Selenium 2.0 Server support + Running ChromeDriver directly
 #------------------------------------------------------------------
@@ -1021,17 +1021,20 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
     if (defined $driver) { #shut down any existing selenium browser session
         $main::results_stdout .= "    [\$driver is defined so shutting down Selenium first]\n";
         shutdown_selenium();
-        shutdown_selenium_server($main::selenium_port);
+        ####shutdown_selenium_server($selenium_port);
         sleep 2.1; ## Sleep for 2.1 seconds, give system a chance to settle before starting new browser
         $main::results_stdout .= "    [Done shutting down Selenium]\n";
     }
 
     $main::opt_driver //= 'chromedriver'; ## if variable is undefined, set to default value
     $main::opt_driver = lc $main::opt_driver;
+    if ($main::opt_driver ne 'chrome' and $main::opt_driver ne 'chromedriver') {
+        die "\n\n'--driver $main::opt_driver' not recognised - only chrome and chromedriver are supported\n\n";
+    }
 
     if ($main::opt_driver eq 'chrome') {
-        $main::selenium_port = _start_selenium_server();
-        $main::results_stdout .= "    [Connecting to Selenium Remote Control server on port $main::selenium_port]\n";
+        $selenium_port = _start_selenium_server();
+        $main::results_stdout .= "    [Connecting to Selenium Remote Control server on port $selenium_port]\n";
     }
 
     my $_max = 3;
@@ -1072,17 +1075,17 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
             if ($main::opt_driver eq 'chrome') {
                 my $_chrome_proxy = q{};
                 if ($main::opt_proxy) {
-                    $main::results_stdout .= qq|    [Starting Chrome with Selenium Server Standalone on port $main::selenium_port through proxy on port $main::opt_proxy]\n|;
+                    $main::results_stdout .= qq|    [Starting Chrome with Selenium Server Standalone on port $selenium_port through proxy on port $main::opt_proxy]\n|;
                     $driver = Selenium::Remote::Driver->new('remote_server_addr' => 'localhost',
-                                                        'port' => $main::selenium_port,
+                                                        'port' => $selenium_port,
                                                         'browser_name' => 'chrome',
                                                         'proxy' => {'proxyType' => 'manual', 'httpProxy' => $main::opt_proxy, 'sslProxy' => $main::opt_proxy },
                                                         'extra_capabilities' => {'chromeOptions' => {'args' => ['window-size=1260,968']}}
                                                         );
                 } else {
-                    $main::results_stdout .= "    [Starting Chrome using Selenium Server Standalone on $main::selenium_port]\n";
+                    $main::results_stdout .= "    [Starting Chrome using Selenium Server Standalone on $selenium_port]\n";
                     $driver = Selenium::Remote::Driver->new('remote_server_addr' => 'localhost',
-                                                        'port' => $main::selenium_port,
+                                                        'port' => $selenium_port,
                                                         'browser_name' => 'chrome',
                                                         'extra_capabilities' => {'chromeOptions' => {'args' => ['window-size=1260,968']}}
                                                         );
@@ -1171,19 +1174,6 @@ sub find_available_port {
 
 #------------------------------------------------------------------
 sub shutdown_selenium_server {
-    my ($_selenium_port) = @_;
-
-    if (not defined $_selenium_port) {
-        return;
-    }
-
-    require LWP::Simple;
-
-    my $_url = "http://localhost:$_selenium_port/selenium-server/driver/?cmd=shutDownSeleniumServer";
-    my $_content = LWP::Simple::get $_url;
-    #print {*STDOUT} "Shutdown Server:$_content\n";
-
-    return;
 }
 
 #------------------------------------------------------------------
@@ -1263,21 +1253,22 @@ sub _start_osx_process {
 
 sub shutdown_selenium {
     if ($main::opt_driver) {
-        #$main::results_stdout .= " Shutting down Selenium Browser Session\n";
-
-        #my $close_handles = $driver->get_window_handles;
-        #for my $_close_handle (reverse 0..@{$_close_handles}) {
-        #   $main::results_stdout .= "Shutting down window $_close_handle\n";
-        #   $driver->switch_to_window($_close_handles->[$_close_handle]);
-        #   $driver->close();
-        #}
-
         eval { $driver->quit(); }; ## shut down selenium browser session
         if ($main::opt_driver eq 'chromedriver') {
             eval { $driver->shutdown_binary(); }; ## shut down chromedriver binary
         }
         undef $driver;
     }
+
+    if (not defined $selenium_port) {
+        return;
+    }
+
+    require LWP::Simple;
+
+    my $_url = "http://localhost:$selenium_port/selenium-server/driver/?cmd=shutDownSeleniumServer";
+    my $_content = LWP::Simple::get $_url;
+    #print {*STDOUT} "Shutdown Server:$_content\n";
 
     return;
 }
