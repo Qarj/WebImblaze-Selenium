@@ -147,30 +147,342 @@ sub _screenshot {
     return;
 }
 
-sub helper_clear_and_send_keys { ## usage: helper_clear_and_send_keys(Search Target, Locator, Keys);
-                                 ##        helper_clear_and_send_keys('candidateProfileDetails_txtPostCode','id','WC1X 8TG');
+#------------------------------------------------------------------
+sub start_selenium_browser {     ## start Browser using Selenium Server or ChromeDriver
+    require Selenium::Remote::Driver;
+    require Selenium::Chrome;
+    if (not $main::opt_chromedriver_binary) {
+        die "\n\nYou must specify --chromedriver-binary for Selenium tests\n\n";
+    }
 
-    my ($_search_target, $_locator, $_keys) = @_;
+    $main::opt_chromedriver_binary =~ s/(\$[\w{}""]+)/$1/eeg; ## expand perl environment variables like $ENV{"HOME"} / $ENV{"HOMEPATH"}
+    if (not -e $main::opt_chromedriver_binary) {
+        die "\n\nCannot find ChromeDriver at $main::opt_chromedriver_binary\n\n";
+    }
 
-    my $_element = $driver->find_element("$_search_target", "$_locator")->clear();
-    my $_response = $driver->find_element("$_search_target", "$_locator")->send_keys("$_keys");
+    if (defined $driver) { #shut down any existing selenium browser session
+        $main::results_stdout .= "    [\$driver is defined so shutting down Selenium first]\n";
+        shutdown_selenium();
+        ####shutdown_selenium_server($selenium_port);
+        sleep 2.1; ## Sleep for 2.1 seconds, give system a chance to settle before starting new browser
+        $main::results_stdout .= "    [Done shutting down Selenium]\n";
+    }
 
-    return $_response;
+    $main::opt_driver //= 'chromedriver'; ## if variable is undefined, set to default value
+    $main::opt_driver = lc $main::opt_driver;
+    if ($main::opt_driver ne 'chrome' and $main::opt_driver ne 'chromedriver') {
+        die "\n\n'--driver $main::opt_driver' not recognised - only chrome and chromedriver are supported\n\n";
+    }
+
+    if ($main::opt_driver eq 'chrome') {
+        $selenium_port = _start_selenium_server();
+        $main::results_stdout .= "    [Connecting to Selenium Remote Control server on port $selenium_port]\n";
+    }
+
+    my $_max = 3;
+    my $_try = 0;
+
+    ## --load-extension Loads an extension from the specified directory
+    ## --whitelisted-extension-id
+    ## http://rdekleijn.nl/functional-test-automation-over-a-proxy/
+    ## http://bmp.lightbody.net/
+    ATTEMPT:
+    {
+        eval
+        {
+
+            ## ChromeDriver without Selenium Server or JRE
+            if ($main::opt_driver eq 'chromedriver') {
+                my $_port = find_available_port(9585); ## find a free port to bind to, starting from this number
+                if ($main::opt_proxy) {
+                    $main::results_stdout .= "    [Starting ChromeDriver without Selenium Server through proxy on port $main::opt_proxy]\n";
+                    $driver = Selenium::Chrome->new (binary => $main::opt_chromedriver_binary,
+                                                 binary_port => $_port,
+                                                 _binary_args => " --port=$_port --url-base=/wd/hub --verbose --log-path=$main::output".'chromedriver.log',
+                                                 'browser_name' => 'chrome',
+                                                 'proxy' => {'proxyType' => 'manual', 'httpProxy' => $main::opt_proxy, 'sslProxy' => $main::opt_proxy }
+                                                 );
+
+                } else {
+                    $main::results_stdout .= "    [Starting ChromeDriver without Selenium Server]\n";
+                    $driver = Selenium::Chrome->new (binary => $main::opt_chromedriver_binary,
+                                                 binary_port => $_port,
+                                                 _binary_args => " --port=$_port --url-base=/wd/hub --verbose --log-path=$main::output".'chromedriver.log',
+                                                 'browser_name' => 'chrome'
+                                                 );
+                }
+            }
+
+            ## Chrome
+            if ($main::opt_driver eq 'chrome') {
+                my $_chrome_proxy = q{};
+                if ($main::opt_proxy) {
+                    $main::results_stdout .= qq|    [Starting Chrome with Selenium Server Standalone on port $selenium_port through proxy on port $main::opt_proxy]\n|;
+                    $driver = Selenium::Remote::Driver->new('remote_server_addr' => 'localhost',
+                                                        'port' => $selenium_port,
+                                                        'browser_name' => 'chrome',
+                                                        'proxy' => {'proxyType' => 'manual', 'httpProxy' => $main::opt_proxy, 'sslProxy' => $main::opt_proxy },
+                                                        'extra_capabilities' => {'chromeOptions' => {'args' => ['window-size=1260,968']}}
+                                                        );
+                } else {
+                    $main::results_stdout .= "    [Starting Chrome using Selenium Server Standalone on $selenium_port]\n";
+                    $driver = Selenium::Remote::Driver->new('remote_server_addr' => 'localhost',
+                                                        'port' => $selenium_port,
+                                                        'browser_name' => 'chrome',
+                                                        'extra_capabilities' => {'chromeOptions' => {'args' => ['window-size=1260,968']}}
+                                                        );
+                }
+             }
+                                                   # For reference on how to specify options for Chrome
+                                                   #
+                                                   #'proxy' => {'proxyType' => 'manual', 'httpProxy' => $main::opt_proxy, 'sslProxy' => $main::opt_proxy },
+                                                   #'extra_capabilities' => {'chrome.switches' => ['--proxy-server="http://127.0.0.1:$main::opt_proxy" --incognito --window-size=1260,460'],},
+                                                   #'extra_capabilities' => {'chrome.switches' => ['--incognito --window-size=1260,960']}
+                                                   #'extra_capabilities' => {'chromeOptions' => {'args' => ['incognito','window-size=1260,960']}}
+                                                   #'extra_capabilities' => {'chromeOptions' => {'args' => ['window-size=1260,968']}}
+
+                                                   #'extra_capabilities'
+                                                   #   => {'chromeOptions' => {'args'  =>         ['window-size=1260,960','incognito'],
+                                                   #                           'prefs' => {'session' => {'restore_on_startup' =>4, 'urls_to_restore_on_startup' => ['http://www.google.com','http://www.example.com']},
+                                                   #                                       'first_run_tabs' => ['http://www.mywebsite.com','http://www.google.de']
+                                                   #                                      }
+                                                   #                          }
+                                                   #      }
+
+        }; ## end eval
+
+        if ( $@ and $_try++ < $_max )
+        {
+            print "\n[Selenium Start Error - possible Chrome and ChromeDriver version compatibility issue]\n$@\nFailed try $_try to connect to Selenium Server, retrying...\n\n";
+            sleep 4; ## sleep for 4 seconds, Selenium Server may still be starting up
+            redo ATTEMPT;
+        }
+    } ## end ATTEMPT
+
+    if ($@) {
+        print "\nError: $@ Failed to connect on port $main::opt_port after $_max tries\n\n";
+        $main::results_xml .= qq|        <testcase id="999999">\n|;
+        $main::results_xml .= qq|            <description1>WebInject ended execution early !!!</description1>\n|;
+        $main::results_xml .= qq|            <verifynegative>\n|;
+        $main::results_xml .= qq|                <assert>WebInject Aborted - could not connect to Selenium Server</assert>\n|;
+        $main::results_xml .= qq|                <success>false</success>\n|;
+        $main::results_xml .= qq|            </verifynegative>\n|;
+        $main::results_xml .= qq|            <success>false</success>\n|;
+        $main::results_xml .= qq|            <result-message>WEBINJECT ABORTED</result-message>\n|;
+        $main::results_xml .= qq|            <responsetime>0.001</responsetime>\n|;
+        $main::results_xml .= qq|        </testcase>\n|;
+        $main::case_failed_count++;
+        main::write_final_xml();
+        die "\n\nWebInject Aborted - could not connect to Selenium Server\n";
+    }
+
+    eval { $driver->set_timeout('page load', 30_000); };
+
+    return;
 }
 
-sub helper_switch_to_window { ## usage: helper_switch_to_window(window number);
-                              ##        helper_switch_to_window(0);
-                              ##        helper_switch_to_window(1);
-    my ($_window_number) = @_;
+#------------------------------------------------------------------
 
-    require Data::Dumper;
+sub port_available {
+    my ($_port) = @_;
 
-    my $_handles = $driver->get_window_handles;
-    my $_response =  $driver->switch_to_window($_handles->[$_window_number]);
+    my $_family = PF_INET;
+    my $_type   = SOCK_STREAM;
+    my $_proto  = getprotobyname 'tcp' or die "getprotobyname: $!\n";
+    my $_host   = INADDR_ANY;  # Use inet_aton for a specific interface
 
-    return 'Handles:' . Data::Dumper::Dumper($_handles) . $_response;
+    socket my $_sock, $_family, $_type, $_proto or die "socket: $!\n";
+    my $_name = sockaddr_in($_port, $_host)     or die "sockaddr_in: $!\n";
+
+    if (bind $_sock, $_name) {
+        return 'available';
+    }
+
+    return 'in use';
 }
 
+sub find_available_port {
+    my ($_start_port) = @_;
+
+    my $_max_attempts = 20;
+    foreach my $_i (0..$_max_attempts) {
+        if (port_available($_start_port + $_i) eq 'available') {
+            return $_start_port + $_i;
+        }
+    }
+
+    return 'none';
+}
+
+#------------------------------------------------------------------
+sub _start_selenium_server {
+
+    $main::opt_selenium_binary =~ s/(\$[\w{}""]+)/$1/eeg; ## expand perl environment variables like $ENV{"HOME"} / $ENV{"HOMEPATH"}
+    if (not -e $main::opt_selenium_binary) {
+        die "\nCannot find Selenium Server at $main::opt_selenium_binary\n";
+    }
+
+    # copy chromedriver - source location hardcoded for now
+    copy $main::opt_chromedriver_binary, $main::output_folder;
+
+    # find free port
+    my $_selenium_port = find_available_port(int(rand 999)+11_000);
+    #print "_selenium_port:$_selenium_port\n";
+
+    my $_abs_selenium_log_full = File::Spec->rel2abs( $main::output_folder.'/selenium_log.txt' );
+
+    my $_os = $^O;
+    if ($main::is_windows) {
+        my $_abs_chromedriver_full = File::Spec->rel2abs( "$main::output_folder/chromedriver.eXe" );
+        my $_pid = _start_windows_process(qq{cmd /c java -Dwebdriver.chrome.driver="$_abs_chromedriver_full" -Dwebdriver.chrome.logfile="$_abs_selenium_log_full" -jar $main::opt_selenium_binary -port $_selenium_port -trustAllSSLCertificates});
+    } elsif ($_os eq 'darwin') {
+        my $_abs_chromedriver_full = File::Spec->rel2abs( "$main::output_folder/chromedriver" );
+        chmod 0775, $_abs_chromedriver_full; # Linux loses the write permission with file copy
+        _start_osx_process(qq{java -Dwebdriver.chrome.driver=$_abs_chromedriver_full -Dwebdriver.chrome.logfile=$_abs_selenium_log_full -jar $main::opt_selenium_binary -port $_selenium_port -trustAllSSLCertificates}); ## note quotes removed
+    } else {
+        my $_abs_chromedriver_full = File::Spec->rel2abs( "$main::output_folder/chromedriver" );
+        chmod 0775, $_abs_chromedriver_full; # Linux loses the write permission with file copy
+        _start_linux_process(qq{java -Dwebdriver.chrome.driver="$_abs_chromedriver_full" -Dwebdriver.chrome.logfile="$_abs_selenium_log_full" -jar $main::opt_selenium_binary -port $_selenium_port -trustAllSSLCertificates});
+    }
+
+    return $_selenium_port;
+}
+
+#------------------------------------------------------------------
+sub _start_windows_process {
+    my ($_command) = @_;
+
+    my $_wmic = "wmic process call create '$_command'"; #
+    my $_result = `$_wmic`;
+    #print "_wmic:$_wmic\n";
+    #print "$_result\n";
+
+    my $_pid;
+    if ( $_result =~ m/ProcessId = (\d+)/ ) {
+        $_pid = $1;
+    }
+
+    return $_pid;
+}
+
+#------------------------------------------------------------------
+sub _start_linux_process {
+    my ($_command) = @_;
+
+    my $_gnome_terminal = qq{(gnome-terminal -e "$_command" &)}; #
+    my $_result = `$_gnome_terminal`;
+    #print "_gnome_terminal:_gnome_terminal\n";
+    #print "$_result\n";
+
+    return;
+}
+
+sub _start_osx_process {
+    my ($_command) = @_;
+
+    #osascript -e 'tell application "Terminal" to do script "cd /tmp;pwd"'
+    my $_term = qq{(osascript -e 'tell application "Terminal" to do script "$_command"' &)}; #
+    my $_result = `$_term`;
+    #print "_term:$_term\n";
+    #print "$_result\n";
+
+    return;
+}
+
+sub shutdown_selenium {
+    if ($main::opt_driver) {
+        eval { $driver->quit(); }; ## shut down selenium browser session
+        if ($main::opt_driver eq 'chromedriver') {
+            eval { $driver->shutdown_binary(); }; ## shut down chromedriver binary
+        }
+        undef $driver;
+    }
+
+    if (not defined $selenium_port) {
+        return;
+    }
+
+    require LWP::Simple;
+
+    my $_url = "http://localhost:$selenium_port/selenium-server/driver/?cmd=shutDownSeleniumServer";
+    my $_content = LWP::Simple::get $_url;
+    #print {*STDOUT} "Shutdown Server:$_content\n";
+
+    return;
+}
+
+#------------------------------------------------------------------
+# search image plugin - see https://github.com/Qarj/search-image
+#------------------------------------------------------------------
+sub searchimage {  ## search for images in the actual result
+
+    my $_unmarked = 'true';
+
+    for (qw/searchimage searchimage1 searchimage2 searchimage3 searchimage4 searchimage5/) {
+        if ($main::case{$_}) {
+            if (-e "$main::case{$_}") { ## imageinimage.py bigimage smallimage markimage
+                if ($_unmarked eq 'true') {
+                   copy "$main::opt_publish_full$main::testnum_display$main::jumpbacks_print$main::retries_print.png", "$main::opt_publish_full$main::testnum_display$main::jumpbacks_print$main::retries_print-marked.png";
+                   $_unmarked = 'false';
+                }
+
+                my $_search_image_script = main::slash_me('plugins/search-image.py');
+                my $_image_in_image_result = (`$_search_image_script $main::opt_publish_full$main::testnum_display$main::jumpbacks_print$main::retries_print.png "$main::case{$_}" $main::opt_publish_full$main::testnum_display$main::jumpbacks_print$main::retries_print-marked.png`);
+
+                $_image_in_image_result =~ m/primary confidence (\d+)/s;
+                my $_primary_confidence;
+                if ($1) {$_primary_confidence = $1;}
+
+                $_image_in_image_result =~ m/alternate confidence (\d+)/s;
+                my $_alternate_confidence;
+                if ($1) {$_alternate_confidence = $1;}
+
+                $_image_in_image_result =~ m/min_loc (.*?)X/s;
+                my $_location;
+                if ($1) {$_location = $1;}
+
+                $main::results_xml .= qq|            <$_>\n|;
+                $main::results_xml .= qq|                <assert>$main::case{$_}</assert>\n|;
+
+                if ($_image_in_image_result =~ m/was found/s) { ## was the image found?
+                    $main::results_html .= qq|<span class="found">Found image: $main::case{$_}</span><br />\n|;
+                    $main::results_xml .= qq|                <success>true</success>\n|;
+                    $main::results_stdout .= "Found: $main::case{$_}\n   $_primary_confidence primary confidence\n   $_alternate_confidence alternate confidence\n   $_location location\n";
+                    $main::passed_count++;
+                    $main::retry_passed_count++;
+                }
+                else { #the image was not found within the bigger image
+                    $main::results_html .= qq|<span class="notfound">Image not found: $main::case{$_}</span><br />\n|;
+                    $main::results_xml .= qq|                <success>false</success>\n|;
+                    $main::results_stdout .= "Not found: $main::case{$_}\n   $_primary_confidence primary confidence\n   $_alternate_confidence alternate confidence\n   $_location location\n";
+                    $main::failed_count++;
+                    $main::retry_failed_count++;
+                    $main::is_failure++;
+                }
+                $main::results_xml .= qq|            </$_>\n|;
+            } else {#We were not able to find the image to search for
+                $main::results_html .= qq|<span class="notfound">SearchImage error - was the file path correct? $main::case{$_}</span><br />\n|;
+                $main::results_xml .= qq|                <success>false</success>\n|;
+                $main::results_stdout .= "SearchImage error - was the file path correct? $main::case{$_}\n";
+                $main::failed_count++;
+                $main::retry_failed_count++;
+                $main::is_failure++;
+            }
+        } ## end first if
+    } ## end for
+
+    if ($_unmarked eq 'false') {
+       #keep an unmarked image, make the marked the actual result
+       move "$main::opt_publish_full$main::testnum_display$main::jumpbacks_print$main::retries_print.png", "$main::opt_publish_full$main::testnum_display$main::jumpbacks_print$main::retries_print-unmarked.png";
+       move "$main::opt_publish_full$main::testnum_display$main::jumpbacks_print$main::retries_print-marked.png", "$main::opt_publish_full$main::testnum_display$main::jumpbacks_print$main::retries_print.png";
+    }
+
+    return;
+} ## end sub
+
+#------------------------------------------------------------------
+# helpers - Locators for Testers
+#------------------------------------------------------------------
 sub helper_keys_to_element { ## usage: helper_keys_to_element(anchor|||instance,keys);
                              ##        helper_keys_to_element('E.g. Regional Manager','Test Automation Architect');
 
@@ -192,27 +504,6 @@ sub helper_keys_to_element_after { ## usage: helper_keys_to_element_after(anchor
     my @_tag = _unpack_tag($_tag_parms);
 
     return _helper_keys_to_element($_anchor[0],$_anchor[1],$_tag[0],$_tag[1],$_keys);
-}
-
-sub _unpack_anchor {
-
-    my ($_anchor_parms) = @_;
-
-    my @_anchor = split /[|][|][|]/, $_anchor_parms ; ## index 0 is anchor, index 1 is instance number
-    $_anchor[1] //= 1;
-
-    return @_anchor;
-}
-
-sub _unpack_tag {
-
-    my ($_tag_parms) = @_;
-    $_tag_parms //= 'INPUT';
-
-    my @_tag = split /[|][|][|]/, $_tag_parms ; ## index 0 is tag, index 1 is instance number
-    $_tag[1] //= 1;
-
-    return @_tag;
 }
 
 sub helper_keys_to_element_before { ## usage: helper_keys_to_element_before(anchor|||instance,keys,tag|||instance);
@@ -260,88 +551,34 @@ sub _helper_keys_to_element {
     return %$_response{message} . ' then sent keys OK';
 }
 
-sub helper_get_element {
+sub _helper_click_element {
 
-    my ($_anchor_parms) = @_;
+    my ($_anchor,$_anchor_instance,$_tag,$_tag_instance) = @_;
+    $_anchor_instance //= 1; ## 1 means first instance of anchor
+    $_tag //= '*'; ## * means click the tag found by the anchor, whatever it is
+    $_tag_instance //= 0; ## -1 means search for the specified tag BEFORE, 1 means search for specified tag after, 0 is an error unless $_tag is '*' 
 
-    my @_anchor = _unpack_anchor($_anchor_parms);
+    my $_element_details_ref = _helper_get_element($_anchor,$_anchor_instance,$_tag,$_tag_instance);
+    my %_element_details = %$_element_details_ref;
 
-    my %_element_details = % { _helper_get_element($_anchor[0],$_anchor[1],'*',0) };
-
-    if (not $_element_details{element}) {return $_element_details{message};}
-
-    $_element_details{element_value} //= '_NULL_';
-    $_element_details{text} //= '_NULL_';
-    my $_basic_info = 'Located' . $_element_details{message} . "\n "
-                                . $_element_details{element_signature}
-                                . "\n Element Text [" . $_element_details{text} . "]"
-                                . "\n Element Value [" . $_element_details{element_value} . "]";
+    if (not $_element_details{element}) {return \%_element_details;}
 
     my $_script = _helper_javascript_functions() . q`
 
-        function isElementInViewport (el) {
-        
-            var rect = el.getBoundingClientRect();
-        
-            return (
-                rect.top >= 0 &&
-                rect.left >= 0 &&
-                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
-                rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
-            );
-        }
-
-        function allText (el) {
-            var _text = '';
-            for (var j = 0; j < el.childNodes.length; ++j) {
-               if (el.childNodes[j].nodeType === 3) { // 3 means TEXT_NODE
-                   _text += el.childNodes[j].textContent; // We only want the text immediately within the element, not any child elements
-               }
-            }
-            return _text;
-        }
-
-        function elementSelection (el) {
-            if (el.tagName === 'SELECT') {
-                var _selectedValue = el.options[el.selectedIndex].value;
-                var _selectedText = el.options[el.selectedIndex].text;
-                return "[" + _selectedValue + "] " + _selectedText;
-            }
-            return '_NA_';
-        }
-
-        function isElementChecked (el) {
-            if (el.checked) { return 'true'; }
-            return 'false';
-        }
-
-        var _element = arguments[0];
-
-        return {
-            selection : elementSelection(_element),
-            isChecked : isElementChecked(_element),
-            scrollTop : _element.scrollTop, 
-            offsetHeight : _element.offsetHeight,
-            offsetWidth : _element.offsetWidth,
-            inViewport : isElementInViewport(_element),
-            allText : allText(_element)
-        }
+        var element_ = arguments[0];
+        element_.focus();
+        element_.click();
+        return;
 
     `;
-    my %_element_extra = % { $driver->execute_script($_script,$_element_details{element}) };
+    my $_response = $driver->execute_script($_script,$_element_details{element});
 
-    my $_extra_info = "\n Element Selection [".$_element_extra{selection}."] isChecked[".$_element_extra{isChecked}."]\n".
-                      " scrollTop[".$_element_extra{scrollTop}.
-                      "] offsetWidth[".$_element_extra{offsetWidth}.
-                      "] offsetHeight[".$_element_extra{offsetHeight}.
-                      "] inViewport[".$_element_extra{inViewport}.
-                      "]\n".
-                      " allText[".$_element_extra{allText}."]\n";
+    $_element_details{message} = "Focused and clicked" . $_element_details{message};
 
-    return $_basic_info . $_extra_info;
+    return \%_element_details;
 }
 
-sub _helper_get_element { ## internal use only
+sub _helper_get_element {
 
     my ($_anchor,$_anchor_instance,$_tag,$_tag_instance) = @_;
     $_anchor_instance //= 1; ## 1 means first instance of anchor
@@ -430,7 +667,7 @@ sub _helper_get_element { ## internal use only
     return $_response;
 }
 
-sub _helper_focus_element { ## internal use only
+sub _helper_focus_element {
 
     my ($_anchor,$_anchor_instance,$_tag,$_tag_instance) = @_;
     $_anchor_instance //= 1; ## 1 means first instance of anchor
@@ -452,33 +689,6 @@ sub _helper_focus_element { ## internal use only
     my $_response = $driver->execute_script($_script,$_element_details{element});
 
     $_element_details{message} = "Focused" . $_element_details{message};
-
-    return \%_element_details;
-}
-
-sub _helper_click_element { ## internal use only
-
-    my ($_anchor,$_anchor_instance,$_tag,$_tag_instance) = @_;
-    $_anchor_instance //= 1; ## 1 means first instance of anchor
-    $_tag //= '*'; ## * means click the tag found by the anchor, whatever it is
-    $_tag_instance //= 0; ## -1 means search for the specified tag BEFORE, 1 means search for specified tag after, 0 is an error unless $_tag is '*' 
-
-    my $_element_details_ref = _helper_get_element($_anchor,$_anchor_instance,$_tag,$_tag_instance);
-    my %_element_details = %$_element_details_ref;
-
-    if (not $_element_details{element}) {return \%_element_details;}
-
-    my $_script = _helper_javascript_functions() . q`
-
-        var element_ = arguments[0];
-        element_.focus();
-        element_.click();
-        return;
-
-    `;
-    my $_response = $driver->execute_script($_script,$_element_details{element});
-
-    $_element_details{message} = "Focused and clicked" . $_element_details{message};
 
     return \%_element_details;
 }
@@ -538,6 +748,17 @@ sub helper_click { ## usage: helper_click(anchor|||instance]);
     return %{_helper_click_element($_anchor[0],$_anchor[1],'*',0)}{message};
 }
 
+sub helper_click_after { ## usage: helper_click_after(anchor|||instance[,element|||instance]);
+
+    my ($_anchor_parms,$_tag_parms) = @_;
+    $_tag_parms //= 'INPUT|BUTTON|SELECT|A';
+
+    my @_anchor = _unpack_anchor($_anchor_parms);
+    my @_tag = _unpack_tag($_tag_parms);
+
+    return %{_helper_click_element($_anchor[0],$_anchor[1],$_tag[0],$_tag[1])}{message};
+}
+
 sub helper_click_before { ## usage: helper_click_before(anchor|||instance);
 
     my ($_anchor_parms,$_tag_parms) = @_;
@@ -551,15 +772,189 @@ sub helper_click_before { ## usage: helper_click_before(anchor|||instance);
     return %{_helper_click_element($_anchor[0],$_anchor[1],$_tag[0],$_tag[1])}{message};
 }
 
-sub helper_click_after { ## usage: helper_click_after(anchor|||instance[,element|||instance]);
+sub helper_get_element {
 
-    my ($_anchor_parms,$_tag_parms) = @_;
-    $_tag_parms //= 'INPUT|BUTTON|SELECT|A';
+    my ($_anchor_parms) = @_;
 
     my @_anchor = _unpack_anchor($_anchor_parms);
-    my @_tag = _unpack_tag($_tag_parms);
 
-    return %{_helper_click_element($_anchor[0],$_anchor[1],$_tag[0],$_tag[1])}{message};
+    my %_element_details = % { _helper_get_element($_anchor[0],$_anchor[1],'*',0) };
+
+    if (not $_element_details{element}) {return $_element_details{message};}
+
+    $_element_details{element_value} //= '_NULL_';
+    $_element_details{text} //= '_NULL_';
+    my $_basic_info = 'Located' . $_element_details{message} . "\n "
+                                . $_element_details{element_signature}
+                                . "\n Element Text [" . $_element_details{text} . "]"
+                                . "\n Element Value [" . $_element_details{element_value} . "]";
+
+    my $_script = _helper_javascript_functions() . q`
+
+        function isElementInViewport (el) {
+        
+            var rect = el.getBoundingClientRect();
+        
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
+            );
+        }
+
+        function allText (el) {
+            var _text = '';
+            for (var j = 0; j < el.childNodes.length; ++j) {
+               if (el.childNodes[j].nodeType === 3) { // 3 means TEXT_NODE
+                   _text += el.childNodes[j].textContent; // We only want the text immediately within the element, not any child elements
+               }
+            }
+            return _text;
+        }
+
+        function elementSelection (el) {
+            if (el.tagName === 'SELECT') {
+                var _selectedValue = el.options[el.selectedIndex].value;
+                var _selectedText = el.options[el.selectedIndex].text;
+                return "[" + _selectedValue + "] " + _selectedText;
+            }
+            return '_NA_';
+        }
+
+        function isElementChecked (el) {
+            if (el.checked) { return 'true'; }
+            return 'false';
+        }
+
+        var _element = arguments[0];
+
+        return {
+            selection : elementSelection(_element),
+            isChecked : isElementChecked(_element),
+            scrollTop : _element.scrollTop, 
+            offsetHeight : _element.offsetHeight,
+            offsetWidth : _element.offsetWidth,
+            inViewport : isElementInViewport(_element),
+            allText : allText(_element)
+        }
+
+    `;
+    my %_element_extra = % { $driver->execute_script($_script,$_element_details{element}) };
+
+    my $_extra_info = "\n Element Selection [".$_element_extra{selection}."] isChecked[".$_element_extra{isChecked}."]\n".
+                      " scrollTop[".$_element_extra{scrollTop}.
+                      "] offsetWidth[".$_element_extra{offsetWidth}.
+                      "] offsetHeight[".$_element_extra{offsetHeight}.
+                      "] inViewport[".$_element_extra{inViewport}.
+                      "]\n".
+                      " allText[".$_element_extra{allText}."]\n";
+
+    return $_basic_info . $_extra_info;
+}
+
+sub helper_wait_visible { ## usage: helper_wait_visible(anchor|||instance,timeout);
+
+    my ($_anchor_parms,$_timeout) = @_;
+    $_timeout //= 5;
+
+    my @_anchor = split /[|][|][|]/, $_anchor_parms ; ## index 0 is anchor, index 1 is instance number
+    $_anchor[1] //= 1;
+
+    $main::results_stdout .= "WAIT VISIBLE IN VIEWPORT: [$_anchor_parms] TIMEOUT[$_timeout]\n";
+
+    my $_search_expression = '@_response = helper_get_element($_target);'; ## no critic(RequireInterpolationOfMetachars)
+    my $_found_expression = 'if ($__response =~ m/inViewport\[1]/) { return q|true|; }  else { return; }'; ## no critic(RequireInterpolationOfMetachars)
+
+    return _wait_for_item_present($_search_expression, $_found_expression, $_timeout, 'element visible', 'NA', $_anchor_parms);
+
+}
+
+sub _wait_for_item_present {
+
+    my ($_search_expression, $_found_expression, $_timeout, $_message_fragment, $_search_text, $_target, $_locator) = @_;
+
+    $main::results_stdout .= "TIMEOUT:$_timeout\n";
+
+    my $_timestart = time;
+    my @_response;
+    my $_found_it;
+
+    while ( (($_timestart + $_timeout) > time) && (not $_found_it) ) {
+        eval { eval "$_search_expression"; }; ## no critic(ProhibitStringyEval)
+        foreach my $__response (@_response) {
+            #if ($_message_fragment eq 'element visible') { print "__response:$__response\n";}
+            if (eval { eval "$_found_expression";} ) { ## no critic(ProhibitStringyEval)
+                $_found_it = 'true';
+            }
+        }
+        if (not $_found_it) {
+            sleep 0.5; # Sleep for 0.5 seconds
+        }
+    }
+    my $_try_time = ( int( (time - $_timestart) *10 ) / 10);
+
+    my $_message;
+    if ($_found_it) {
+        $_message = 'Found sought '.$_message_fragment." after $_try_time seconds";
+    }
+    else {
+        $_message = 'Did not find sought '.$_message_fragment.", timed out after $_try_time seconds";
+    }
+
+    return $_message;
+}
+
+sub helper_wait_not_visible { ## usage: helper_wait_not_visible(anchor|||instance,timeout);
+
+    my ($_anchor_parms,$_timeout) = @_;
+    $_timeout //= 5;
+
+    my @_anchor = split /[|][|][|]/, $_anchor_parms ; ## index 0 is anchor, index 1 is instance number
+    $_anchor[1] //= 1;
+
+    $main::results_stdout .= "WAIT NOT VISIBLE IN VIEWPORT: [$_anchor_parms] TIMEOUT[$_timeout]\n";
+
+    my $_search_expression = '@_response = helper_get_element($_anchor_parms);'; ## no critic(RequireInterpolationOfMetachars)
+    my $_found_expression = 'if ($__response =~ m/inViewport\[1]/) { return q|true|; }  else { return; }'; ## no critic(RequireInterpolationOfMetachars)
+
+    return _wait_for_item_not_present($_search_expression, $_found_expression, $_timeout, 'element visible', 'NA', $_anchor_parms);
+
+}
+
+sub _wait_for_item_not_present {
+
+    my ($_search_expression, $_found_expression, $_timeout, $_message_fragment, $_search_text, $_anchor_parms) = @_;
+
+    $main::results_stdout .= "TIMEOUT:$_timeout\n";
+
+    my $_timestart = time;
+    my @_response;
+    my $_found_it = 'true';
+
+    while ( (($_timestart + $_timeout) > time) && ($_found_it) ) {
+        eval { eval "$_search_expression"; }; ## no critic(ProhibitStringyEval)
+        foreach my $__response (@_response) {
+            #if ($_message_fragment eq 'element visible') { print "__response:$__response\n";}
+            if (not eval { eval "$_found_expression";} ) { ## no critic(ProhibitStringyEval)
+                undef $_found_it;
+            }
+        }
+        if ($_found_it) {
+            sleep 0.5; # Sleep for 0.5 seconds
+        }
+    }
+    my $_try_time = ( int( (time - $_timestart) *10 ) / 10);
+
+    my $_message;
+    if (not $_found_it) {
+        $_message = 'SUCCESS: Sought '.$_message_fragment." not found after $_try_time seconds";
+    }
+    else {
+        $_message = 'TIMEOUT: Still found '.$_message_fragment.", timed out after $_try_time seconds";
+    }
+
+    return $_message;
 }
 
 sub _helper_javascript_functions {
@@ -770,33 +1165,52 @@ sub _helper_javascript_functions {
     `; 
 }
 
-sub helper_check_element_within_pixels {     ## usage: helper_check_element_within_pixels(searchTarget,id,xBase,yBase,pixelThreshold);
-                                             ##        helper_check_element_within_pixels('txtEmail','id',193,325,30);
+sub _unpack_anchor {
 
-    my ($_search_target, $_locator, $_x_base, $_y_base, $_pixel_threshold) = @_;
+    my ($_anchor_parms) = @_;
 
-    ## get_element_location will return a reference to a hash associative array
-    ## http://www.troubleshooters.com/codecorn/littperl/perlscal.htm
-    ## the array will look something like this
-    # { 'y' => 325, 'hCode' => 25296896, 'x' => 193, 'class' => 'org.openqa.selenium.Point' };
-    my ($_location) = $driver->find_element("$_search_target", "$_locator")->get_element_location();
+    my @_anchor = split /[|][|][|]/, $_anchor_parms ; ## index 0 is anchor, index 1 is instance number
+    $_anchor[1] //= 1;
 
-    ## if the element doesn't exist, we get an empty output, so presumably this subroutine just dies and the program carries on
+    return @_anchor;
+}
 
-    ## we use the -> operator to get to the underlying values in the hash array
-    my $_x = $_location->{x};
-    my $_y = $_location->{y};
+sub _unpack_tag {
 
-    my $_x_diff = abs $_x_base - $_x;
-    my $_y_diff = abs $_y_base - $_y;
+    my ($_tag_parms) = @_;
+    $_tag_parms //= 'INPUT';
 
-    my $_message = "Pixel threshold check passed - $_search_target is $_x_diff,$_y_diff (x,y) pixels removed from baseline of $_x_base,$_y_base; actual was $_x,$_y";
+    my @_tag = split /[|][|][|]/, $_tag_parms ; ## index 0 is tag, index 1 is instance number
+    $_tag[1] //= 1;
 
-    if ($_x_diff > $_pixel_threshold || $_y_diff > $_pixel_threshold) {
-        $_message = "Pixel threshold check failed - $_search_target is $_x_diff,$_y_diff (x,y) pixels removed from baseline of $_x_base,$_y_base; actual was $_x,$_y";
-    }
+    return @_tag;
+}
 
-    return $_message;
+#------------------------------------------------------------------
+# helpers - Other helpers
+#------------------------------------------------------------------
+sub helper_clear_and_send_keys { ## usage: helper_clear_and_send_keys(Search Target, Locator, Keys);
+                                 ##        helper_clear_and_send_keys('candidateProfileDetails_txtPostCode','id','WC1X 8TG');
+
+    my ($_search_target, $_locator, $_keys) = @_;
+
+    my $_element = $driver->find_element("$_search_target", "$_locator")->clear();
+    my $_response = $driver->find_element("$_search_target", "$_locator")->send_keys("$_keys");
+
+    return $_response;
+}
+
+sub helper_switch_to_window { ## usage: helper_switch_to_window(window number);
+                              ##        helper_switch_to_window(0);
+                              ##        helper_switch_to_window(1);
+    my ($_window_number) = @_;
+
+    require Data::Dumper;
+
+    my $_handles = $driver->get_window_handles;
+    my $_response =  $driver->switch_to_window($_handles->[$_window_number]);
+
+    return 'Handles:' . Data::Dumper::Dumper($_handles) . $_response;
 }
 
 sub helper_wait_for_text_present { ## usage: helper_wait_for_text_present('Search Text',Timeout);
@@ -834,443 +1248,33 @@ sub helper_wait_for_text_visible { ## usage: helper_wait_for_text_visible('Searc
 
 }
 
-sub helper_wait_visible { ## usage: helper_wait_visible(anchor|||instance,timeout);
+sub helper_check_element_within_pixels {     ## usage: helper_check_element_within_pixels(searchTarget,id,xBase,yBase,pixelThreshold);
+                                             ##        helper_check_element_within_pixels('txtEmail','id',193,325,30);
 
-    my ($_anchor_parms,$_timeout) = @_;
-    $_timeout //= 5;
+    my ($_search_target, $_locator, $_x_base, $_y_base, $_pixel_threshold) = @_;
 
-    my @_anchor = split /[|][|][|]/, $_anchor_parms ; ## index 0 is anchor, index 1 is instance number
-    $_anchor[1] //= 1;
+    ## get_element_location will return a reference to a hash associative array
+    ## http://www.troubleshooters.com/codecorn/littperl/perlscal.htm
+    ## the array will look something like this
+    # { 'y' => 325, 'hCode' => 25296896, 'x' => 193, 'class' => 'org.openqa.selenium.Point' };
+    my ($_location) = $driver->find_element("$_search_target", "$_locator")->get_element_location();
 
-    $main::results_stdout .= "WAIT VISIBLE IN VIEWPORT: [$_anchor_parms] TIMEOUT[$_timeout]\n";
+    ## if the element doesn't exist, we get an empty output, so presumably this subroutine just dies and the program carries on
 
-    my $_search_expression = '@_response = helper_get_element($_target);'; ## no critic(RequireInterpolationOfMetachars)
-    my $_found_expression = 'if ($__response =~ m/inViewport\[1]/) { return q|true|; }  else { return; }'; ## no critic(RequireInterpolationOfMetachars)
+    ## we use the -> operator to get to the underlying values in the hash array
+    my $_x = $_location->{x};
+    my $_y = $_location->{y};
 
-    return _wait_for_item_present($_search_expression, $_found_expression, $_timeout, 'element visible', 'NA', $_anchor_parms);
+    my $_x_diff = abs $_x_base - $_x;
+    my $_y_diff = abs $_y_base - $_y;
 
-}
+    my $_message = "Pixel threshold check passed - $_search_target is $_x_diff,$_y_diff (x,y) pixels removed from baseline of $_x_base,$_y_base; actual was $_x,$_y";
 
-sub _wait_for_item_present {
-
-    my ($_search_expression, $_found_expression, $_timeout, $_message_fragment, $_search_text, $_target, $_locator) = @_;
-
-    $main::results_stdout .= "TIMEOUT:$_timeout\n";
-
-    my $_timestart = time;
-    my @_response;
-    my $_found_it;
-
-    while ( (($_timestart + $_timeout) > time) && (not $_found_it) ) {
-        eval { eval "$_search_expression"; }; ## no critic(ProhibitStringyEval)
-        foreach my $__response (@_response) {
-            #if ($_message_fragment eq 'element visible') { print "__response:$__response\n";}
-            if (eval { eval "$_found_expression";} ) { ## no critic(ProhibitStringyEval)
-                $_found_it = 'true';
-            }
-        }
-        if (not $_found_it) {
-            sleep 0.5; # Sleep for 0.5 seconds
-        }
-    }
-    my $_try_time = ( int( (time - $_timestart) *10 ) / 10);
-
-    my $_message;
-    if ($_found_it) {
-        $_message = 'Found sought '.$_message_fragment." after $_try_time seconds";
-    }
-    else {
-        $_message = 'Did not find sought '.$_message_fragment.", timed out after $_try_time seconds";
+    if ($_x_diff > $_pixel_threshold || $_y_diff > $_pixel_threshold) {
+        $_message = "Pixel threshold check failed - $_search_target is $_x_diff,$_y_diff (x,y) pixels removed from baseline of $_x_base,$_y_base; actual was $_x,$_y";
     }
 
     return $_message;
-}
-
-sub helper_wait_not_visible { ## usage: helper_wait_not_visible(anchor|||instance,timeout);
-
-    my ($_anchor_parms,$_timeout) = @_;
-    $_timeout //= 5;
-
-    my @_anchor = split /[|][|][|]/, $_anchor_parms ; ## index 0 is anchor, index 1 is instance number
-    $_anchor[1] //= 1;
-
-    $main::results_stdout .= "WAIT NOT VISIBLE IN VIEWPORT: [$_anchor_parms] TIMEOUT[$_timeout]\n";
-
-    my $_search_expression = '@_response = helper_get_element($_anchor_parms);'; ## no critic(RequireInterpolationOfMetachars)
-    my $_found_expression = 'if ($__response =~ m/inViewport\[1]/) { return q|true|; }  else { return; }'; ## no critic(RequireInterpolationOfMetachars)
-
-    return _wait_for_item_not_present($_search_expression, $_found_expression, $_timeout, 'element visible', 'NA', $_anchor_parms);
-
-}
-
-sub _wait_for_item_not_present {
-
-    my ($_search_expression, $_found_expression, $_timeout, $_message_fragment, $_search_text, $_anchor_parms) = @_;
-
-    $main::results_stdout .= "TIMEOUT:$_timeout\n";
-
-    my $_timestart = time;
-    my @_response;
-    my $_found_it = 'true';
-
-    while ( (($_timestart + $_timeout) > time) && ($_found_it) ) {
-        eval { eval "$_search_expression"; }; ## no critic(ProhibitStringyEval)
-        foreach my $__response (@_response) {
-            #if ($_message_fragment eq 'element visible') { print "__response:$__response\n";}
-            if (not eval { eval "$_found_expression";} ) { ## no critic(ProhibitStringyEval)
-                undef $_found_it;
-            }
-        }
-        if ($_found_it) {
-            sleep 0.5; # Sleep for 0.5 seconds
-        }
-    }
-    my $_try_time = ( int( (time - $_timestart) *10 ) / 10);
-
-    my $_message;
-    if (not $_found_it) {
-        $_message = 'SUCCESS: Sought '.$_message_fragment." not found after $_try_time seconds";
-    }
-    else {
-        $_message = 'TIMEOUT: Still found '.$_message_fragment.", timed out after $_try_time seconds";
-    }
-
-    return $_message;
-}
-
-#------------------------------------------------------------------
-sub searchimage {  ## search for images in the actual result
-
-    my $_unmarked = 'true';
-
-    for (qw/searchimage searchimage1 searchimage2 searchimage3 searchimage4 searchimage5/) {
-        if ($main::case{$_}) {
-            if (-e "$main::case{$_}") { ## imageinimage.py bigimage smallimage markimage
-                if ($_unmarked eq 'true') {
-                   copy "$main::opt_publish_full$main::testnum_display$main::jumpbacks_print$main::retries_print.png", "$main::opt_publish_full$main::testnum_display$main::jumpbacks_print$main::retries_print-marked.png";
-                   $_unmarked = 'false';
-                }
-
-                my $_search_image_script = main::slash_me('plugins/search-image.py');
-                my $_image_in_image_result = (`$_search_image_script $main::opt_publish_full$main::testnum_display$main::jumpbacks_print$main::retries_print.png "$main::case{$_}" $main::opt_publish_full$main::testnum_display$main::jumpbacks_print$main::retries_print-marked.png`);
-
-                $_image_in_image_result =~ m/primary confidence (\d+)/s;
-                my $_primary_confidence;
-                if ($1) {$_primary_confidence = $1;}
-
-                $_image_in_image_result =~ m/alternate confidence (\d+)/s;
-                my $_alternate_confidence;
-                if ($1) {$_alternate_confidence = $1;}
-
-                $_image_in_image_result =~ m/min_loc (.*?)X/s;
-                my $_location;
-                if ($1) {$_location = $1;}
-
-                $main::results_xml .= qq|            <$_>\n|;
-                $main::results_xml .= qq|                <assert>$main::case{$_}</assert>\n|;
-
-                if ($_image_in_image_result =~ m/was found/s) { ## was the image found?
-                    $main::results_html .= qq|<span class="found">Found image: $main::case{$_}</span><br />\n|;
-                    $main::results_xml .= qq|                <success>true</success>\n|;
-                    $main::results_stdout .= "Found: $main::case{$_}\n   $_primary_confidence primary confidence\n   $_alternate_confidence alternate confidence\n   $_location location\n";
-                    $main::passed_count++;
-                    $main::retry_passed_count++;
-                }
-                else { #the image was not found within the bigger image
-                    $main::results_html .= qq|<span class="notfound">Image not found: $main::case{$_}</span><br />\n|;
-                    $main::results_xml .= qq|                <success>false</success>\n|;
-                    $main::results_stdout .= "Not found: $main::case{$_}\n   $_primary_confidence primary confidence\n   $_alternate_confidence alternate confidence\n   $_location location\n";
-                    $main::failed_count++;
-                    $main::retry_failed_count++;
-                    $main::is_failure++;
-                }
-                $main::results_xml .= qq|            </$_>\n|;
-            } else {#We were not able to find the image to search for
-                $main::results_html .= qq|<span class="notfound">SearchImage error - was the file path correct? $main::case{$_}</span><br />\n|;
-                $main::results_xml .= qq|                <success>false</success>\n|;
-                $main::results_stdout .= "SearchImage error - was the file path correct? $main::case{$_}\n";
-                $main::failed_count++;
-                $main::retry_failed_count++;
-                $main::is_failure++;
-            }
-        } ## end first if
-    } ## end for
-
-    if ($_unmarked eq 'false') {
-       #keep an unmarked image, make the marked the actual result
-       move "$main::opt_publish_full$main::testnum_display$main::jumpbacks_print$main::retries_print.png", "$main::opt_publish_full$main::testnum_display$main::jumpbacks_print$main::retries_print-unmarked.png";
-       move "$main::opt_publish_full$main::testnum_display$main::jumpbacks_print$main::retries_print-marked.png", "$main::opt_publish_full$main::testnum_display$main::jumpbacks_print$main::retries_print.png";
-    }
-
-    return;
-} ## end sub
-
-#------------------------------------------------------------------
-sub start_selenium_browser {     ## start Browser using Selenium Server or ChromeDriver
-    require Selenium::Remote::Driver;
-    require Selenium::Chrome;
-    if (not $main::opt_chromedriver_binary) {
-        die "\n\nYou must specify --chromedriver-binary for Selenium tests\n\n";
-    }
-
-    $main::opt_chromedriver_binary =~ s/(\$[\w{}""]+)/$1/eeg; ## expand perl environment variables like $ENV{"HOME"} / $ENV{"HOMEPATH"}
-    if (not -e $main::opt_chromedriver_binary) {
-        die "\n\nCannot find ChromeDriver at $main::opt_chromedriver_binary\n\n";
-    }
-
-    if (defined $driver) { #shut down any existing selenium browser session
-        $main::results_stdout .= "    [\$driver is defined so shutting down Selenium first]\n";
-        shutdown_selenium();
-        ####shutdown_selenium_server($selenium_port);
-        sleep 2.1; ## Sleep for 2.1 seconds, give system a chance to settle before starting new browser
-        $main::results_stdout .= "    [Done shutting down Selenium]\n";
-    }
-
-    $main::opt_driver //= 'chromedriver'; ## if variable is undefined, set to default value
-    $main::opt_driver = lc $main::opt_driver;
-    if ($main::opt_driver ne 'chrome' and $main::opt_driver ne 'chromedriver') {
-        die "\n\n'--driver $main::opt_driver' not recognised - only chrome and chromedriver are supported\n\n";
-    }
-
-    if ($main::opt_driver eq 'chrome') {
-        $selenium_port = _start_selenium_server();
-        $main::results_stdout .= "    [Connecting to Selenium Remote Control server on port $selenium_port]\n";
-    }
-
-    my $_max = 3;
-    my $_try = 0;
-
-    ## --load-extension Loads an extension from the specified directory
-    ## --whitelisted-extension-id
-    ## http://rdekleijn.nl/functional-test-automation-over-a-proxy/
-    ## http://bmp.lightbody.net/
-    ATTEMPT:
-    {
-        eval
-        {
-
-            ## ChromeDriver without Selenium Server or JRE
-            if ($main::opt_driver eq 'chromedriver') {
-                my $_port = find_available_port(9585); ## find a free port to bind to, starting from this number
-                if ($main::opt_proxy) {
-                    $main::results_stdout .= "    [Starting ChromeDriver without Selenium Server through proxy on port $main::opt_proxy]\n";
-                    $driver = Selenium::Chrome->new (binary => $main::opt_chromedriver_binary,
-                                                 binary_port => $_port,
-                                                 _binary_args => " --port=$_port --url-base=/wd/hub --verbose --log-path=$main::output".'chromedriver.log',
-                                                 'browser_name' => 'chrome',
-                                                 'proxy' => {'proxyType' => 'manual', 'httpProxy' => $main::opt_proxy, 'sslProxy' => $main::opt_proxy }
-                                                 );
-
-                } else {
-                    $main::results_stdout .= "    [Starting ChromeDriver without Selenium Server]\n";
-                    $driver = Selenium::Chrome->new (binary => $main::opt_chromedriver_binary,
-                                                 binary_port => $_port,
-                                                 _binary_args => " --port=$_port --url-base=/wd/hub --verbose --log-path=$main::output".'chromedriver.log',
-                                                 'browser_name' => 'chrome'
-                                                 );
-                }
-            }
-
-            ## Chrome
-            if ($main::opt_driver eq 'chrome') {
-                my $_chrome_proxy = q{};
-                if ($main::opt_proxy) {
-                    $main::results_stdout .= qq|    [Starting Chrome with Selenium Server Standalone on port $selenium_port through proxy on port $main::opt_proxy]\n|;
-                    $driver = Selenium::Remote::Driver->new('remote_server_addr' => 'localhost',
-                                                        'port' => $selenium_port,
-                                                        'browser_name' => 'chrome',
-                                                        'proxy' => {'proxyType' => 'manual', 'httpProxy' => $main::opt_proxy, 'sslProxy' => $main::opt_proxy },
-                                                        'extra_capabilities' => {'chromeOptions' => {'args' => ['window-size=1260,968']}}
-                                                        );
-                } else {
-                    $main::results_stdout .= "    [Starting Chrome using Selenium Server Standalone on $selenium_port]\n";
-                    $driver = Selenium::Remote::Driver->new('remote_server_addr' => 'localhost',
-                                                        'port' => $selenium_port,
-                                                        'browser_name' => 'chrome',
-                                                        'extra_capabilities' => {'chromeOptions' => {'args' => ['window-size=1260,968']}}
-                                                        );
-                }
-             }
-                                                   # For reference on how to specify options for Chrome
-                                                   #
-                                                   #'proxy' => {'proxyType' => 'manual', 'httpProxy' => $main::opt_proxy, 'sslProxy' => $main::opt_proxy },
-                                                   #'extra_capabilities' => {'chrome.switches' => ['--proxy-server="http://127.0.0.1:$main::opt_proxy" --incognito --window-size=1260,460'],},
-                                                   #'extra_capabilities' => {'chrome.switches' => ['--incognito --window-size=1260,960']}
-                                                   #'extra_capabilities' => {'chromeOptions' => {'args' => ['incognito','window-size=1260,960']}}
-                                                   #'extra_capabilities' => {'chromeOptions' => {'args' => ['window-size=1260,968']}}
-
-                                                   #'extra_capabilities'
-                                                   #   => {'chromeOptions' => {'args'  =>         ['window-size=1260,960','incognito'],
-                                                   #                           'prefs' => {'session' => {'restore_on_startup' =>4, 'urls_to_restore_on_startup' => ['http://www.google.com','http://www.example.com']},
-                                                   #                                       'first_run_tabs' => ['http://www.mywebsite.com','http://www.google.de']
-                                                   #                                      }
-                                                   #                          }
-                                                   #      }
-
-        }; ## end eval
-
-        if ( $@ and $_try++ < $_max )
-        {
-            print "\n[Selenium Start Error - possible Chrome and ChromeDriver version compatibility issue]\n$@\nFailed try $_try to connect to Selenium Server, retrying...\n\n";
-            sleep 4; ## sleep for 4 seconds, Selenium Server may still be starting up
-            redo ATTEMPT;
-        }
-    } ## end ATTEMPT
-
-    if ($@) {
-        print "\nError: $@ Failed to connect on port $main::opt_port after $_max tries\n\n";
-        $main::results_xml .= qq|        <testcase id="999999">\n|;
-        $main::results_xml .= qq|            <description1>WebInject ended execution early !!!</description1>\n|;
-        $main::results_xml .= qq|            <verifynegative>\n|;
-        $main::results_xml .= qq|                <assert>WebInject Aborted - could not connect to Selenium Server</assert>\n|;
-        $main::results_xml .= qq|                <success>false</success>\n|;
-        $main::results_xml .= qq|            </verifynegative>\n|;
-        $main::results_xml .= qq|            <success>false</success>\n|;
-        $main::results_xml .= qq|            <result-message>WEBINJECT ABORTED</result-message>\n|;
-        $main::results_xml .= qq|            <responsetime>0.001</responsetime>\n|;
-        $main::results_xml .= qq|        </testcase>\n|;
-        $main::case_failed_count++;
-        main::write_final_xml();
-        die "\n\nWebInject Aborted - could not connect to Selenium Server\n";
-    }
-
-    eval { $driver->set_timeout('page load', 30_000); };
-
-    return;
-}
-
-#------------------------------------------------------------------
-
-sub port_available {
-    my ($_port) = @_;
-
-    my $_family = PF_INET;
-    my $_type   = SOCK_STREAM;
-    my $_proto  = getprotobyname 'tcp' or die "getprotobyname: $!\n";
-    my $_host   = INADDR_ANY;  # Use inet_aton for a specific interface
-
-    socket my $_sock, $_family, $_type, $_proto or die "socket: $!\n";
-    my $_name = sockaddr_in($_port, $_host)     or die "sockaddr_in: $!\n";
-
-    if (bind $_sock, $_name) {
-        return 'available';
-    }
-
-    return 'in use';
-}
-
-sub find_available_port {
-    my ($_start_port) = @_;
-
-    my $_max_attempts = 20;
-    foreach my $_i (0..$_max_attempts) {
-        if (port_available($_start_port + $_i) eq 'available') {
-            return $_start_port + $_i;
-        }
-    }
-
-    return 'none';
-}
-
-#------------------------------------------------------------------
-sub shutdown_selenium_server {
-}
-
-#------------------------------------------------------------------
-sub _start_selenium_server {
-
-    $main::opt_selenium_binary =~ s/(\$[\w{}""]+)/$1/eeg; ## expand perl environment variables like $ENV{"HOME"} / $ENV{"HOMEPATH"}
-    if (not -e $main::opt_selenium_binary) {
-        die "\nCannot find Selenium Server at $main::opt_selenium_binary\n";
-    }
-
-    # copy chromedriver - source location hardcoded for now
-    copy $main::opt_chromedriver_binary, $main::output_folder;
-
-    # find free port
-    my $_selenium_port = find_available_port(int(rand 999)+11_000);
-    #print "_selenium_port:$_selenium_port\n";
-
-    my $_abs_selenium_log_full = File::Spec->rel2abs( $main::output_folder.'/selenium_log.txt' );
-
-    my $_os = $^O;
-    if ($main::is_windows) {
-        my $_abs_chromedriver_full = File::Spec->rel2abs( "$main::output_folder/chromedriver.eXe" );
-        my $_pid = _start_windows_process(qq{cmd /c java -Dwebdriver.chrome.driver="$_abs_chromedriver_full" -Dwebdriver.chrome.logfile="$_abs_selenium_log_full" -jar $main::opt_selenium_binary -port $_selenium_port -trustAllSSLCertificates});
-    } elsif ($_os eq 'darwin') {
-        my $_abs_chromedriver_full = File::Spec->rel2abs( "$main::output_folder/chromedriver" );
-        chmod 0775, $_abs_chromedriver_full; # Linux loses the write permission with file copy
-        _start_osx_process(qq{java -Dwebdriver.chrome.driver=$_abs_chromedriver_full -Dwebdriver.chrome.logfile=$_abs_selenium_log_full -jar $main::opt_selenium_binary -port $_selenium_port -trustAllSSLCertificates}); ## note quotes removed
-    } else {
-        my $_abs_chromedriver_full = File::Spec->rel2abs( "$main::output_folder/chromedriver" );
-        chmod 0775, $_abs_chromedriver_full; # Linux loses the write permission with file copy
-        _start_linux_process(qq{java -Dwebdriver.chrome.driver="$_abs_chromedriver_full" -Dwebdriver.chrome.logfile="$_abs_selenium_log_full" -jar $main::opt_selenium_binary -port $_selenium_port -trustAllSSLCertificates});
-    }
-
-    return $_selenium_port;
-}
-
-#------------------------------------------------------------------
-sub _start_windows_process {
-    my ($_command) = @_;
-
-    my $_wmic = "wmic process call create '$_command'"; #
-    my $_result = `$_wmic`;
-    #print "_wmic:$_wmic\n";
-    #print "$_result\n";
-
-    my $_pid;
-    if ( $_result =~ m/ProcessId = (\d+)/ ) {
-        $_pid = $1;
-    }
-
-    return $_pid;
-}
-
-#------------------------------------------------------------------
-sub _start_linux_process {
-    my ($_command) = @_;
-
-    my $_gnome_terminal = qq{(gnome-terminal -e "$_command" &)}; #
-    my $_result = `$_gnome_terminal`;
-    #print "_gnome_terminal:_gnome_terminal\n";
-    #print "$_result\n";
-
-    return;
-}
-
-sub _start_osx_process {
-    my ($_command) = @_;
-
-    #osascript -e 'tell application "Terminal" to do script "cd /tmp;pwd"'
-    my $_term = qq{(osascript -e 'tell application "Terminal" to do script "$_command"' &)}; #
-    my $_result = `$_term`;
-    #print "_term:$_term\n";
-    #print "$_result\n";
-
-    return;
-}
-
-sub shutdown_selenium {
-    if ($main::opt_driver) {
-        eval { $driver->quit(); }; ## shut down selenium browser session
-        if ($main::opt_driver eq 'chromedriver') {
-            eval { $driver->shutdown_binary(); }; ## shut down chromedriver binary
-        }
-        undef $driver;
-    }
-
-    if (not defined $selenium_port) {
-        return;
-    }
-
-    require LWP::Simple;
-
-    my $_url = "http://localhost:$selenium_port/selenium-server/driver/?cmd=shutDownSeleniumServer";
-    my $_content = LWP::Simple::get $_url;
-    #print {*STDOUT} "Shutdown Server:$_content\n";
-
-    return;
 }
 
 1;
