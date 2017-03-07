@@ -1,65 +1,23 @@
 # Manual for WebInject-Selenium version 0.1.0
 
+
 ## Table of Contents
 
+### [1 - Overview](#overview)
 
-#### [3.3.8 - Parameters to control Selenium WebDriver Test Execution](#webdriver)
+### [2 - Parameters to control Selenium WebDriver Test Execution](#parameters)
 
 [searchimage searchimage1 ... searchimage5](#searchimage)
 
 [verifytext](#verifytext)
 
-
-#### [3.3.10 - Selenium WebDriver](#selenium)
+### [3 - Helper Functions](#helper)
 
 [helper functions](#helper)
 
 
-
-<a name="webdriver"></a>
-### 3.3.8 - Parameters to control Selenium WebDriver Test Execution
-
-<br />
-
-
-<a name="searchimage"></a>
-#### searchimage searchimage1 ... searchimage5
-
-Searches the WebDriver pagegrab or screenshot for a specified subimage. A small tolerance is allowed in case
-the image cannot be found exactly. This is useful if the baseline image is captured in one browser version /
-operating system, but tested on another.
-
-```
-    searchimage="RunningMan_Company_Logo.png"`
-```
-
-The subimages are stored in a folder named baseline under the testcases folder. The specific imagie is in an addtional
-subfolder that has the same name as the testcase you are running.
-
-For example, refering to the example above, RunningMan_Company_Logo.png can be found at
-```
-    mywebinjectestsfolder\baseline\mytestname\RunningMan_Company_Logo.png
-```
-
-<br />
-
-
-<a name="verifytext"></a>
-#### verifytext
-Fetches from WebDriver / Selenium the details you specify. Used in conjuction with a verifypostive or verifynegative.
-Or perhaps you just want those details to appear in the http.txt.
-
-Separate additional items with commas. Example:
-
-```
-    verifytext="get_active_element,get_all_cookies,get_current_url,get_window_position,get_body_text,get_page_source"
-```
-
-<br />
-
-
-<a name="selenium"></a>
-### 3.3.10 - Selenium WebDriver
+<a name="overview"></a>
+### 1 Overview
 
 A minimal Selenium example looks like the following:
 
@@ -68,35 +26,88 @@ A minimal Selenium example looks like the following:
     id="10"
     description1="Get Totaljobs Home Page"
     method="selenium"
-    command='$selresp = $driver->get("http://www.totaljobs.com");'
+    command='$selresp = $driver->get("https://www.totaljobs.com");'
 />
 ```
 
 The method is specified as `selenium` and this is used in conjunction with `command` to drive Selenium.
+
+`$selresp` refers to the Selenium Response. This will be stored in the http.txt file for each step.
+Typically Selenium just responds with `1` for a command to do something - e.g. click on an element.
 
 The example gets a web page, and automatically takes a screenshot which will be saved in the output folder.
 
 Many different commands are supported, to see them all refer to Selenium::Remote::Driver on cpan which
 can be found here: http://search.cpan.org/~gempesaw/Selenium-Remote-Driver/lib/Selenium/Remote/Driver.pm
 
-The first example given does not include an assertion. Here is a more complete example:
+In addition, there are many helper_ functions built into this plugin that make working with Selenium very easy. See the
+[Helper Functions](#helper) section.
+
+Here is an example that includes an assertion:
 
 ```
 <case
     id="10"
     description1="Get Totaljobs Home Page"
     method="selenium"
-    command='$selresp = $driver->get("http://www.totaljobs.com");'
-    verifytext="get_current_url,get_page_source"
-    verifypositive="Find your perfect job"
+    command='$selresp = $driver->get("https://www.totaljobs.com");'
+    verifytext="get_current_url,get_body_text,get_page_source"
+    verifypositive="a job you love"
 />
 ```
 
-Here you can see that we also get the page source. WebInject then can use this to perform a standard
+Here you can see that we also get the body text and page source. WebInject then can use this to perform a standard
 assertion within its existing framework.
 
+<a name="parameters"></a>
+### 2 - Parameters to control Selenium WebDriver Test Execution
+
+<br />
+
+
+<a name="searchimage"></a>
+#### searchimage searchimage1 ... searchimage5
+
+Requires search-image plugin. The plugin itself is already installed, however there are dependencies on Python and other libraries. Setup
+instructions can be found here: https://github.com/Qarj/search-image
+
+Searches the WebDriver Selenium screenshot for a specified subimage. A small tolerance is allowed in case
+the image cannot be found exactly. This is useful if the baseline image is captured in one browser version /
+operating system, but tested on another.
+
+```
+    searchimage="examples\search_images\menu_hamburger.png"`
+```
+
+Specify the file path relative to the WebInject root folder.
+
+<br />
+
+
+<a name="verifytext"></a>
+#### verifytext
+Fetches from WebDriver / Selenium the details you specify. Used in conjuction with a verifypostive or verifynegative.
+If you want to parseresponse, then you will need to use this feature to get something to parse.
+
+Multiple items can be separated with commas. Example:
+
+```
+    verifytext="get_active_element,get_all_cookies,get_current_url,get_window_position,get_body_text,get_page_source"
+```
+
+Typically you might just get the current URL, the body text and the page source:
+
+```
+    verifytext="get_current_url,get_body_text,get_page_source"
+```
+
+
+<br />
+
+
+### 3 Helper Functions
+
 <a name="helper"></a>
-#### Helper functions for Selenium WebDriver based tests
 
 There are a number of helper functions built into WebInject to make it easier to create
 Selenium test suites.
@@ -109,10 +120,10 @@ for the text `Sign in` to appear.
     id="10"
     description1="Get Totaljobs Home Page"
     method="selenium"
-    command1='$selresp = $driver->get("http://www.totaljobs.com");'
-	command2="$selresp = helper_wait_for_text_visible('Sign in',25,'body','tag_name');"
-    verifytext="get_current_url,get_page_source"
-    verifypositive="Find your perfect job"
+    command1='$selresp = $driver->get("https://www.totaljobs.com");'
+	command2="$selresp = helper_wait_for_text_visible('Sign in',25);"
+    verifytext="get_current_url,get_body_text"
+    verifypositive="a job you love"
     verifypositive1="Found sought text"
 />
 ```
