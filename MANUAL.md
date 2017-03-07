@@ -11,9 +11,9 @@
 
 [verifytext](#verifytext)
 
-### [3 - Helper Functions](#helper)
+### [3 - Helper Functions - Locators for Testers](#locators)
 
-[helper functions](#helper)
+### [4 - Helper Functions - Other](#helper)
 
 
 <a name="overview"></a>
@@ -105,46 +105,8 @@ Typically you might just get the current URL, the body text and the page source:
 <br />
 
 
-### 3 Helper Functions
-
-<a name="helper"></a>
-
-There are a number of helper functions built into WebInject to make it easier to create
-Selenium test suites.
-
-The following example shows how you can get WebInject to wait up to a maximum of 25 seconds
-for the text `Sign in` to appear.
-
-```
-<case
-    id="10"
-    description1="Get Totaljobs Home Page"
-    method="selenium"
-    command1='$selresp = $driver->get("https://www.totaljobs.com");'
-	command2="$selresp = helper_wait_for_text_visible('Sign in',25);"
-    verifytext="get_current_url,get_body_text"
-    verifypositive="a job you love"
-    verifypositive1="Found sought text"
-/>
-```
-
-Here is a full list of the helper functions.
-
-##### helper_clear_and_send_keys
-
-helper_clear_and_send_keys(`target`, `locator`, `keys`);
-
-```
-command="$selresp = helper_clear_and_send_keys('candidateProfileDetails_txtPostCode','id','WC1X 8TG');"
-```
-
-##### helper_switch_to_window
-
-helper_switch_to_window(`window number`);
-
-```
-command="$selresp = helper_switch_to_window(0);"
-```
+<a name="locators"></a>
+### 3 Helper Functions - Locators for Testers
 
 ##### helper_keys_to_element
 
@@ -220,21 +182,15 @@ helper_check_element_within_pixels(`target`, `id`, `x baseline`, `y baseline`, `
 command="$selresp = helper_check_element_within_pixels('txtEmail','id',193,325,30);"
 ```
 
-##### helper_wait_for_text_present
+##### helper_get_element
 
-helper_wait_for_text_present(`search text`, `timeout`);
+helper_get_element(`anchor[|||instance]`);
 
-```
-command="$selresp = helper_wait_for_text_present('Job title',10);"
-```
+Gets various information about the element targeted by the anchor.
 
-##### helper_wait_for_text_visible
+The information includes the element attributes, the text, and if the element is in the current viewport.
 
-helper_wait_for_text_visible(`search text`,`timeout`,`target`,`locator`);
-
-```
-command="$selresp = helper_wait_for_text_visible('Job title', 10, 'body', 'tag_name');"
-```
+If applicable the currently selected drop down option is returned.
 
 ##### helper_wait_visible
 
@@ -277,5 +233,59 @@ Gets various information about the element targeted by the anchor.
 The information includes the element attributes, the text, and if the element is in the current viewport.
 
 If applicable the currently selected drop down option is returned.
+
+
+
+<a name="helper"></a>
+### 4 Helper Functions - Other
+
+
+##### helper_clear_and_send_keys
+
+helper_clear_and_send_keys(`target`, `locator`, `keys`);
+
+```
+command="$selresp = helper_clear_and_send_keys('candidateProfileDetails_txtPostCode','id','WC1X 8TG');"
+```
+
+##### helper_switch_to_window
+
+helper_switch_to_window(`window number`);
+
+```
+command="$selresp = helper_switch_to_window(0);"
+```
+
+##### helper_wait_for_text_present
+
+helper_wait_for_text_present(`search text`, `timeout`);
+
+```
+command="$selresp = helper_wait_for_text_present('Job title',10);"
+```
+
+##### helper_wait_for_text_visible
+
+helper_wait_for_text_visible(`search text`,`timeout`,`target`,`locator`);
+
+```
+command="$selresp = helper_wait_for_text_visible('Job title', 10, 'body', 'tag_name');"
+```
+
+The following example shows how you can get WebInject to wait up to a maximum of 25 seconds
+for the text `Sign in` to appear.
+```xml
+<case
+    id="10"
+    description1="Get Totaljobs Home Page"
+    method="selenium"
+    command1='$selresp = $driver->get("https://www.totaljobs.com");'
+	command2="$selresp = helper_wait_for_text_visible('Sign in',25);"
+    verifytext="get_current_url,get_body_text"
+    verifypositive="a job you love"
+    verifypositive1="Found sought text"
+/>
+```
+
 
 
