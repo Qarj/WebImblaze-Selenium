@@ -1,4 +1,4 @@
-# WebInject-Selenium
+# WebInject-Selenium 0.1.0
 WebInject, the project found at [https://github.com/Qarj/WebInject](https://github.com/Qarj/WebInject), can also drive Selenium using the Chrome browser.
 
 You have the choice of using the Selenium Server (which I find to be more robust), or you can drive ChromeDriver directly (Java not required!).
