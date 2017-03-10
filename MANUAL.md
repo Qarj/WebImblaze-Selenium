@@ -758,9 +758,9 @@ By default WebInject sets the Selenium page load timeout to 30 seconds. You can 
 to a different value as follows.
 
 ```
-    command="$selresp = $driver->set_timeout('page load', 75_000);"
+    command="$selresp = $driver->set_timeout('page load', 5_000);"
 ```
-Changes page load timeout to 75 seconds.
+Changes page load timeout to 5 seconds.
 
 Setting the page load timeout to a low value can help with pages that have a lot of third party content.
 Sometimes this content can be slow to load, or in fact may never load. Often your test will not
