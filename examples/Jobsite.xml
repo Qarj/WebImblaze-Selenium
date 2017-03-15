@@ -8,7 +8,7 @@
     command1='$selresp = $driver->get("http://www.jobsite.co.uk");'
     command2="$selresp = helper_keys_to_element_before('Job title or skill','Automated Testing');"
     command3="$selresp = helper_keys_to_element_before('Location','London');"
-    command4="$selresp = helper_keys_to_element_before('Distance','20 Miles','SELECT');"
+    command4="$selresp = helper_keys_to_element_before('Distance','15 miles','SELECT');"
     verifytext="get_current_url,get_body_text"
     verifypositive="Automated Testing"
 />
