@@ -179,7 +179,7 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
         $main::results_stdout .= "    [Connecting to Selenium Remote Control server on port $selenium_port]\n";
     }
 
-    my $_max = 3;
+    my $_max = 10;
     my $_try = 0;
 
     ## --load-extension Loads an extension from the specified directory
