@@ -176,11 +176,12 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
 
     if ($main::opt_driver eq 'chrome') {
         $selenium_port = _start_selenium_server();
-        $main::results_stdout .= "    [Connecting to Selenium Remote Control server on port $selenium_port]\n";
+        $main::results_stdout .= "    [Started Selenium Remote Control Standalone server on port $selenium_port]\n";
     }
 
     my $_max = 10;
     my $_try = 0;
+    my $_connect_port;
 
     ## --load-extension Loads an extension from the specified directory
     ## --whitelisted-extension-id
@@ -194,8 +195,9 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
             ## ChromeDriver without Selenium Server or JRE
             if ($main::opt_driver eq 'chromedriver') {
                 my $_port = find_available_port(9585); ## find a free port to bind to, starting from this number
+                $_connect_port = $_port; ## for stdout
                 if ($main::opt_proxy) {
-                    $main::results_stdout .= "    [Starting ChromeDriver without Selenium Server through proxy on port $main::opt_proxy]\n";
+                    $main::results_stdout .= "    [Starting ChromeDriver on port $_port through proxy on port $main::opt_proxy]\n";
                     $driver = Selenium::Chrome->new (binary => $main::opt_chromedriver_binary,
                                                  binary_port => $_port,
                                                  _binary_args => " --port=$_port --url-base=/wd/hub --verbose --log-path=$main::output".'chromedriver.log',
@@ -204,7 +206,7 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
                                                  );
 
                 } else {
-                    $main::results_stdout .= "    [Starting ChromeDriver without Selenium Server]\n";
+                    $main::results_stdout .= "    [Starting ChromeDriver on port $_port]\n";
                     $driver = Selenium::Chrome->new (binary => $main::opt_chromedriver_binary,
                                                  binary_port => $_port,
                                                  _binary_args => " --port=$_port --url-base=/wd/hub --verbose --log-path=$main::output".'chromedriver.log',
@@ -215,6 +217,7 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
 
             ## Chrome
             if ($main::opt_driver eq 'chrome') {
+                $_connect_port = $selenium_port;
                 my $_chrome_proxy = q{};
                 if ($main::opt_proxy) {
                     $main::results_stdout .= qq|    [Starting Chrome with Selenium Server Standalone on port $selenium_port through proxy on port $main::opt_proxy]\n|;
@@ -253,18 +256,22 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
 
         if ( $@ and $_try++ < $_max )
         {
-            print "\n[Selenium Start Error - possible Chrome and ChromeDriver version compatibility issue]\n$@\nFailed try $_try to connect to Selenium Server, retrying...\n\n";
+            print "\n[Selenium Start Error - possible Chrome and ChromeDriver version compatibility issue]\n$@\nFailed try $_try to connect to $main::opt_driver on port $_connect_port, retrying...\n\n";
             sleep 4; ## sleep for 4 seconds, Selenium Server may still be starting up
             redo ATTEMPT;
         }
     } ## end ATTEMPT
 
     if ($@) {
-        print "\nError: $@ Failed to connect on port $main::opt_port after $_max tries\n\n";
+        print "\nError: $@ Failed to connect to $main::opt_driver after $_max tries\n\n";
+        $main::results_xml .= qq|            <success>false</success>\n|;
+        $main::results_xml .= qq|            <result-message>Selenium Connection Fail</result-message>\n|;
+        $main::results_xml .= qq|            <responsetime>0.001</responsetime>\n|;
+        $main::results_xml .= qq|        </testcase>\n|;
         $main::results_xml .= qq|        <testcase id="999999">\n|;
         $main::results_xml .= qq|            <description1>WebInject ended execution early !!!</description1>\n|;
         $main::results_xml .= qq|            <verifynegative>\n|;
-        $main::results_xml .= qq|                <assert>WebInject Aborted - could not connect to Selenium Server</assert>\n|;
+        $main::results_xml .= qq|                <assert>WebInject Aborted - could not connect to $main::opt_driver on port $_connect_port</assert>\n|;
         $main::results_xml .= qq|                <success>false</success>\n|;
         $main::results_xml .= qq|            </verifynegative>\n|;
         $main::results_xml .= qq|            <success>false</success>\n|;
@@ -272,8 +279,8 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
         $main::results_xml .= qq|            <responsetime>0.001</responsetime>\n|;
         $main::results_xml .= qq|        </testcase>\n|;
         $main::case_failed_count++;
-        main::write_final_xml();
-        die "\n\nWebInject Aborted - could not connect to Selenium Server\n";
+        main::final_tasks();
+        die "\n\nWebInject Aborted - could not connect to $main::opt_driver on port $_connect_port\n";
     }
 
     eval { $driver->set_timeout('page load', 30_000); };
