@@ -12,6 +12,7 @@ use vars qw/ $VERSION /;
 
 $VERSION = '0.1.0';
 
+use Time::HiRes 'time','sleep';
 use File::Copy qw(copy), qw(move);
 use Socket qw( PF_INET SOCK_STREAM INADDR_ANY sockaddr_in );
 
