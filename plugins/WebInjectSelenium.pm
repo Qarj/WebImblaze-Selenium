@@ -589,10 +589,11 @@ sub _helper_click_element {
 
 sub _helper_get_element {
 
-    my ($_anchor,$_anchor_instance,$_tag,$_tag_instance) = @_;
+    my ($_anchor,$_anchor_instance,$_tag,$_tag_instance,$_auto_wait) = @_;
     $_anchor_instance //= 1; ## 1 means first instance of anchor
     $_tag //= '*'; ## * means click the tag found by the anchor, whatever it is
     $_tag_instance //= 0; ## -1 means search for the specified tag BEFORE, 1 means search for specified tag after, 0 is an error unless $_tag is '*' 
+    $_auto_wait //= 'true'; ## automatically wait for element to be found if it can not be found immediately
 
     my $_script = _helper_javascript_functions() . q`
 
@@ -670,7 +671,7 @@ sub _helper_get_element {
     my %_response;
     my $_max = 15 - $attempts_since_last_locate_success;
     if ($_max > 10) {$_max = 10};
-    if ($_max < 1) {$_max = 1};
+    if ( ($_max < 1) || ($_auto_wait eq 'false') ) {$_max = 1};
     my $_tries = 0;
     my $_found = 0;
     while ($_tries < $_max && not $_found) {
@@ -813,7 +814,7 @@ sub helper_get_element {
 
     my @_anchor = _unpack_anchor($_anchor_parms);
 
-    my %_element_details = % { _helper_get_element($_anchor[0],$_anchor[1],'*',0) };
+    my %_element_details = % { _helper_get_element($_anchor[0],$_anchor[1],'*',0,'false') };
 
     if (not $_element_details{element}) {return $_element_details{message};}
 
