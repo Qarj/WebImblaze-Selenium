@@ -17,6 +17,7 @@ use File::Copy qw(copy), qw(move);
 use Socket qw( PF_INET SOCK_STREAM INADDR_ANY sockaddr_in );
 
 our ($selresp, $driver, $selenium_port);
+my $attempts_since_last_locate_success = 0;
 
 ## Selenium 2.0 Server support + Running ChromeDriver directly
 #------------------------------------------------------------------
@@ -428,7 +429,7 @@ sub searchimage {  ## search for images in the actual result
 
     for (qw/searchimage searchimage1 searchimage2 searchimage3 searchimage4 searchimage5/) {
         if ($main::case{$_}) {
-            if (-e "$main::case{$_}") { ## imageinimage.py bigimage smallimage markimage
+            if (-e "$main::case{$_}") {
                 if ($_unmarked eq 'true') {
                    copy "$main::opt_publish_full$main::testnum_display$main::jumpbacks_print$main::retries_print.png", "$main::opt_publish_full$main::testnum_display$main::jumpbacks_print$main::retries_print-marked.png";
                    $_unmarked = 'false';
@@ -665,14 +666,40 @@ sub _helper_get_element {
             text : _all_[target_element_index_].text
         }
     `;
-    my $_response = $driver->execute_script($_script,$_anchor,$_anchor_instance,$_tag,$_tag_instance);
+
+    my %_response;
+    my $_max = 15 - $attempts_since_last_locate_success;
+    if ($_max > 10) {$_max = 10};
+    if ($_max < 1) {$_max = 1};
+    my $_tries = 0;
+    my $_found = 0;
+    while ($_tries < $_max && not $_found) {
+        $_tries++;
+
+        %_response = % { $driver->execute_script($_script,$_anchor,$_anchor_instance,$_tag,$_tag_instance) };
+
+        if ($_response{message} =~ /Could not find /) {
+            $attempts_since_last_locate_success++;
+            print " Try $_tries failed [$_anchor]:[$_tag] ...";
+            if ($_tries < $_max) {
+                sleep 1;
+                print "\n";
+            } else {
+                print " ... max attempts reached for element locate\n";
+                $_response{message} .= '[max attempts reached for element locate]';
+            }
+        } else {
+            $_found = 1;
+            $attempts_since_last_locate_success = 0;
+        }
+    }
 
     #print 'Located[debug]' . %{$_response}{message} . "\n  "
     #                            . %{$_response}{element_signature}
     #                            . "\n Element Text [" . %{$_response}{text} . "]"
     #                            . "\n Element Value [" . %{$_response}{element_value} . "]\n";
 
-    return $_response;
+    return \%_response;
 }
 
 sub _helper_focus_element {
