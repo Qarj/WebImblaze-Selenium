@@ -40,7 +40,7 @@ command will run on both Windows and Linux
     method="cmd"
     command1="webinject.pl -o {PROJECT}selftest\output\${feature}server_chrome_sub --driver chrome --chromedriver-binary C:\selenium\chromedriver.exe --selenium-binary C:\selenium\selenium-server-standalone-2.53.1.jar {PROJECT}selftest\substeps\${feature}.xml"
     command2="perl $PWD/webinject.pl -o {PROJECT}selftest\output\${feature}server_chrome_sub --driver chrome --chromedriver-binary $HOME/selenium/chromedriver --selenium-binary $HOME/selenium/selenium-server-standalone-2.53.1.jar {PROJECT}selftest\substeps\${feature}.xml"
-    verifypositive1="__RequestVerificationToken"
+    verifypositive1="AspNetCore.Antiforgery"
     verifypositive2="Test Cases Failed: 0"
     verifypositive3="Started Selenium Remote Control Standalone server on port"
 />
@@ -51,7 +51,7 @@ command will run on both Windows and Linux
     method="cmd"
     command1="webinject.pl -o {PROJECT}selftest\output\${feature}_chromedriver_standalone_sub --driver chromedriver --chromedriver-binary C:\selenium\chromedriver.exe {PROJECT}selftest\substeps\${feature}.xml"
     command2="perl $PWD/webinject.pl -o {PROJECT}selftest\output\${feature}_chromedriver_standalone_sub --driver chromedriver --chromedriver-binary $HOME/selenium/chromedriver {PROJECT}selftest\substeps\${feature}.xml"
-    verifypositive1="__RequestVerificationToken"
+    verifypositive1="AspNetCore.Antiforgery"
     verifypositive2="Test Cases Failed: 0"
     verifypositive3="Starting ChromeDriver on port"
 />

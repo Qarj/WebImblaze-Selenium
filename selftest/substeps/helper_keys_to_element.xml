@@ -3,9 +3,9 @@
 <case
     section="helper_keys_to_element_after"
     id="10"
-    description1="Get RIMATTEST Search Form"
+    description1="Get WEBINJECT-CHECK Search Form"
     method="selenium"
-    command='$selresp = $driver->get("http://{RAN}/Search/SearchForm");'
+    command='$selresp = $driver->get("http://{WIC}/Search/SearchForm");'
     verifytext="get_current_url,get_page_source"
     verifypositive="Search Recipes"
     verifypositive1="Max Preparation Time"
@@ -51,9 +51,9 @@
 <case
     section="helper_keys_to_element_before"
     id="100"
-    description1="Get RIMATTEST Search Form"
+    description1="Get WEBINJECT-CHECK Search Form"
     method="selenium"
-    command='$selresp = $driver->get("http://{RAN}/Search/SearchForm");'
+    command='$selresp = $driver->get("http://{WIC}/Search/SearchForm");'
     verifytext="get_current_url,get_page_source"
     verifypositive="Search Recipes"
     verifypositive1="Max Preparation Time"
@@ -100,9 +100,9 @@
 <case
     section="helper_keys_to_element"
     id="200"
-    description1="Get RIMATTEST Search Form"
+    description1="Get WEBINJECT-CHECK Search Form"
     method="selenium"
-    command='$selresp = $driver->get("http://{RAN}/Search/SearchForm");'
+    command='$selresp = $driver->get("http://{WIC}/Search/SearchForm");'
     verifytext="get_current_url,get_page_source"
     verifypositive="Search Recipes"
     verifypositive1="Max Preparation Time"
@@ -151,9 +151,9 @@
 <case
     section="'INPUT|||3'"
     id="300"
-    description1="Get RIMATTEST Search Form"
+    description1="Get WEBINJECT-CHECK Search Form"
     method="selenium"
-    command='$selresp = $driver->get("http://{RAN}/Search/SearchForm");'
+    command='$selresp = $driver->get("http://{WIC}/Search/SearchForm");'
     verifytext="get_current_url,get_page_source"
     verifypositive="Search Recipes"
     verifypositive1="Max Preparation Time"

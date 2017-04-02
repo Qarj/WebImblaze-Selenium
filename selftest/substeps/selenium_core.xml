@@ -1,11 +1,11 @@
 <testcases repeat="1">
 
 <case
-    section="RIMATTEST Search Form"
+    section="WEBINJECT-CHECK Search Form"
     id="10"
-    description1="Get RIMATTEST Search Form"
+    description1="Get WEBINJECT-CHECK Search Form"
     method="selenium"
-    command='$selresp = $driver->get("http://{RAN}/Search/SearchForm");'
+    command='$selresp = $driver->get("http://{WIC}/Search/SearchForm");'
     command1='$selresp = $driver->get_all_cookies();'
     verifytext="get_page_source,get_current_url"
     verifypositive="Search Recipes"

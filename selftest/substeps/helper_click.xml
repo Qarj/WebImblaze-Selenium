@@ -5,7 +5,7 @@
     id="100"
     description1="Get Search Recipes"
     method="selenium"
-    command='$selresp = $driver->get("http://{RAN}/Search/SearchRecipes");'
+    command='$selresp = $driver->get("http://{WIC}/Search/SearchForm");'
     verifytext="get_current_url,get_page_source"
     verifypositive="Recipe Name"
 />
@@ -37,9 +37,9 @@
 <case
     id="130"
     description1="Click Recipes"
-    description2="Partial Match of an attribute from within string, 3rd instance"
+    description2="Partial Match of an attribute from within string, 4th instance"
     method="selenium"
-    command1="$selresp = helper_click('Recipes|||3');"
+    command1="$selresp = helper_click('Recipes|||4');"
     command2="$selresp = helper_wait_for_text_visible('MaxPrepTime field is required');"
     verifytext="get_current_url,get_body_text"
     verifypositive1="Focused and clicked tag INPUT WITH\[Recipes] OK \(text index 7\)"
@@ -83,7 +83,7 @@
     id="200"
     description1="Get Search Recipes"
     method="selenium"
-    command='$selresp = $driver->get("http://{RAN}/Search/SearchRecipes");'
+    command='$selresp = $driver->get("http://{WIC}/Search/SearchForm");'
     verifytext="get_current_url,get_page_source"
     verifypositive="Recipe Name"
 />

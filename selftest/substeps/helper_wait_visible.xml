@@ -13,7 +13,7 @@
     id="100"
     description1="Get Search Recipes"
     method="selenium"
-    command1='$selresp = $driver->get("http://{RAN}/Search/SearchRecipes");'
+    command1='$selresp = $driver->get("http://{WIC}/Search/SearchForm");'
     command2="$selresp = helper_wait_for_text_visible('Recipe Name');"
     command3="$selresp = helper_wait_visible('Recipe Name');"
     verifytext="get_current_url,get_page_source"
@@ -27,7 +27,7 @@
     id="200"
     description1="Get Search Recipes"
     method="selenium"
-    command1='$selresp = $driver->get("http://{RAN}/Search/SearchRecipes");'
+    command1='$selresp = $driver->get("http://{WIC}/Search/SearchForm");'
     command2="$selresp = helper_wait_visible('ThisIsNotPresent');"
     verifytext="get_current_url,get_page_source"
     verifypositive="Recipe Name"
@@ -48,7 +48,7 @@
     id="1100"
     description1="Get Search Recipes"
     method="selenium"
-    command1='$selresp = $driver->get("http://{RAN}/Search/SearchRecipes");'
+    command1='$selresp = $driver->get("http://{WIC}/Search/SearchForm");'
     command2="$selresp = helper_wait_for_text_visible('Recipe Name');"
     command3="$selresp = helper_wait_not_visible('Recipe Name');"
     verifytext="get_current_url,get_page_source"
@@ -62,7 +62,7 @@
     id="1200"
     description1="Get Search Recipes"
     method="selenium"
-    command1='$selresp = $driver->get("http://{RAN}/Search/SearchRecipes");'
+    command1='$selresp = $driver->get("http://{WIC}/Search/SearchForm");'
     command2="$selresp = helper_wait_not_visible('ThisIsNotPresent');"
     verifytext="get_current_url,get_page_source"
     verifypositive="Recipe Name"

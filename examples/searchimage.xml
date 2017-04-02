@@ -1,16 +1,14 @@
 <testcases repeat="1">
 
-<testvar varname="RIMATTEST">rimattest.azurewebsites.net</testvar>
-
 <case
     varPROJECT="./../WebInject-Selenium/"
     section="Mobile"
     id="100"
-    description1="Get RIMATTEST Home page"
+    description1="Get WEBINJECT-CHECK Home page"
     description2="mobile phone pixel width - 320 wide"
     method="selenium"
     command1="$selresp = $driver->set_window_size(960, 320);"
-    command2="$selresp = $driver->get('http://${RIMATTEST}');"
+    command2="$selresp = $driver->get('http://{WIC}');"
     verifytext="get_page_source"
     verifypositive="automated testing examples"
     searchimage="{PROJECT}examples\search_images\menu_hamburger.png"
@@ -20,11 +18,11 @@
 <case
     section="Desktop"
     id="200"
-    description1="Get RIMATTEST Home page"
+    description1="Get WEBINJECT-CHECK Home page"
     description2="desktop pixel width - 1260 wide"
     method="selenium"
     command1="$selresp = $driver->set_window_size(960, 1260);"
-    command2="$selresp = $driver->get('http://${RIMATTEST}');"
+    command2="$selresp = $driver->get('http://{WIC}');"
     verifytext="get_page_source"
     verifypositive="automated testing examples"
     searchimage="{PROJECT}examples\search_images\menu_desktop.png"
