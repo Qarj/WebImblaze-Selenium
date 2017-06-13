@@ -20,6 +20,7 @@
     verifypositive="Recipe Name"
     verifypositive2="Found sought text visible after"
     verifypositive3="Found sought element visible after"
+    retry="3"
 />
 
 <case
