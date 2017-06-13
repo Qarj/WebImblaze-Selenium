@@ -10,6 +10,7 @@
     verifytext="get_page_source,get_current_url"
     verifypositive="Search Recipes"
     verifypositive1="Max Preparation Time"
+    retry="3"
 />
 
 <!--
