@@ -70,8 +70,7 @@ sub selenium {  ## send Selenium command and read response
        $selresp =~ s{^}{HTTP/1.1 100 OK\n\n}; ## pretend this is an HTTP response - 100 means continue
     }
 
-    my $_end_timer = time; ## we only want to measure the time it took for the commands, not to do the screenshots and verification
-    $main::latency = (int(1000 * ($_end_timer - $_start_timer)) / 1000);  ## elapsed time rounded to thousandths
+    $main::latency = main::_get_latency_since($_start_timer);
 
     _get_verifytext(); ## will be injected into $selresp
     $main::response = HTTP::Response->parse($selresp); ## pretend the response is an http response - inject it into the object
@@ -116,8 +115,7 @@ sub _get_verifytext {
         }
     }
 
-    my $_end_timer = time; ## we only want to measure the time it took for the commands, not to do the screenshots and verification
-    $main::verification_latency = (int(1000 * ($_end_timer - $_start_timer)) / 1000);  ## elapsed time rounded to thousandths
+    $main::verification_latency = main::_get_latency_since($_start_timer);
 
     return;
 }
@@ -143,8 +141,7 @@ sub _screenshot {
         close $_FH or die "\nCould not close page capture file handle\n";
     }
 
-    my $_end_timer = time; ## we only want to measure the time it took for the commands, not to do the screenshots and verification
-    $main::screenshot_latency = (int(1000 * ($_end_timer - $_start_timer)) / 1000);  ## elapsed time rounded to thousandths
+    $main::screenshot_latency = main::_get_latency_since($_start_timer);
 
     return;
 }
