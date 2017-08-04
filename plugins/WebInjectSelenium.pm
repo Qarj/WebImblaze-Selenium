@@ -150,32 +150,21 @@ sub _screenshot {
 sub start_selenium_browser {     ## start Browser using Selenium Server or ChromeDriver
     require Selenium::Remote::Driver;
     require Selenium::Chrome;
-    if (not $main::opt_chromedriver_binary) {
-        die "\n\nYou must specify --chromedriver-binary for Selenium tests\n\n";
-    }
+    
+    _check_and_set_selenium_defaults();
 
-    $main::opt_chromedriver_binary =~ s/(\$[\w{}""]+)/$1/eeg; ## expand perl environment variables like $ENV{"HOME"} / $ENV{"HOMEPATH"}
-    if (not -e $main::opt_chromedriver_binary) {
-        die "\n\nCannot find ChromeDriver at $main::opt_chromedriver_binary\n\n";
-    }
+    _shutdown_any_existing_selenium_session();
 
-    if (defined $driver) { #shut down any existing selenium browser session
-        $main::results_stdout .= "    [\$driver is defined so shutting down Selenium first]\n";
-        shutdown_selenium();
-        ####shutdown_selenium_server($selenium_port);
-        sleep 2.1; ## Sleep for 2.1 seconds, give system a chance to settle before starting new browser
-        $main::results_stdout .= "    [Done shutting down Selenium]\n";
-    }
-
-    $main::opt_driver //= 'chromedriver'; ## if variable is undefined, set to default value
-    $main::opt_driver = lc $main::opt_driver;
-    if ($main::opt_driver ne 'chrome' and $main::opt_driver ne 'chromedriver') {
-        die "\n\n'--driver $main::opt_driver' not recognised - only chrome and chromedriver are supported\n\n";
-    }
-
-    if ($main::opt_driver eq 'chrome') {
-        $selenium_port = _start_selenium_server();
-        $main::results_stdout .= "    [Started Selenium Remote Control Standalone server on port $selenium_port]\n";
+    my $_selenium_host;
+    if (_selenium_host_specified()) {
+        $selenium_port = $main::opt_selenium_port;
+        $_selenium_host = $main::opt_selenium_host;
+    } else {
+        if ($main::opt_driver eq 'chrome') {
+            $selenium_port = _start_selenium_server();
+            $_selenium_host = 'localhost';
+            $main::results_stdout .= "    [Started Selenium Remote Control Standalone server on port $selenium_port]\n";
+        }
     }
 
     my $_max = 10;
@@ -219,22 +208,22 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
                 $_connect_port = $selenium_port;
                 my $_chrome_proxy = q{};
                 if ($main::opt_proxy) {
-                    $main::results_stdout .= qq|    [Starting Chrome with Selenium Server Standalone on port $selenium_port through proxy on port $main::opt_proxy]\n|;
-                    $driver = Selenium::Remote::Driver->new('remote_server_addr' => 'localhost',
+                    $main::results_stdout .= qq|    [Starting Chrome with Selenium Server at $_selenium_host on port $selenium_port through proxy on port $main::opt_proxy]\n|;
+                    $driver = Selenium::Remote::Driver->new('remote_server_addr' => $_selenium_host,
                                                         'port' => $selenium_port,
                                                         'browser_name' => 'chrome',
                                                         'proxy' => {'proxyType' => 'manual', 'httpProxy' => $main::opt_proxy, 'sslProxy' => $main::opt_proxy },
                                                         'extra_capabilities' => {'chromeOptions' => {'args' => ['window-size=1260,968']}}
                                                         );
                 } else {
-                    $main::results_stdout .= "    [Starting Chrome using Selenium Server Standalone on $selenium_port]\n";
-                    $driver = Selenium::Remote::Driver->new('remote_server_addr' => 'localhost',
+                    $main::results_stdout .= "    [Starting Chrome using Selenium Server at $_selenium_host on port $selenium_port]\n";
+                    $driver = Selenium::Remote::Driver->new('remote_server_addr' => $_selenium_host,
                                                         'port' => $selenium_port,
                                                         'browser_name' => 'chrome',
                                                         'extra_capabilities' => {'chromeOptions' => {'args' => ['window-size=1260,968']}}
                                                         );
                 }
-             }
+            }
                                                    # For reference on how to specify options for Chrome
                                                    #
                                                    #'proxy' => {'proxyType' => 'manual', 'httpProxy' => $main::opt_proxy, 'sslProxy' => $main::opt_proxy },
@@ -285,6 +274,62 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
     eval { $driver->set_timeout('page load', 30_000); };
 
     return;
+}
+
+#------------------------------------------------------------------
+
+sub _check_and_set_selenium_defaults {
+
+    if (_selenium_host_specified()) {
+        # great - externally managed
+        $main::opt_selenium_port //= '80';  # default port is 80 - e.g. BrowserStack
+        $main::opt_driver //= 'chrome'; ## set default value for Selenium Grid / Server
+    } else { # check that we can access the chromedriver binary - since WebInject needs to invoke it
+        $main::opt_driver //= 'chromedriver'; ## if no selenium host or driver specified, then we go with the basic chromedriver option - it does not require Java
+
+        if (not $main::opt_chromedriver_binary) {
+            die "\n\nYou must specify --chromedriver-binary for Selenium tests\n\n";
+        }
+    
+        $main::opt_chromedriver_binary =~ s/(\$[\w{}""]+)/$1/eeg; ## expand perl environment variables like $ENV{"HOME"} / $ENV{"HOMEPATH"}
+        if (not -e $main::opt_chromedriver_binary) {
+            die "\n\nCannot find ChromeDriver at $main::opt_chromedriver_binary\n\n";
+        }
+    }
+
+    $main::opt_driver = lc $main::opt_driver;
+    if ($main::opt_driver ne 'chrome' and $main::opt_driver ne 'chromedriver') {
+        die "\n\n'--driver $main::opt_driver' not recognised - only chrome and chromedriver are supported\n\n";
+    }
+    
+    return;
+}
+
+
+#------------------------------------------------------------------
+
+sub _shutdown_any_existing_selenium_session {
+
+    if (defined $driver) {
+        $main::results_stdout .= "    [\$driver is defined so shutting down Selenium session first]\n";
+        shutdown_selenium();
+        sleep 2.1; ## Sleep for 2.1 seconds, give system a chance to settle before starting new browser
+        $main::results_stdout .= "    [Done shutting down Selenium session]\n";
+    }
+
+    return;
+}
+
+#------------------------------------------------------------------
+
+sub _selenium_host_specified {
+    ## if a user has passed WebInject has been passed a selenium host, that means they have spun up their own Selenium Server or are using a remote Selenium Grid
+    ## for robustness I find it is better to let WebInject manage the Selenium Server and Chrome browser instead - it means WebInject can give it a good hard kick up the bum if it becomes unresponsive
+    
+    if (defined $main::opt_selenium_host) {
+        return 1;
+    }
+    return 0;
 }
 
 #------------------------------------------------------------------
@@ -405,6 +450,10 @@ sub shutdown_selenium {
     }
 
     if (not defined $selenium_port) {
+        return;
+    }
+
+    if (_selenium_host_specified()) { ## we are not going to shutdown a user supplied Selenium Server - only ones started by WebInject
         return;
     }
 
