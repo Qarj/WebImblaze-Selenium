@@ -213,27 +213,27 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
                                                         'port' => $selenium_port,
                                                         'browser_name' => 'chrome',
                                                         'proxy' => {'proxyType' => 'manual', 'httpProxy' => $main::opt_proxy, 'sslProxy' => $main::opt_proxy },
-                                                        'extra_capabilities' => {'chromeOptions' => {'args' => ['window-size=1260,968']}}
+                                                        'extra_capabilities' => {'chromeOptions' => {'args' => ['window-size=1260,1568']}}
                                                         );
                 } else {
                     $main::results_stdout .= "    [Starting Chrome using Selenium Server at $_selenium_host on port $selenium_port]\n";
                     $driver = Selenium::Remote::Driver->new('remote_server_addr' => $_selenium_host,
                                                         'port' => $selenium_port,
                                                         'browser_name' => 'chrome',
-                                                        'extra_capabilities' => {'chromeOptions' => {'args' => ['window-size=1260,968']}}
+                                                        'extra_capabilities' => {'chromeOptions' => {'args' => ['window-size=1260,1568']}}
                                                         );
                 }
             }
                                                    # For reference on how to specify options for Chrome
                                                    #
                                                    #'proxy' => {'proxyType' => 'manual', 'httpProxy' => $main::opt_proxy, 'sslProxy' => $main::opt_proxy },
-                                                   #'extra_capabilities' => {'chrome.switches' => ['--proxy-server="http://127.0.0.1:$main::opt_proxy" --incognito --window-size=1260,460'],},
-                                                   #'extra_capabilities' => {'chrome.switches' => ['--incognito --window-size=1260,960']}
-                                                   #'extra_capabilities' => {'chromeOptions' => {'args' => ['incognito','window-size=1260,960']}}
-                                                   #'extra_capabilities' => {'chromeOptions' => {'args' => ['window-size=1260,968']}}
+                                                   #'extra_capabilities' => {'chrome.switches' => ['--proxy-server="http://127.0.0.1:$main::opt_proxy" --incognito --window-size=1260,1568'],},
+                                                   #'extra_capabilities' => {'chrome.switches' => ['--incognito --window-size=1260,1568']}
+                                                   #'extra_capabilities' => {'chromeOptions' => {'args' => ['incognito','window-size=1260,1568']}}
+                                                   #'extra_capabilities' => {'chromeOptions' => {'args' => ['window-size=1260,1568']}}
 
                                                    #'extra_capabilities'
-                                                   #   => {'chromeOptions' => {'args'  =>         ['window-size=1260,960','incognito'],
+                                                   #   => {'chromeOptions' => {'args'  =>         ['window-size=1260,1568','incognito'],
                                                    #                           'prefs' => {'session' => {'restore_on_startup' =>4, 'urls_to_restore_on_startup' => ['http://www.google.com','http://www.example.com']},
                                                    #                                       'first_run_tabs' => ['http://www.mywebsite.com','http://www.google.de']
                                                    #                                      }
