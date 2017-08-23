@@ -170,6 +170,12 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
     my $_max = 10;
     my $_try = 0;
     my $_connect_port;
+    
+    my @_chrome_args;
+    push @_chrome_args, 'window-size=1260,1568';
+    if ($main::opt_headless) {
+        push @_chrome_args, '--headless';
+    }
 
     ## --load-extension Loads an extension from the specified directory
     ## --whitelisted-extension-id
@@ -213,14 +219,14 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
                                                         'port' => $selenium_port,
                                                         'browser_name' => 'chrome',
                                                         'proxy' => {'proxyType' => 'manual', 'httpProxy' => $main::opt_proxy, 'sslProxy' => $main::opt_proxy },
-                                                        'extra_capabilities' => {'chromeOptions' => {'args' => ['window-size=1260,1568']}}
+                                                        'extra_capabilities' => {'chromeOptions' => {'args' => [@_chrome_args]}}
                                                         );
                 } else {
                     $main::results_stdout .= "    [Starting Chrome using Selenium Server at $_selenium_host on port $selenium_port]\n";
                     $driver = Selenium::Remote::Driver->new('remote_server_addr' => $_selenium_host,
                                                         'port' => $selenium_port,
                                                         'browser_name' => 'chrome',
-                                                        'extra_capabilities' => {'chromeOptions' => {'args' => ['window-size=1260,1568']}}
+                                                        'extra_capabilities' => {'chromeOptions' => {'args' => [@_chrome_args]}}
                                                         );
                 }
             }
