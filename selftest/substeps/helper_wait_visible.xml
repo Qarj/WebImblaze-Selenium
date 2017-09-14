@@ -1,9 +1,9 @@
 <testcases repeat="1">
 
 <case
-    section="helper_wait_visible"
+    section="_wait_visible"
     id="10"
-    description1="Info - helper_wait_visible"
+    description1="Info - _wait_visible"
     method="cmd"
     command1='echo NOP'
 />
@@ -13,9 +13,9 @@
     id="100"
     description1="Get Search Recipes"
     method="selenium"
-    command1='$selresp = $driver->get("http://{WIC}/Search/SearchForm");'
-    command2="$selresp = helper_wait_for_text_visible('Recipe Name');"
-    command3="$selresp = helper_wait_visible('Recipe Name');"
+    command1='$driver->get("http://{WIC}/Search/SearchForm")'
+    command2="_wait_for_text_visible('Recipe Name')"
+    command3="_wait_visible('Recipe Name')"
     verifytext="get_current_url,get_page_source"
     verifypositive="Recipe Name"
     verifypositive2="Found sought text visible after"
@@ -28,8 +28,8 @@
     id="200"
     description1="Get Search Recipes"
     method="selenium"
-    command1='$selresp = $driver->get("http://{WIC}/Search/SearchForm");'
-    command2="$selresp = helper_wait_visible('ThisIsNotPresent');"
+    command1='$driver->get("http://{WIC}/Search/SearchForm")'
+    command2="_wait_visible('ThisIsNotPresent')"
     verifytext="get_current_url,get_page_source"
     verifypositive="Recipe Name"
     verifypositive2="Did not find sought element visible, timed out after"
@@ -37,9 +37,9 @@
 />
 
 <case
-    section="helper_wait_not_visible"
+    section="_wait_not_visible"
     id="1000"
-    description1="Info - helper_wait_not_visible"
+    description1="Info - _wait_not_visible"
     method="cmd"
     command1='echo NOP'
 />
@@ -49,9 +49,9 @@
     id="1100"
     description1="Get Search Recipes"
     method="selenium"
-    command1='$selresp = $driver->get("http://{WIC}/Search/SearchForm");'
-    command2="$selresp = helper_wait_for_text_visible('Recipe Name');"
-    command3="$selresp = helper_wait_not_visible('Recipe Name');"
+    command1='$driver->get("http://{WIC}/Search/SearchForm")'
+    command2="_wait_for_text_visible('Recipe Name')"
+    command3="_wait_not_visible('Recipe Name')"
     verifytext="get_current_url,get_page_source"
     verifypositive="Recipe Name"
     verifypositive2="Found sought text visible after"
@@ -63,8 +63,8 @@
     id="1200"
     description1="Get Search Recipes"
     method="selenium"
-    command1='$selresp = $driver->get("http://{WIC}/Search/SearchForm");'
-    command2="$selresp = helper_wait_not_visible('ThisIsNotPresent');"
+    command1='$driver->get("http://{WIC}/Search/SearchForm")'
+    command2="_wait_not_visible('ThisIsNotPresent')"
     verifytext="get_current_url,get_page_source"
     verifypositive="Recipe Name"
     verifypositive2="SUCCESS: Sought element visible not found after"

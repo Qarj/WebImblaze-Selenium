@@ -4,6 +4,16 @@
 ## Release History:
 
 
+### Version 0.2.0 - Sept 14, 2017
+* helper_ functions now simply begin with _
+* `$selresp = ` is no longer needed in the commands, it is added automatically
+* the trailing `;` was never needed and has been removed from all examples
+* fails more gracefully if it is not possible to connect to the Selenium Server or ChromeDriver
+* automatically retry failed `locators for testers` locates
+* use http://webinject-check.azurewebsites.net for self test and examples
+* support external Selenium grid host, e.g. BrowserStack or Sauce Labs
+* support --headless mode in Chrome and increase ViewPort y pixels to 1568
+
 ### Version 0.1.0 - Mar 8, 2017
 * Initial release
     

@@ -1,4 +1,4 @@
-# Manual for WebInject-Selenium version 0.1.0
+# Manual for WebInject-Selenium version 0.2.0
 
 ## [1 - Overview](#overview)
 
@@ -9,25 +9,25 @@
 ## [3 - Helper Functions - Locators for Testers](#locators)
 ### [`target` and `element` parameters described](#target_element)
 ### [`Locators for Testers` helper functions full details](#full_details)
-### [ helper_keys_to_element](#helper_keys_to_element)
-### [ helper_keys_to_element_after](#helper_keys_to_element_after)
-### [ helper_keys_to_element_before](#helper_keys_to_element_before)
-### [ helper_click](#helper_click)
-### [ helper_click_after](#helper_click_after)
-### [ helper_click_before](#helper_click_before)
-### [ helper_get_element](#helper_get_element)
-### [ helper_wait_visible](#helper_wait_visible)
-### [ helper_wait_not_visible](#helper_wait_not_visible)
-### [ helper_scroll_to](#helper_scroll_to)
-### [ helper_move_to](#helper_move_to)
+### [ _keys_to_element](#_keys_to_element)
+### [ _keys_to_element_after](#_keys_to_element_after)
+### [ _keys_to_element_before](#_keys_to_element_before)
+### [ _click](#_click)
+### [ _click_after](#_click_after)
+### [ _click_before](#_click_before)
+### [ _get_element](#_get_element)
+### [ _wait_visible](#_wait_visible)
+### [ _wait_not_visible](#_wait_not_visible)
+### [ _scroll_to](#_scroll_to)
+### [ _move_to](#_move_to)
 ### [ Locators for Testers - Heuristics full details](#heuristics)
 
 ## [4 - Helper Functions - Other](#helper)
-### [ helper_clear_and_send_keys](#helper_clear_and_send_keys)
-### [ helper_switch_to_window](#helper_switch_to_window)
-### [ helper_wait_for_text_present](#helper_wait_for_text_present)
-### [ helper_wait_for_text_visible](#helper_wait_for_text_visible)
-### [ helper_check_element_within_pixels](#helper_check_element_within_pixels)
+### [ _clear_and_send_keys](#_clear_and_send_keys)
+### [ _switch_to_window](#_switch_to_window)
+### [ _wait_for_text_present](#_wait_for_text_present)
+### [ _wait_for_text_visible](#_wait_for_text_visible)
+### [ _check_element_within_pixels](#_check_element_within_pixels)
 
 ## [5 - Hints and tips](#tips)
 ### [ Single quote vs Double quote](#tips)
@@ -48,7 +48,7 @@ A minimal Selenium example looks like the following:
     id="10"
     description1="Get Totaljobs Home Page"
     method="selenium"
-    command='$selresp = $driver->get("https://www.totaljobs.com");'
+    command='$driver->get("https://www.totaljobs.com")'
 />
 ```
 
@@ -62,7 +62,7 @@ The example gets a web page, and automatically takes a screenshot which will be 
 Many different commands are supported, to see them all refer to Selenium::Remote::Driver on cpan which
 can be found here: http://search.cpan.org/~gempesaw/Selenium-Remote-Driver/lib/Selenium/Remote/Driver.pm
 
-In addition, there are many helper_ functions built into this plugin that make working with Selenium very easy. See the
+In addition, there are many helper (start with underscore _) functions built into this plugin that make working with Selenium very easy. See the
 [Helper Functions](#helper) section.
 
 Here is an example that includes an assertion:
@@ -72,7 +72,7 @@ Here is an example that includes an assertion:
     id="10"
     description1="Get Totaljobs Home Page"
     method="selenium"
-    command='$selresp = $driver->get("https://www.totaljobs.com");'
+    command='$driver->get("https://www.totaljobs.com")'
     verifytext="get_current_url,get_body_text,get_page_source"
     verifypositive="a job you love"
 />
@@ -148,9 +148,9 @@ Look at this example:
     id="10"
     description1="Get CWJobs home page and fill out search form"
     method="selenium"
-    command1='$selresp = $driver->get("https://www.cwjobs.co.uk/");'
-    command2="$selresp = helper_keys_to_element_after('What','Automated Testing');"
-    command3="$selresp = helper_keys_to_element_after('Where','London');"
+    command1='$driver->get("https://www.cwjobs.co.uk/")'
+    command2="_keys_to_element_after('What','Automated Testing')"
+    command3="_keys_to_element_after('Where','London')"
 />
 ```
 
@@ -159,7 +159,7 @@ The search form on this website looks like this:
 
 So we can see the labels `What` and `Where`. We see input fields after the labels.
 
-`helper_keys_to_element_after` will send keys to the INPUT element after the target text, in this case `What` and `Where`.
+`_keys_to_element_after` will send keys to the INPUT element after the target text, in this case `What` and `Where`.
 The target text is referred to as the `target` parameter in these 'Locators for Testers' helper functions.
 
 In fact this is the most common scenario, the label will be immediately before corresponding INPUT element.
@@ -170,11 +170,11 @@ After we fill out the search form, we will want to submit it. We can do this as 
     id="20"
     description1="Click Search"
     method="selenium"
-    command1="$selresp = helper_click('Search');"
+    command1="_click('Search')"
 />
 ```
 
-`helper_click` found an element with the text `Search` and clicked it. The Search button.
+`_click` found an element with the text `Search` and clicked it. The Search button.
 
 These locators use heuristics to determine the correct elements to interact with. These heuristics are described in
 detail at the end of this section. For now just understand that high probability matches will be chosen ahead of a low
@@ -187,7 +187,7 @@ is different!
 
 And if there were two `What` input fields fields for some reason? You could target the second one as follows:
 ```
-    command2="$selresp = helper_keys_to_element_after('What|||2','Automated Testing');"
+    command2="_keys_to_element_after('What|||2','Automated Testing')"
 ```
 
 This simply says to use the second match. Most of the time you will not need to do this.
@@ -196,7 +196,7 @@ So how can we select a radius in the drop down combo box (refer back to the sear
 
 This can be done as follows:
 ```
-    command4="$selresp = helper_keys_to_element_after('Where','20 miles','SELECT');"
+    command4="_keys_to_element_after('Where','20 miles','SELECT')"
 ```
 
 Here an additional parameter is introduced, called the `element`. By default we send keys to `INPUT` elements. (Think
@@ -209,7 +209,7 @@ interact with. In this case, as a last resort, the heuristics will look at the e
 So lets say you had a hamburger icon for the menu (often the case for mobile websites) and in the page source you
 discovered it had a name="hamburger_icon", you could target it as follows:
 ```
-    command1="$selresp = helper_click('hamburger_icon');"
+    command1="_click('hamburger_icon')"
 ```
 
 <br />
@@ -223,7 +223,7 @@ discovered it had a name="hamburger_icon", you could target it as follows:
 The target is made up of the text to search for (the `anchor`) and an optional instance number. The instance defaults
 to 1 - i.e. the 1st text that matches the target according to the heuristics.
 
-`helper_keys_to_element('Town, city or postcode|||2','London')`
+`_keys_to_element('Town, city or postcode|||2','London')`
 In this example, `Job title, skill or company` is the target text (refer to the example search form in the Overview).
 `2` says to match the second instance of the target text.
 
@@ -240,16 +240,16 @@ we need to know what type of element to interact with.
 For the helpers that send keys, we don't want to send keys to literally the next element in the DOM after the
 field label. We want to send the keys to the next INPUT element. This is the default.
 
-`helper_keys_to_element_after('Where|||2','London')`
+`_keys_to_element_after('Where|||2','London')`
 In this example, it is implied that we send the keys to the next `INPUT` element after `Where` in the DOM. That is the default.
 
-`helper_keys_to_element_after('Where|||2','London','INPUT')`
+`_keys_to_element_after('Where|||2','London','INPUT')`
 This example is functionally identical.
 
-`helper_keys_to_element_after('Where|||2','London','INPUT|||1')`
+`_keys_to_element_after('Where|||2','London','INPUT|||1')`
 This example is also functionally identical.
 
-`helper_keys_to_element_after('Where|||2','London','INPUT|||2')`
+`_keys_to_element_after('Where|||2','London','INPUT|||2')`
 In this example, the keys are sent to the second `INPUT` element found in the DOM *after* the best
 match of `Where` according to the heuristics.
 
@@ -262,74 +262,74 @@ functions heavily rely on JavaScript for parsing the DOM.
 <a name="full_details"></a>
 ### `Locators for Testers` helper functions full details
 
-<a name="helper_keys_to_element"></a>
-#### helper_keys_to_element
+<a name="_keys_to_element"></a>
+#### _keys_to_element
 
-helper_keys_to_element(`target`,`keys`);
+_keys_to_element(`target`,`keys`)
 
 Will look for some text in the page source, and enter a value to found element. In this example
 the element is found using the placeholder text.
 ```
-    command="$selresp = helper_keys_to_element('Job title, skill or company','WebDriver Jobs');"
+    command="_keys_to_element('Job title, skill or company','WebDriver Jobs')"
 ```
 
 Select "Contract" in the drop down with attribute "optJobType".
 ```
-    command="$selresp = helper_keys_to_element('optJobType','Contract','SELECT');"
+    command="_keys_to_element('optJobType','Contract','SELECT')"
 ```
 
 <br />
 
 
-<a name="helper_keys_to_element_after"></a>
-#### helper_keys_to_element_after
+<a name="_keys_to_element_after"></a>
+#### _keys_to_element_after
 
-helper_keys_to_element_after(`target`,`keys`,[`element`]);
+_keys_to_element_after(`target`,`keys`,[`element`])
 
 Will look for some text in the page source, and enter a value to the following INPUT tag.
 ```
-    command="$selresp = helper_keys_to_element_after('What','WebDriver Jobs');"
+    command="_keys_to_element_after('What','WebDriver Jobs')"
 ```
 
 Select "Contract" in the 2nd drop down after the element targeted by "Job Type".
 ```
-    command="$selresp = helper_keys_to_element_after('Job Type','Contract','SELECT|||2');"
+    command="_keys_to_element_after('Job Type','Contract','SELECT|||2')"
 ```
 
 <br />
 
 
-<a name="helper_keys_to_element_before"></a>
-#### helper_keys_to_element_before
+<a name="_keys_to_element_before"></a>
+#### _keys_to_element_before
 
-Works just like `helper_keys_to_element_after` but will search for a matching element before the anchor text.
+Works just like `_keys_to_element_after` but will search for a matching element before the anchor text.
 
 <br />
 
 
-<a name="helper_click"></a>
-#### helper_click
+<a name="_click"></a>
+#### _click
 
-helper_click(`target`);
+_click(`target`)
 
 Clicks the first element on the page with Yes in it somewhere. Exact matches are priortised over partial matches.
 Element text is prioritised over attribute values.
 ```
-    command="$selresp = helper_click('Yes');"
+    command="_click('Yes')"
 ```
 
 Clicks the second instance that matches `Yes`.
 ```
-    command="$selresp = helper_click('Yes',2);"
+    command="_click('Yes',2)"
 ```
 
 <br />
 
 
-<a name="helper_click_after"></a>
-#### helper_click_after
+<a name="_click_after"></a>
+#### _click_after
 
-helper_click_after(`target`,[`element`]);
+_click_after(`target`,[`element`])
 
 Will click the matching element it finds after the target.
 
@@ -340,7 +340,7 @@ This means any tag named `INPUT`, `BUTTON`, `SELECT` or `A` (link) is a match.
 `1` means first match.
 
 ```
-    command="$selresp = helper_click_after('Yes|||2','BUTTON');"
+    command="_click_after('Yes|||2','BUTTON')"
 ```
 Clicks the first button after the second instance that matches `Yes`.
 
@@ -350,18 +350,18 @@ be ignored if they are considered to be of poorer quality.
 <br />
 
 
-<a name="helper_click_before"></a>
-#### helper_click_before
+<a name="_click_before"></a>
+#### _click_before
 
-Works just like helper_click_after, except that it looks before the matching target.
+Works just like _click_after, except that it looks before the matching target.
 
 <br />
 
 
-<a name="helper_get_element"></a>
-#### helper_get_element
+<a name="_get_element"></a>
+#### _get_element
 
-helper_get_element(`target`);
+_get_element(`target`)
 
 Gets various information about the element targeted by the anchor.
 
@@ -370,7 +370,7 @@ The information includes the element attributes, the text, and if the element is
 If applicable the currently selected drop down option is returned.
 
 ```
-    command="$selresp = helper_get_element('Company Billing Cycle|||2');"
+    command="_get_element('Company Billing Cycle|||2')"
 ```
 
 This example might return something like:
@@ -392,15 +392,15 @@ down the page (out of the currently scrolled to area). Or it might be completely
 <br />
 
 
-<a name="helper_wait_visible"></a>
-#### helper_wait_visible
+<a name="_wait_visible"></a>
+#### _wait_visible
 
-helper_wait_visible(`target`,`[timeout]`);
+_wait_visible(`target`,`[timeout]`)
 
 Waits for the element designated by the anchor to be visible in the current viewport. Default timeout is 5 seconds.
 
 ```
-    command="$selresp = helper_wait_visible('txtJobTitle', 10);"
+    command="_wait_visible('txtJobTitle', 10)"
 ```
 Will wait up to 10 seconds for element with attribute `txtJobTitle` to become visible in the viewport.
 
@@ -426,34 +426,34 @@ It works pretty well but not in all cases. If it does work for your scenario, th
 <br />
 
 
-<a name="helper_wait_not_visible"></a>
-#### helper_wait_not_visible
+<a name="_wait_not_visible"></a>
+#### _wait_not_visible
 
-Works like helper_wait_visible except that it waits until the element targeted by the anchor to be not visible in the current viewport.
+Works like _wait_visible except that it waits until the element targeted by the anchor to be not visible in the current viewport.
 
 <br />
 
 
-<a name="helper_scroll_to"></a>
-#### helper_scroll_to
+<a name="_scroll_to"></a>
+#### _scroll_to
 
-helper_scroll_to(`target`);
+_scroll_to(`target`)
 
 Uses the JavaScript element.scrollIntoView method to scroll the element targeted by the anchor into view.
 
 <br />
 
 
-<a name="helper_move_to"></a>
-#### helper_move_to
+<a name="_move_to"></a>
+#### _move_to
 
-helper_move_to(`target`,`x offset`,`y offset`);
+_move_to(`target`,`x offset`,`y offset`)
 
 Moves the mouse to the element targeted by the anchor. Uses the Selenium command of the same name once the
 target has been found.
 
 ```
-    command="$selresp = helper_move_to('Yes|||2',320,200);"
+    command="_move_to('Yes|||2',320,200)"
 ```
 Moves to an x offset of 320 and a y offset of 200 from the 2nd element with anchor `Yes`.
 
@@ -573,53 +573,53 @@ As per `Phase 1`, however `class three` text is searched.
 ## 4 Helper Functions - Other
 
 
-<a name="helper_clear_and_send_keys"></a>
-#### helper_clear_and_send_keys
+<a name="_clear_and_send_keys"></a>
+#### _clear_and_send_keys
 
-helper_clear_and_send_keys(`target`, `locator`, `keys`);
+_clear_and_send_keys(`target`, `locator`, `keys`)
 
 Commonly when we send keys to an element we want to blank out any existing text first. This helper does that.
 
 Refer to the Selenium::Remote:::Driver documentation on cpan for descriptions on `target` and `locator`.
 
 ```
-    command="$selresp = helper_clear_and_send_keys('candidateProfileDetails_txtPostCode','id','WC1X 8TG');"
+    command="_clear_and_send_keys('candidateProfileDetails_txtPostCode','id','WC1X 8TG')"
 ```
 
 <br />
 
 
-<a name="helper_switch_to_window"></a>
-#### helper_switch_to_window
+<a name="_switch_to_window"></a>
+#### _switch_to_window
 
-helper_switch_to_window(`window number`);
+_switch_to_window(`window number`)
 
 For working with multiple tabs / windows. Refer to the Selenium::Remote:::Driver documentation on cpan.
 
 ```
-    command="$selresp = helper_switch_to_window(0);"
+    command="_switch_to_window(0)"
 ```
 
 Note that if you know the window's name, you don't need to use this helper, you can use the Selenium
 command directly:
 ```
-    command="$selresp = $driver->switch_to_window('Homepage');"
+    command="$driver->switch_to_window('Homepage')"
 ```
 
 <br />
 
 
-<a name="helper_wait_for_text_present"></a>
-#### helper_wait_for_text_present
+<a name="_wait_for_text_present"></a>
+#### _wait_for_text_present
 
-helper_wait_for_text_present(`search text`, `timeout`);
+_wait_for_text_present(`search text`, `timeout`)
 
 Waits for the `search text` to be found in the page source. Waits until the `timeout` has been reached.
 
 When the search text is found, a message will be writen to the response log `Found sought text present`.
 
 ```
-    command="$selresp = helper_wait_for_text_present('Job title',10);"
+    command="_wait_for_text_present('Job title',10)"
 ```
 Wait up to 10 seconds for `Job title` to appear in the page source.
 
@@ -629,8 +629,8 @@ Full example:
     id="520"
     description1="Click 'Connect to Dropbox' button"
     method="selenium"
-    command1='$selresp = $driver->find_element("lnkDropBox","id")->click();'
-    command2="$selresp = helper_wait_for_text_present('Sign in to Dropbox',15);"
+    command1='$driver->find_element("lnkDropBox","id")->click()'
+    command2="_wait_for_text_present('Sign in to Dropbox',15)"
     verifytext="get_current_url,get_body_text"
     verifypositive="Found sought text"
 />
@@ -644,22 +644,22 @@ Found sought text in page source after 1.6 seconds
 <br />
 
 
-<a name="helper_wait_for_text_visible"></a>
-#### helper_wait_for_text_visible
+<a name="_wait_for_text_visible"></a>
+#### _wait_for_text_visible
 
-helper_wait_for_text_visible(`search text`,[`timeout`,`target`,`locator`]);
+_wait_for_text_visible(`search text`,[`timeout`,`target`,`locator`])
 
 `timeout` defaults to 5 seconds
 `target` defaults to 'body'
 `locator` defaults to 'tag_name'
 
 ```
-    command="$selresp = helper_wait_for_text_visible('Job title');"
+    command="_wait_for_text_visible('Job title')"
 ```
 Waits up to 5 seconds for `Job title` to be found in the body text.
 
 ```
-    command="$selresp = helper_wait_for_text_visible(q|my profile and CV|,25,q|label[for='candidateProfile']|,q|css|);"
+    command="_wait_for_text_visible(q|my profile and CV|,25,q|label[for='candidateProfile']|,q|css|)"
 ```
 Waits up to 25 seconds for `my profile and CV` to be found using the given css locator.
 
@@ -670,8 +670,8 @@ for the text `Sign in` to appear.
     id="10"
     description1="Get Totaljobs Home Page"
     method="selenium"
-    command1='$selresp = $driver->get("https://www.totaljobs.com");'
-	command2="$selresp = helper_wait_for_text_visible('Sign in',25);"
+    command1='$driver->get("https://www.totaljobs.com")'
+	command2="_wait_for_text_visible('Sign in',25)"
     verifytext="get_current_url,get_body_text"
     verifypositive="a job you love"
     verifypositive1="Found sought text"
@@ -686,16 +686,16 @@ Found sought text visible after 3.8 seconds
 <br />
 
 
-<a name="helper_check_element_within_pixels"></a>
-#### helper_check_element_within_pixels
+<a name="_check_element_within_pixels"></a>
+#### _check_element_within_pixels
 
-helper_check_element_within_pixels(`target`, `id`, `x baseline`, `y baseline`, `pixel threshold`);
+_check_element_within_pixels(`target`, `id`, `x baseline`, `y baseline`, `pixel threshold`)
 
 If you know an element you appear at a particular location on the page, you can assert that it does
 appear there. A threshold can be specified.
 
 ```
-    command="$selresp = helper_check_element_within_pixels('Edit profile','link_text',860,549,40);"
+    command="_check_element_within_pixels('Edit profile','link_text',860,549,40)"
 ```
 Check that the element identified by the link text 'Edit profile' appears at 860,549 - or within 40 pixels of that location.
 
@@ -718,19 +718,19 @@ includes giving special meaning to certain characters that denote variables. `$`
 
 So it is generally better to write the commands as follows:
 ```
-    command1="$selresp = helper_keys_to_element_after('E-mail','john@example.com');"
+    command1="_keys_to_element_after('E-mail','john@example.com')"
 ```
 In this example WebInject will not get tripped up by the `@` symbol in the email address.
 
 If you had written
 ```
-    command1='$selresp = helper_keys_to_element_after("E-mail","john@example.com");'
+    command1='_keys_to_element_after("E-mail","john@example.com")'
 ```
 Perl would expect a variable `@example` to exist and would throw an error when it couldn't find it.
 
 There is always the option of escaping the special characters with a backslash:
 ```
-    command1='$selresp = helper_keys_to_element_after("E-mail","john\@example.com");'
+    command1='_keys_to_element_after("E-mail","john\@example.com")'
 ```
 
 <br />
@@ -743,7 +743,7 @@ In some cases due to complex CSS locators, you might find yourself running out o
 
 Fortunately with Perl you can make up your own quotes as in this example:
 ```
-    command="$selresp = helper_wait_for_text_visible(q|my profile and CV|,25,q|label[for='candidateProfile']|,q|css|);"
+    command="_wait_for_text_visible(q|my profile and CV|,25,q|label[for='candidateProfile']|,q|css|)"
 ```
 
 Just use a `q` then immediately following the character you want to act as a quote.
@@ -758,7 +758,7 @@ By default WebInject sets the Selenium page load timeout to 30 seconds. You can 
 to a different value as follows.
 
 ```
-    command="$selresp = $driver->set_timeout('page load', 5_000);"
+    command="$driver->set_timeout('page load', 5_000)"
 ```
 Changes page load timeout to 5 seconds.
 
@@ -773,7 +773,7 @@ depend on it at all - for example, banner ads and tracking tags.
 ### Switch to iframe example
 
 ```
-    command="$selresp = $driver->switch_to_frame($driver->find_element(q|iframe[title='Third party frame']|,'css'));"
+    command="$driver->switch_to_frame($driver->find_element(q|iframe[title='Third party frame']|,'css'))"
 ```
 
 <br />
@@ -783,7 +783,7 @@ depend on it at all - for example, banner ads and tracking tags.
 ### Set window size to emulate Mobile view port
 
 ```
-    command1="$selresp = $driver->set_window_size(960, 340);"
+    command1="$driver->set_window_size(960, 340)"
 ```
 The pixels down is given first, then across.
 
@@ -796,7 +796,7 @@ The pixels down is given first, then across.
 You can execute some JavaScript to interact with the page.
 
 ```
-	command="$selresp = $driver->execute_script(q|return analytics.Campaign;|);"
+	command="$driver->execute_script(q|return analytics.Campaign;|)"
 ```
 Will return the value of the variable `analytics.Campaign`.
 

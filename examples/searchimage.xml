@@ -7,12 +7,12 @@
     description1="Get WEBINJECT-CHECK Home page"
     description2="mobile phone pixel width - 320 wide"
     method="selenium"
-    command1="$selresp = $driver->set_window_size(960, 320);"
-    command2="$selresp = $driver->get('http://{WIC}');"
+    command1="$driver->set_window_size(960, 320)"
+    command2="$driver->get('http://{WIC}')"
     verifytext="get_page_source"
-    verifypositive="automated testing examples"
-    searchimage="{PROJECT}examples\search_images\menu_hamburger.png"
-    searchimage1="{PROJECT}examples\search_images\content_vertical_mobile.png"
+    verifypositive="WebInject is a powerful free automated test tool"
+    searchimage1="{PROJECT}examples\search_images\menu_hamburger.png"
+    searchimage2="{PROJECT}examples\search_images\Learn_more.png"
 />
 
 <case
@@ -21,12 +21,12 @@
     description1="Get WEBINJECT-CHECK Home page"
     description2="desktop pixel width - 1260 wide"
     method="selenium"
-    command1="$selresp = $driver->set_window_size(960, 1260);"
-    command2="$selresp = $driver->get('http://{WIC}');"
+    command1="$driver->set_window_size(960, 1260)"
+    command2="$driver->get('http://{WIC}')"
     verifytext="get_page_source"
-    verifypositive="automated testing examples"
-    searchimage="{PROJECT}examples\search_images\menu_desktop.png"
-    searchimage1="{PROJECT}examples\search_images\content_horizontal_desktop.png"
+    verifypositive="WebInject is a powerful free automated test tool"
+    searchimage1="{PROJECT}examples\search_images\menu_desktop.png"
+    searchimage2="{PROJECT}examples\search_images\Learn_more.png"
 />
 
 

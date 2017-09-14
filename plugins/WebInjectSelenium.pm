@@ -10,7 +10,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '0.1.0';
+$VERSION = '0.2.0';
 
 use Time::HiRes 'time','sleep';
 use File::Copy qw(copy), qw(move);
@@ -37,8 +37,8 @@ sub selenium {  ## send Selenium command and read response
             my $_command = $main::case{$_};
             undef $selresp;
             my $_selenium_exception;
-            my $_eval_response = eval { eval "$_command"; if ($@) { $_selenium_exception = $@; } }; ## no critic(ProhibitStringyEval)
-            
+            eval { $selresp = eval "$_command"; if ($@) { $_selenium_exception = $@; } }; ## no critic(ProhibitStringyEval)
+
              #$main::results_stdout .= "EVALRESP:$_eval_response\n";
             if (defined $selresp) { ## phantomjs does not return a defined response sometimes
                 if (($selresp =~ m/(^|=)HASH\b/) || ($selresp =~ m/(^|=)ARRAY\b/)) { ## check to see if we have a HASH or ARRAY object returned
@@ -487,7 +487,7 @@ sub searchimage {  ## search for images in the actual result
                    $_unmarked = 'false';
                 }
 
-                my $_search_image_script = main::slash_me('plugins/search-image.py');
+                my $_search_image_script = main::slash_me('python plugins/search-image.py');
                 my $_image_in_image_result = (`$_search_image_script $main::opt_publish_full$main::testnum_display$main::jumpbacks_print$main::retries_print.png "$main::case{$_}" $main::opt_publish_full$main::testnum_display$main::jumpbacks_print$main::retries_print-marked.png`);
 
                 $_image_in_image_result =~ m/primary confidence (\d+)/s;
@@ -544,8 +544,8 @@ sub searchimage {  ## search for images in the actual result
 #------------------------------------------------------------------
 # helpers - Locators for Testers
 #------------------------------------------------------------------
-sub helper_keys_to_element { ## usage: helper_keys_to_element(anchor|||instance,keys);
-                             ##        helper_keys_to_element('E.g. Regional Manager','Test Automation Architect');
+sub _keys_to_element { ## usage: _keys_to_element(anchor|||instance,keys);
+                       ##        _keys_to_element('E.g. Regional Manager','Test Automation Architect');
 
     my ($_anchor_parms,$_keys) = @_;
 
@@ -554,10 +554,10 @@ sub helper_keys_to_element { ## usage: helper_keys_to_element(anchor|||instance,
     return _helper_keys_to_element($_anchor[0],$_anchor[1],'*',0,$_keys);
 }
 
-sub helper_keys_to_element_after { ## usage: helper_keys_to_element_after(anchor|||instance,keys,tag|||instance);
-                                   ##        helper_keys_to_element_after('Where','London');               # will default to 'INPUT'
-                                   ##        helper_keys_to_element_after('Job Type','Contract','SELECT');
-                                   ##        helper_keys_to_element_after('What|||1','Test Automation','INPUT|||2');
+sub _keys_to_element_after { ## usage: _keys_to_element_after(anchor|||instance,keys,tag|||instance);
+                             ##        _keys_to_element_after('Where','London');               # will default to 'INPUT'
+                             ##        _keys_to_element_after('Job Type','Contract','SELECT');
+                             ##        _keys_to_element_after('What|||1','Test Automation','INPUT|||2');
 
     my ($_anchor_parms,$_keys,$_tag_parms) = @_;
 
@@ -567,10 +567,10 @@ sub helper_keys_to_element_after { ## usage: helper_keys_to_element_after(anchor
     return _helper_keys_to_element($_anchor[0],$_anchor[1],$_tag[0],$_tag[1],$_keys);
 }
 
-sub helper_keys_to_element_before { ## usage: helper_keys_to_element_before(anchor|||instance,keys,tag|||instance);
-                                    ##        helper_keys_to_element_before('Where','London');               # will default tag to 'INPUT'
-                                    ##        helper_keys_to_element_before('Job Type','Contract','SELECT');
-                                    ##        helper_keys_to_element_before('Job Type|||2','Contract','SELECT|||2');
+sub _keys_to_element_before { ## usage: _keys_to_element_before(anchor|||instance,keys,tag|||instance);
+                              ##        _keys_to_element_before('Where','London');               # will default tag to 'INPUT'
+                              ##        _keys_to_element_before('Job Type','Contract','SELECT');
+                              ##        _keys_to_element_before('Job Type|||2','Contract','SELECT|||2');
 
     my ($_anchor_parms,$_keys,$_tag_parms) = @_;
 
@@ -733,12 +733,12 @@ sub _helper_get_element {
 
         if ($_response{message} =~ /Could not find /) {
             $attempts_since_last_locate_success++;
-            print " Try $_tries failed [$_anchor]:[$_tag] ...";
+            print " Try $_tries of $_max failed [$_anchor]:[$_tag] ...";
             if ($_tries < $_max) {
                 sleep 1;
                 print "\n";
             } else {
-                print " ... max attempts reached for element locate\n";
+                print " ... max attempts reached for element locate, auto_wait[$_auto_wait]\n";
                 $_response{message} .= '[max attempts reached for element locate]';
             }
         } else {
@@ -781,9 +781,9 @@ sub _helper_focus_element {
     return \%_element_details;
 }
 
-sub helper_move_to { ## usage: helper_move_to(anchor|||instance,x offset, y offset]);
-                     ## usage: helper_move_to('Yes');
-                     ## usage: helper_move_to('Yes|||2',320,200);
+sub _move_to { ## usage: _move_to(anchor|||instance,x offset, y offset]);
+               ## usage: _move_to('Yes');
+               ## usage: _move_to('Yes|||2',320,200);
 
     my ($_anchor_parms,$_x_offset,$_y_offset) = @_;
 
@@ -801,9 +801,9 @@ sub helper_move_to { ## usage: helper_move_to(anchor|||instance,x offset, y offs
     return 'Found' . $_element_details{message} . ' then moved mouse';
 }
 
-sub helper_scroll_to { ## usage: helper_scroll_to(anchor|||instance);
-                       ## usage: helper_scroll_to('Yes');
-                       ## usage: helper_scroll_to('Yes|||2');
+sub _scroll_to { ## usage: _scroll_to(anchor|||instance);
+                 ## usage: _scroll_to('Yes');
+                 ## usage: _scroll_to('Yes|||2');
 
     my ($_anchor_parms) = @_;
 
@@ -825,9 +825,9 @@ sub helper_scroll_to { ## usage: helper_scroll_to(anchor|||instance);
     return 'Found' . $_element_details{message} . ' then scrolled into view';
 }
 
-sub helper_click { ## usage: helper_click(anchor|||instance]);
-                   ## usage: helper_click('Yes');
-                   ## usage: helper_click('Yes|||2');
+sub _click { ## usage: _click(anchor|||instance]);
+             ## usage: _click('Yes');
+             ## usage: _click('Yes|||2');
 
     my ($_anchor_parms) = @_;
 
@@ -836,7 +836,7 @@ sub helper_click { ## usage: helper_click(anchor|||instance]);
     return %{_helper_click_element($_anchor[0],$_anchor[1],'*',0)}{message};
 }
 
-sub helper_click_after { ## usage: helper_click_after(anchor|||instance[,element|||instance]);
+sub _click_after { ## usage: _click_after(anchor|||instance[,element|||instance]);
 
     my ($_anchor_parms,$_tag_parms) = @_;
     $_tag_parms //= 'INPUT|BUTTON|SELECT|A';
@@ -847,7 +847,7 @@ sub helper_click_after { ## usage: helper_click_after(anchor|||instance[,element
     return %{_helper_click_element($_anchor[0],$_anchor[1],$_tag[0],$_tag[1])}{message};
 }
 
-sub helper_click_before { ## usage: helper_click_before(anchor|||instance);
+sub _click_before { ## usage: _click_before(anchor|||instance);
 
     my ($_anchor_parms,$_tag_parms) = @_;
     $_tag_parms //= 'INPUT|BUTTON|SELECT|A';
@@ -860,7 +860,7 @@ sub helper_click_before { ## usage: helper_click_before(anchor|||instance);
     return %{_helper_click_element($_anchor[0],$_anchor[1],$_tag[0],$_tag[1])}{message};
 }
 
-sub helper_get_element {
+sub _get_element {
 
     my ($_anchor_parms) = @_;
 
@@ -941,7 +941,7 @@ sub helper_get_element {
     return $_basic_info . $_extra_info;
 }
 
-sub helper_wait_visible { ## usage: helper_wait_visible(anchor|||instance,timeout);
+sub _wait_visible { ## usage: _wait_visible(anchor|||instance,timeout);
 
     my ($_anchor_parms,$_timeout) = @_;
     $_timeout //= 5;
@@ -951,14 +951,14 @@ sub helper_wait_visible { ## usage: helper_wait_visible(anchor|||instance,timeou
 
     $main::results_stdout .= "WAIT VISIBLE IN VIEWPORT: [$_anchor_parms] TIMEOUT[$_timeout]\n";
 
-    my $_search_expression = '@_response = helper_get_element($_target);'; ## no critic(RequireInterpolationOfMetachars)
+    my $_search_expression = '@_response = _get_element($_target);'; ## no critic(RequireInterpolationOfMetachars)
     my $_found_expression = 'if ($__response =~ m/inViewport\[1]/) { return q|true|; }  else { return; }'; ## no critic(RequireInterpolationOfMetachars)
 
     return _wait_for_item_present($_search_expression, $_found_expression, $_timeout, 'element visible', 'NA', $_anchor_parms);
 
 }
 
-sub _wait_for_item_present {
+sub _wait_for_item_present { ##should be named _helper_wait_for_item_present
 
     my ($_search_expression, $_found_expression, $_timeout, $_message_fragment, $_search_text, $_target, $_locator) = @_;
 
@@ -993,7 +993,7 @@ sub _wait_for_item_present {
     return $_message;
 }
 
-sub helper_wait_not_visible { ## usage: helper_wait_not_visible(anchor|||instance,timeout);
+sub _wait_not_visible { ## usage: _wait_not_visible(anchor|||instance,timeout);
 
     my ($_anchor_parms,$_timeout) = @_;
     $_timeout //= 5;
@@ -1003,14 +1003,14 @@ sub helper_wait_not_visible { ## usage: helper_wait_not_visible(anchor|||instanc
 
     $main::results_stdout .= "WAIT NOT VISIBLE IN VIEWPORT: [$_anchor_parms] TIMEOUT[$_timeout]\n";
 
-    my $_search_expression = '@_response = helper_get_element($_anchor_parms);'; ## no critic(RequireInterpolationOfMetachars)
+    my $_search_expression = '@_response = _get_element($_anchor_parms);'; ## no critic(RequireInterpolationOfMetachars)
     my $_found_expression = 'if ($__response =~ m/inViewport\[1]/) { return q|true|; }  else { return; }'; ## no critic(RequireInterpolationOfMetachars)
 
     return _wait_for_item_not_present($_search_expression, $_found_expression, $_timeout, 'element visible', 'NA', $_anchor_parms);
 
 }
 
-sub _wait_for_item_not_present {
+sub _wait_for_item_not_present { ## should be named _helper_wait_for_item_not_present
 
     my ($_search_expression, $_found_expression, $_timeout, $_message_fragment, $_search_text, $_anchor_parms) = @_;
 
@@ -1277,7 +1277,7 @@ sub _unpack_tag {
 #------------------------------------------------------------------
 # helpers - Other helpers
 #------------------------------------------------------------------
-sub helper_clear_and_send_keys { ## usage: helper_clear_and_send_keys(Search Target, Locator, Keys);
+sub _clear_and_send_keys { ## usage: helper_clear_and_send_keys(Search Target, Locator, Keys);
                                  ##        helper_clear_and_send_keys('candidateProfileDetails_txtPostCode','id','WC1X 8TG');
 
     my ($_search_target, $_locator, $_keys) = @_;
@@ -1288,7 +1288,7 @@ sub helper_clear_and_send_keys { ## usage: helper_clear_and_send_keys(Search Tar
     return $_response;
 }
 
-sub helper_switch_to_window { ## usage: helper_switch_to_window(window number);
+sub _switch_to_window { ## usage: helper_switch_to_window(window number);
                               ##        helper_switch_to_window(0);
                               ##        helper_switch_to_window(1);
     my ($_window_number) = @_;
@@ -1301,7 +1301,7 @@ sub helper_switch_to_window { ## usage: helper_switch_to_window(window number);
     return 'Handles:' . Data::Dumper::Dumper($_handles) . $_response;
 }
 
-sub helper_wait_for_text_present { ## usage: helper_wait_for_text_present('Search Text',Timeout);
+sub _wait_for_text_present { ## usage: helper_wait_for_text_present('Search Text',Timeout);
                                    ##        helper_wait_for_text_present('Job title',10);
                                    ##
                                    ## waits for text to appear in page source
@@ -1317,7 +1317,7 @@ sub helper_wait_for_text_present { ## usage: helper_wait_for_text_present('Searc
 
 }
 
-sub helper_wait_for_text_visible { ## usage: helper_wait_for_text_visible('Search Text', timeout, 'target', 'locator');
+sub _wait_for_text_visible { ## usage: helper_wait_for_text_visible('Search Text', timeout, 'target', 'locator');
                                    ##        helper_wait_for_text_visible('Job title', 10, 'body', 'tag_name');
                                    ##
                                    ## Waits for text to appear visible in the body text. This function can sometimes be very slow on some pages.
@@ -1336,7 +1336,7 @@ sub helper_wait_for_text_visible { ## usage: helper_wait_for_text_visible('Searc
 
 }
 
-sub helper_check_element_within_pixels {     ## usage: helper_check_element_within_pixels(searchTarget,id,xBase,yBase,pixelThreshold);
+sub _check_element_within_pixels {     ## usage: helper_check_element_within_pixels(searchTarget,id,xBase,yBase,pixelThreshold);
                                              ##        helper_check_element_within_pixels('txtEmail','id',193,325,30);
 
     my ($_search_target, $_locator, $_x_base, $_y_base, $_pixel_threshold) = @_;

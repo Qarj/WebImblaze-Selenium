@@ -5,9 +5,9 @@
     id="100"
     description1="Fill out StepStone search form"
     method="selenium"
-    command1='$selresp = $driver->get("https://www.stepstone.de/");'
-    command2="$selresp = helper_keys_to_element('Jobtitel, Firmenname','Test Automation');"
-    command3="$selresp = helper_keys_to_element('Ort oder 5','Berlin');"
+    command1='$driver->get("https://www.stepstone.de/")'
+    command2="_keys_to_element('Jobtitel, Kompetenz','Test Automation')"
+    command3="_keys_to_element('Ort oder 5','Berlin')"
     verifytext="get_current_url,get_body_text"
     verifypositive="Job nach Berufsfeld"
 />
@@ -16,8 +16,8 @@
     id="110"
     description1="Click Suchen"
     method="selenium"
-    command1="$selresp = helper_click('Suchen');"
-    command2="$selresp = helper_wait_for_text_visible('Ihre Suche nach');"
+    command1="_click('Suchen')"
+    command2="_wait_for_text_visible('Ihre Suche nach')"
     verifytext="get_current_url,get_body_text"
     verifypositive="Found sought text"
 />
@@ -26,18 +26,18 @@
     id="120"
     description1="Click Sortieren nach"
     method="selenium"
-    command1="$selresp = helper_click('Sortieren nach');"
-    command2="$selresp = helper_wait_for_text_visible('Datum');"
+    command1="_click('Datum')"
+    command2="_wait_for_text_visible('Ihre Suche nach')"
     verifytext="get_current_url,get_body_text"
     verifypositive="Found sought text"
 />
 
 <case
     id="130"
-    description1="Click Datum"
+    description1="Click Suche speichern"
     method="selenium"
-    command1="$selresp = helper_click('Datum');"
-    command2="$selresp = helper_wait_for_text_visible('Sortieren nach Datum');"
+    command1="_click('Suche speichern')"
+    command2="_wait_for_text_visible('Wohin sollen wir')"
     verifytext="get_current_url,get_body_text"
 />
 

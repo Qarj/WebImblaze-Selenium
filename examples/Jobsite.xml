@@ -5,37 +5,40 @@
     id="100"
     description1="Fill out Jobsite search form"
     method="selenium"
-    command1='$selresp = $driver->get("http://www.jobsite.co.uk");'
-    command2="$selresp = helper_keys_to_element_before('Job title or skill','Automated Testing');"
-    command3="$selresp = helper_keys_to_element_before('Location','London');"
-    command4="$selresp = helper_keys_to_element_before('Distance','15 miles','SELECT');"
+    command1='$driver->get("http://www.jobsite.co.uk")'
+    command2="_keys_to_element_before('Job title or skill','Automated Testing')"
+    command3="_keys_to_element_before('Location','London')"
+    command4="_keys_to_element_before('Distance','15 miles','SELECT')"
     verifytext="get_current_url,get_body_text"
     verifypositive="Automated Testing"
 />
 
 <case
+    varSPOTLIGHT_PRESENT=""
     id="110"
     description1="Click Search"
     method="selenium"
-    command1="$selresp = helper_click('Search');"
-    command2="$selresp = helper_wait_for_text_visible('Automated Testing jobs');"
+    command1="_click('Search')"
+    command2="_wait_for_text_visible('Automated Testing jobs')"
     verifytext="get_current_url,get_body_text"
     verifypositive="Found sought text"
+    pareseresponseSPOTLIGHT_PRESENT="(spotlight_dismiss)|regex|"
 />
 
 <case
     id="120"
-    description1="Dismiss 'Get new jobs' spotlight"
+    description1="Dismiss 'Get new jobs' spotlight - [{SPOTLIGHT_PRESENT}]"
     method="selenium"
-    command1="$selresp = helper_click('spotlight_dismiss');"
+    command1="_click('spotlight_dismiss')"
     verifytext="get_current_url,get_body_text"
+    runif="{SPOTLIGHT_PRESENT}"
 />
 
 <case
     id="130"
     description1="Sort jobs by date"
     method="selenium"
-    command1="$selresp = helper_keys_to_element_after('sortby', ' Date', 'SELECT');"
+    command1="_keys_to_element_after('sortby', ' Date', 'SELECT')"
     verifytext="get_current_url,get_body_text"
 />
 
@@ -43,7 +46,7 @@
     id="140"
     description1="Click 'Refine Search'"
     method="selenium"
-    command1="$selresp = helper_click('Refine Search');"
+    command1="_click('Refine Search')"
     verifytext="get_current_url,get_body_text"
     verifypositive="Advanced Search"
 />
@@ -52,7 +55,7 @@
     id="150"
     description1="Enter 'Test Manager' into 'Job Title'"
     method="selenium"
-    command1="$selresp = helper_keys_to_element_after('Job Title', 'Test Manager');"
+    command1="_keys_to_element_after('Job Title', 'Test Manager')"
     verifytext="get_current_url,get_body_text"
 />
 

@@ -1,4 +1,4 @@
-# WebInject-Selenium 0.1.0
+# WebInject-Selenium 0.2.0
 WebInject, the project found at [https://github.com/Qarj/WebInject](https://github.com/Qarj/WebInject), can also drive Selenium using the Chrome browser.
 
 You have the choice of using the Selenium Server (which I find to be more robust), or you can drive ChromeDriver directly (Java not required!).
@@ -35,10 +35,10 @@ Copy and paste the following into the file and save it.
     id="10"
     description1="Get CWJobs home page and fill out search form"
     method="selenium"
-    command1='$selresp = $driver->get("https://www.cwjobs.co.uk/");'
-    command2="$selresp = helper_keys_to_element_after('What','test');"
-    command3="$selresp = helper_keys_to_element('Town, city or postcode','London');"
-    command4="$selresp = helper_keys_to_element_after('Where','20 miles','SELECT');"
+    command1='$driver->get("https://www.cwjobs.co.uk/")'
+    command2="_keys_to_element_after('What','test')"
+    command3="_keys_to_element('Town, city or postcode','London')"
+    command4="_keys_to_element_after('Where','20 miles','SELECT')"
     verifytext="get_current_url,get_body_text"
     verifypositive1="home for tech jobs"
     verifypositive2="Companies hiring"
@@ -48,8 +48,8 @@ Copy and paste the following into the file and save it.
     id="20"
     description1="Click Search"
     method="selenium"
-    command1="$selresp = helper_click('Search');"
-    command2="$selresp = helper_wait_for_text_visible('Explore results',25);"
+    command1="_click('Search')"
+    command2="_wait_for_text_visible('Explore results',25)"
     verifytext="get_current_url,get_body_text,get_page_source"
     verifypositive1="Found sought text"
     verifypositive2="Test jobs in London \+ 20 miles"
@@ -59,8 +59,8 @@ Copy and paste the following into the file and save it.
     id="30"
     description1="Click on heading for first job ad on search results to see job details"
     method="selenium"
-    command1="$selresp = helper_click('See details for');"
-    command2="$selresp = helper_wait_for_text_visible('Back to search results',25);"
+    command1="_click('See details for')"
+    command2="_wait_for_text_visible('Back to search results',25)"
     verifytext="get_current_url,get_body_text"
     verifypositive1="Found sought text"
     verifypositive2="Next job"
@@ -193,7 +193,7 @@ http://search.cpan.org/perldoc/Selenium::Remote::Driver
 
 There are further examples in the `examples` and `selftest\substeps` folders of this project.
 
-The [WebInject-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the helper_ functions available.
+The [WebInject-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the helper (start with underscore _) functions available.
 
 ### Linux
 

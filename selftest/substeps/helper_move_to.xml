@@ -1,12 +1,12 @@
 <testcases repeat="1">
 
 <case
-    section="helper_move_to"
+    section="_move_to"
     id="10"
     description1="Get Totaljobs Home Page"
     method="selenium"
-    command='$selresp = $driver->get("https://www.totaljobs.com");'
-    command1="$selresp = helper_get_element('Copyright and database rights');"
+    command='$driver->get("https://www.totaljobs.com")'
+    command1="_get_element('Copyright and database rights')"
     verifytext="get_current_url,get_body_text"
     verifypositive="Companies hiring"
     retry="3"
@@ -16,7 +16,7 @@
     id="20"
     description1="Check that Register CV is in viewport (top right)"
     method="selenium"
-    command1="$selresp = helper_get_element('Register CV');"
+    command1="_get_element('Register CV')"
     verifytext="get_current_url"
     verifypositive1="inViewport\[1]"
 />
@@ -25,7 +25,7 @@
     id="30"
     description1="Check that StepStone Deutschland is not in viewport (very bottom of page left)"
     method="selenium"
-    command1="$selresp = helper_get_element('StepStone Deutschland');"
+    command1="_get_element('StepStone Deutschland')"
     verifytext="get_current_url"
     verifypositive1="inViewport\[0]"
 />
@@ -34,7 +34,7 @@
     id="40"
     description1="Move mouse to Copyright message"
     method="selenium"
-    command1="$selresp = helper_move_to('Copyright and database rights');"
+    command1="_move_to('Copyright and database rights')"
     verifytext="get_current_url"
 />
 
@@ -42,7 +42,7 @@
     id="50"
     description1="Check that Register CV is now NOT in viewport (top right)"
     method="selenium"
-    command1="$selresp = helper_get_element('Register CV');"
+    command1="_get_element('Register CV')"
     verifytext="get_current_url"
     verifypositive1="inViewport\[0]"
 />
@@ -51,7 +51,7 @@
     id="60"
     description1="Check that StepStone Deutschland is now IN viewport (very bottom of page left)"
     method="selenium"
-    command1="$selresp = helper_get_element('StepStone Deutschland');"
+    command1="_get_element('StepStone Deutschland')"
     verifytext="get_current_url"
     verifypositive1="inViewport\[1]"
 />
