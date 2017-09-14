@@ -1365,4 +1365,27 @@ sub _check_element_within_pixels {     ## usage: helper_check_element_within_pix
     return $_message;
 }
 
+sub print_usage {
+        print <<'EOB'
+
+Additional Webinject-Selenium plugin options:
+
+-d|--driver chrome|chromedriver   --driver chrome
+-r|--chromedriver-binary          --chromedriver-binary C:\selenium-server\chromedriver.exe
+-s|--selenium-binary              --selenium-binary C:\selenium-server\selenium-server-standalone-2.53.1.jar
+-t|--selenium-host                --selenium-host 10.44.1.2
+-p|--selenium-port                --selenium-port 4444
+-l|--headless                     --headless
+EOB
+    ;
+
+    return;
+}
+
+sub print_version {
+    print "WebInject-Selenium plugin version $VERSION\nFor more info: https://github.com/Qarj/WebInject-Selenium\n\n";
+
+    return;
+}
+
 1;
