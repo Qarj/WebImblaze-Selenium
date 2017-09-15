@@ -1365,6 +1365,7 @@ sub _check_element_within_pixels {     ## usage: helper_check_element_within_pix
     return $_message;
 }
 
+#------------------------------------------------------------------
 sub print_usage {
         print <<'EOB'
 
