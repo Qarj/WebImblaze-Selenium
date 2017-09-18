@@ -196,7 +196,8 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
                                                  binary_port => $_port,
                                                  _binary_args => " --port=$_port --url-base=/wd/hub --verbose --log-path=$main::output".'chromedriver.log',
                                                  'browser_name' => 'chrome',
-                                                 'proxy' => {'proxyType' => 'manual', 'httpProxy' => $main::opt_proxy, 'sslProxy' => $main::opt_proxy }
+                                                 'proxy' => {'proxyType' => 'manual', 'httpProxy' => $main::opt_proxy, 'sslProxy' => $main::opt_proxy },
+                                                 'extra_capabilities' => {'chromeOptions' => {'args' => [@_chrome_args]}}
                                                  );
 
                 } else {
@@ -204,7 +205,8 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
                     $driver = Selenium::Chrome->new (binary => $main::opt_chromedriver_binary,
                                                  binary_port => $_port,
                                                  _binary_args => " --port=$_port --url-base=/wd/hub --verbose --log-path=$main::output".'chromedriver.log',
-                                                 'browser_name' => 'chrome'
+                                                 'browser_name' => 'chrome',
+                                                 'extra_capabilities' => {'chromeOptions' => {'args' => [@_chrome_args]}}
                                                  );
                 }
             }
