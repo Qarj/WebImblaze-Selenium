@@ -38,9 +38,9 @@
 <case
     id="130"
     description1="Click Recipes"
-    description2="Partial Match of an attribute from within string, 4th instance"
+    description2="Partial Match of an attribute from within string, 3rd instance (1st instance is title element, 2nd instance is h2)"
     method="selenium"
-    command1="_click('Recipes|||4')"
+    command1="_click('Recipes|||3')"
     command2="_wait_for_text_visible('MaxPrepTime field is required')"
     verifytext="get_current_url,get_body_text"
     verifypositive1="Focused and clicked tag INPUT WITH\[Recipes] OK \(text index 7\)"

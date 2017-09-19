@@ -1092,7 +1092,8 @@ sub _helper_javascript_functions {
 
             return {
                 elementIndex : _elementIndex,
-                textIndex : _textIndex
+                textIndex : _textIndex,
+                foundInstance : _found_instance
             }
         }
 
@@ -1136,7 +1137,8 @@ sub _helper_javascript_functions {
 
             return {
                 elementIndex : _elementIndex,
-                textIndex : _textIndex
+                textIndex : _textIndex,
+                foundInstance : _found_instance
             }
         }
 
@@ -1197,6 +1199,7 @@ sub _helper_javascript_functions {
                         textIndex : _info.textIndex
                     }
                 }
+                _instance = _decrement_matches(_instance, _info.foundInstance);
                 _info = get_element_number_by_priority_attribute(_anchor,_depth[i],_instance);
                 if (_info.elementIndex > -1) {
                     return {
@@ -1204,6 +1207,7 @@ sub _helper_javascript_functions {
                         textIndex : _info.textIndex
                     }
                 }
+                _instance = _decrement_matches(_instance, _info.foundInstance);
             }
             for (var i=0; i < _depth.length; i++) {
                 _info = get_element_number_by_attribute(_anchor,_depth[i],_instance);
@@ -1220,6 +1224,12 @@ sub _helper_javascript_functions {
             }
         }
 
+        // If we target Create and it is in a H2 heading element and button value attribute, this will enable us to target it with Create|||2
+        function _decrement_matches(targetInstance, numberOfMatches) {
+            targetInstance = targetInstance - numberOfMatches;
+            if (targetInstance < 1) { targetInstance = 1; }
+            return targetInstance;
+        }
 
         function is_element_at_index_a_match(_tags,_i) {
             for (var j=0; j < _tags.length; j++) {
