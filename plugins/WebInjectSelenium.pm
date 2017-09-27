@@ -160,7 +160,7 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
         $selenium_port = $main::opt_selenium_port;
         $_selenium_host = $main::opt_selenium_host;
     } else {
-        if ($main::opt_driver eq 'chrome') {
+        if ($main::opt_driver eq 'chrome' && !$main::opt_resume_session) {
             $selenium_port = _start_selenium_server();
             $_selenium_host = 'localhost';
             $main::results_stdout .= "    [Started Selenium Remote Control Standalone server on port $selenium_port]\n";
@@ -170,11 +170,19 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
     my $_max = 10;
     my $_try = 0;
     my $_connect_port;
+    my $_session_id; # if undef, a new session will be created
+    my $_auto_close = 1; # 1 auto closes the session, 0 does not
     
     my @_chrome_args;
     push @_chrome_args, 'window-size=1260,1568';
     if ($main::opt_headless) {
         push @_chrome_args, '--headless';
+    }
+
+    if ($main::opt_keep_session) { $_auto_close = 0; }
+
+    if ($main::opt_resume_session) {
+        ($_selenium_host, $selenium_port, $_session_id) = _read_selenium_session_info();
     }
 
     ## --load-extension Loads an extension from the specified directory
@@ -196,6 +204,8 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
                                                  binary_port => $_port,
                                                  _binary_args => " --port=$_port --url-base=/wd/hub --verbose --log-path=$main::output".'chromedriver.log',
                                                  'browser_name' => 'chrome',
+                                                 'auto_close' => $_auto_close,
+                                                 'session_id' => $_session_id,
                                                  'proxy' => {'proxyType' => 'manual', 'httpProxy' => $main::opt_proxy, 'sslProxy' => $main::opt_proxy },
                                                  'extra_capabilities' => {'chromeOptions' => {'args' => [@_chrome_args]}}
                                                  );
@@ -206,11 +216,15 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
                                                  binary_port => $_port,
                                                  _binary_args => " --port=$_port --url-base=/wd/hub --verbose --log-path=$main::output".'chromedriver.log',
                                                  'browser_name' => 'chrome',
+                                                 'auto_close' => $_auto_close,
+                                                 'session_id' => $_session_id,
                                                  'extra_capabilities' => {'chromeOptions' => {'args' => [@_chrome_args]}}
                                                  );
                 }
             }
 
+            print "Selenium Host is: $_selenium_host\n";
+            print "Selenium Port is: $selenium_port\n";
             ## Chrome
             if ($main::opt_driver eq 'chrome') {
                 $_connect_port = $selenium_port;
@@ -220,6 +234,8 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
                     $driver = Selenium::Remote::Driver->new('remote_server_addr' => $_selenium_host,
                                                         'port' => $selenium_port,
                                                         'browser_name' => 'chrome',
+                                                        'auto_close' => $_auto_close,
+                                                        'session_id' => $_session_id,
                                                         'proxy' => {'proxyType' => 'manual', 'httpProxy' => $main::opt_proxy, 'sslProxy' => $main::opt_proxy },
                                                         'extra_capabilities' => {'chromeOptions' => {'args' => [@_chrome_args]}}
                                                         );
@@ -228,6 +244,8 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
                     $driver = Selenium::Remote::Driver->new('remote_server_addr' => $_selenium_host,
                                                         'port' => $selenium_port,
                                                         'browser_name' => 'chrome',
+                                                        'auto_close' => $_auto_close,
+                                                        'session_id' => $_session_id,
                                                         'extra_capabilities' => {'chromeOptions' => {'args' => [@_chrome_args]}}
                                                         );
                 }
@@ -279,9 +297,68 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
         die "\n\nWebInject Aborted - could not connect to $main::opt_driver on port $_connect_port\n";
     }
 
-    eval { $driver->set_timeout('page load', 30_000); };
+    my $_response = eval { $driver->set_timeout('page load', 30_000); };
+    if ($main::opt_resume_session && !$_response) {
+        die "\n\nWebInject Aborted - failed to resume session on port $_connect_port\n";
+    }
+
+    if ($main::opt_resume_session) {
+        my $_url = eval { $driver->get_current_url(); };
+        if (!$_url) {
+            die "\n\nWebInject Aborted - failed to connect to browser for session id $_session_id\n";
+        }
+    }
+
+    if ($main::opt_keep_session) { _save_selenium_session_info($_selenium_host); }
 
     return;
+}
+
+#------------------------------------------------------------------
+
+sub _save_selenium_session_info {
+    my ($_selenium_host) = @_;
+
+    my $_session_info =  eval { Data::Dumper::Dumper( $driver->get_capabilities() ); };
+    $_session_info =~ m/'webdriver.remote.sessionid' => '([^']*)'/; #'
+    my $_session_id;
+    if ($1) {$_session_id = $1};
+
+    print "\nDebug mode - saving Selenium session info (--keep-session)...\n";
+    print "    Selenium Host: $_selenium_host\n";
+    print "    Selenium Port: $selenium_port\n";
+    print "    Session Id: $_session_id\n\n";
+
+    require Config::Tiny;
+    my $_session = Config::Tiny->new;
+
+    $_session->{main}->{selenium_host} = $_selenium_host;
+    $_session->{main}->{selenium_port} = $selenium_port;
+    $_session->{main}->{session_id} = $_session_id;
+
+    $_session->write( 'session.config' );
+    
+    return;
+}
+
+#------------------------------------------------------------------
+
+sub _read_selenium_session_info {
+
+    require Config::Tiny;
+    my $_session = Config::Tiny->read( 'session.config' );
+
+    # main
+    my $_selenium_host = $_session->{main}->{selenium_host};
+    my $_selenium_port = $_session->{main}->{selenium_port};
+    my $_session_id = $_session->{main}->{session_id};
+
+    print "\nDebug mode - read Selenium session info (--resume-session)...\n";
+    print "    Selenium Host: $_selenium_host\n";
+    print "    Selenium Port: $_selenium_port\n";
+    print "    Session Id: $_session_id\n\n";
+    
+    return $_selenium_host, $_selenium_port, $_session_id;
 }
 
 #------------------------------------------------------------------
@@ -449,13 +526,15 @@ sub _start_osx_process {
 }
 
 sub shutdown_selenium {
-    if ($main::opt_driver) {
+    if ($main::opt_driver && !$main::opt_keep_session) {
         eval { $driver->quit(); }; ## shut down selenium browser session
         if ($main::opt_driver eq 'chromedriver') {
             eval { $driver->shutdown_binary(); }; ## shut down chromedriver binary
         }
         undef $driver;
     }
+
+    if ($main::opt_keep_session) { return; }
 
     if (not defined $selenium_port) {
         return;
@@ -1389,6 +1468,8 @@ Additional Webinject-Selenium plugin options:
 -t|--selenium-host                --selenium-host 10.44.1.2
 -p|--selenium-port                --selenium-port 4444
 -l|--headless                     --headless
+-k|--keep-session                 --keep-session
+-m|--resume-session               --resume-session
 EOB
     ;
 

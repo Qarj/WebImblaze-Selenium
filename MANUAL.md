@@ -2,11 +2,21 @@
 
 ## [1 - Overview](#overview)
 
-## [2 - Parameters to control Selenium WebDriver Test Execution](#parameters)
+## [2 - `webinject.pl` command line options for WebInject-Selenium plugin](#options)
+### [ --driver](#driver)
+### [ --chromedriver-binary](#chromedriver-binary)
+### [ --selenium-binary](#selenium-binary)
+### [ --selenium-host](#selenium-host)
+### [ --selenium-port](#selenium-port)
+### [ --headless](#headless)
+### [ --keep-session](#keep-session)
+### [ --resume-session](#resume-session)
+
+## [3 - Parameters to control Selenium WebDriver Test Execution](#parameters)
 ### [ searchimage searchimage1 ... searchimage5](#searchimage)
 ### [ verifytext](#verifytext)
 
-## [3 - Helper Functions - Locators for Testers](#locators)
+## [4 - Helper Functions - Locators for Testers](#locators)
 ### [`target` and `element` parameters described](#target_element)
 ### [`Locators for Testers` helper functions full details](#full_details)
 ### [ _keys_to_element](#_keys_to_element)
@@ -22,14 +32,14 @@
 ### [ _move_to](#_move_to)
 ### [ Locators for Testers - Heuristics full details](#heuristics)
 
-## [4 - Helper Functions - Other](#helper)
+## [5 - Helper Functions - Other](#helper)
 ### [ _clear_and_send_keys](#_clear_and_send_keys)
 ### [ _switch_to_window](#_switch_to_window)
 ### [ _wait_for_text_present](#_wait_for_text_present)
 ### [ _wait_for_text_visible](#_wait_for_text_visible)
 ### [ _check_element_within_pixels](#_check_element_within_pixels)
 
-## [5 - Hints and tips](#tips)
+## [6 - Hints and tips](#tips)
 ### [ Single quote vs Double quote](#tips)
 ### [ Need more quotes!](#more_quotes)
 ### [ Page load timeout](#page_load_timeout)
@@ -81,11 +91,124 @@ Here is an example that includes an assertion:
 Here you can see that we also get the body text and page source. WebInject then can use this to perform a standard
 assertion within its existing framework.
 
-<a name="parameters"></a>
-## 2 - Parameters to control Selenium WebDriver Test Execution
+<br />
+
+
+<a name="options"></a>
+## 2 - `webinject.pl` command line options for WebInject-Selenium plugin
 
 <br />
 
+<a name="driver"></a>
+### --driver
+
+`--driver chrome` starts a Selenium Server and a Chrome browser session.
+Option `--selenium-binary` must also be used.
+
+`--driver chromedriver` starts ChromeDriver directly without using Selenium Server.
+Option `--chromdriver-binary` must also be used.
+
+<br />
+
+<a name="chromedriver-binary"></a>
+### --chromedriver-binary
+Location of the ChromeDriver binary, example:
+
+```
+--chromedriver-binary C:\selenium\chromedriver.exe
+```
+
+<br />
+
+<a name="selenium-binary"></a>
+### --selenium-binary
+Location of the Selenium Standalone Server binary, example:
+
+```
+--selenium-binary C:\selenium-server\selenium-server-standalone-2.53.1.jar
+```
+
+<br />
+
+<a name="selenium-host"></a>
+### --selenium-host
+If this option and `--selenium-port` is specified, then WebInject-Selenium will connect
+to the Selenium Server specified by these options rather than starting its own
+Selenium Server. Used for connecting to Selenium Grid, or Saucelabs or BrowserStack and so on.
+
+If `--selenium-port` is specified but not this option, then the Selenium host is defaulted
+to `localhost`.
+
+<br />
+
+<a name="selenium-port"></a>
+### --selenium-port
+Will connect to the Selenium server specified by this port and the option `--selenium-host`.
+
+<br />
+
+<a name="headless"></a>
+### --headless
+Tells Chrome to start in headless mode.
+
+<br />
+
+<a name="keep-session"></a>
+### --keep-session
+Does not shutdown the Selenium Server and Chrome browser at the end of the test run.
+
+Also will save the Selenium host, port and session id in a file called `session.config`. 
+
+This option is a "Debug Mode" option only and is not safe to run concurrently.
+
+<br />
+
+<a name="resume-session"></a>
+### --resume-session
+Reads the file `session.config` then will attempt to connect to the Selenium host, port and
+session id specified in that file.
+
+Intended to be used in conjunction with `--keep-session` for debugging.
+
+Assume you have a very long workflow that takes many minutes to run, and you have a problem with
+one of the test steps.
+
+If you follow the following pattern, you can debug the problem much more quickly.
+
+1. Comment out the test steps after the error and run the tests with the `--keep-session` option
+
+```
+perl webinject.pl tests/test_case_file.xml --keep-session
+```
+
+Selenium Server and the Chrome browser will be left open at the end of the run.
+
+2. Create another test case file with an attempt to fix the problem, starting from the current state
+then run as follows:
+
+```
+perl webinject.pl tests/debug_test_case_file.xml --resume-sesion --keep-session
+```
+
+Instead of starting a new Selenium server and Chrome browser, the existing server and browser will be
+used from the current state. You specify `--keep-session` again in case your attempt to fix
+the problem does not work and you need to try again.
+
+3. Once you have found a fix for the problem, you fix your orginial test case file and
+uncomment all the steps you commented out. You can then run as normal to make sure the full
+workflow now works:
+
+```
+perl webinject.pl tests/test_case_file.xml
+```
+
+<br />
+
+
+<a name="parameters"></a>
+## 3 - Parameters to control Selenium WebDriver Test Execution
+
+<br />
 
 <a name="searchimage"></a>
 ### searchimage searchimage1 ... searchimage5
@@ -128,7 +251,7 @@ Typically you might just get the current URL, the body text and the page source:
 
 
 <a name="locators"></a>
-## 3 - Helper Functions - Locators for Testers
+## 4 - Helper Functions - Locators for Testers
 
 ### Overview
 
@@ -570,7 +693,7 @@ As per `Phase 1`, however `class three` text is searched.
 
 
 <a name="helper"></a>
-## 4 Helper Functions - Other
+## 5 Helper Functions - Other
 
 
 <a name="_clear_and_send_keys"></a>
@@ -708,7 +831,7 @@ Pixel threshold check passed - Edit profile is 0,0 (x,y) pixels removed from bas
 
 
 <a name="tips"></a>
-## 5 - Hints and tips
+## 6 - Hints and tips
 
 ### Single quote vs Double quote
 
