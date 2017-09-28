@@ -396,11 +396,6 @@ the element is found using the placeholder text.
     command="_keys_to_element('Job title, skill or company','WebDriver Jobs')"
 ```
 
-Select "Contract" in the drop down with attribute "optJobType".
-```
-    command="_keys_to_element('optJobType','Contract','SELECT')"
-```
-
 <br />
 
 
