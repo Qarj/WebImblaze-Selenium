@@ -1,0 +1,23 @@
+<testcases repeat="1">
+
+<case
+    section="Locators for Testers Example - food.gov.uk"
+    id="100"
+    description1="Fill out search form"
+    method="selenium"
+    command1='$driver->get("https://www.food.gov.uk")'
+    command2="_keys_to_element('Search','salt')"
+    verifytext="get_current_url,get_body_text"
+    verifypositive="FSA in Wales"
+/>
+
+<case
+    id="110"
+    description1="Submit search"
+    method="selenium"
+    command3='_click("submit-search")'
+    verifytext="get_current_url,get_body_text"
+    verifypositive="Search results"
+/>
+
+</testcases>

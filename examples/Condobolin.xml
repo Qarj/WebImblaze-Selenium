@@ -1,0 +1,31 @@
+<testcases repeat="1">
+
+<case
+    section="Locators for Testers Example - Condobolin"
+    id="100"
+    description1="Get homepage"
+    method="selenium"
+    command1='$driver->get("http://www.condobolin.nsw.au")'
+    verifytext="get_current_url,get_body_text"
+    verifypositive="Heart of NSW"
+/>
+
+<case
+    id="110"
+    description1="Click Condobolin Directory"
+    method="selenium"
+    command1='_click("Condobolin Directory")'
+    verifytext="get_current_url,get_body_text"
+    verifypositive="Condobolin Local Directory"
+/>
+
+<case
+    id="120"
+    description1="Click Community Organisations"
+    method="selenium"
+    command1='_click("Community Organisations")'
+    verifytext="get_current_url,get_body_text"
+    verifypositive="Western Plains Regional Development"
+/>
+
+</testcases>

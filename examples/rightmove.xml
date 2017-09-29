@@ -1,0 +1,44 @@
+<testcases repeat="1">
+
+<case
+    section="Locators for Testers Example - rightmove"
+    id="100"
+    description1="Fill out search form"
+    method="selenium"
+    command1='$driver->get("http://www.rightmove.co.uk")'
+    command2="_keys_to_element(q|e.g. 'York'|,'Waterloo Station')"
+    verifytext="get_current_url,get_body_text"
+    verifypositive="Find your happy"
+/>
+
+<case
+    id="110"
+    description1="Submit search"
+    method="selenium"
+    command1='_click("To rent")'
+    verifytext="get_current_url,get_body_text"
+    verifypositive="More than one place"
+/>
+
+<case
+    id="120"
+    description1="Fill out additional options"
+    method="selenium"
+    command1='_keys_to_element_after("Search radius","Within 1 mile","SELECT")'
+    command2='_keys_to_element_after("Price range","800 PCM","SELECT")'
+    command3='_keys_to_element_after("Price range","1,500 PCM","SELECT|||2")'
+    verifytext="get_current_url,get_body_text"
+    verifypositive="1500 PCM"
+/>
+
+<case
+    id="130"
+    description1="Submit search"
+    method="selenium"
+    command1='_click("Find properties")'
+    verifytext="get_current_url,get_body_text"
+    verifypositive="Properties To Rent near Waterloo Station"
+/>
+
+
+</testcases>

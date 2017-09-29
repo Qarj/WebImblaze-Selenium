@@ -1,0 +1,24 @@
+<testcases repeat="1">
+
+<case
+    section="Locators for Testers Example - gumtree"
+    id="100"
+    description1="Fill out search form"
+    method="selenium"
+    command1='$driver->get("https://www.gumtree.com")'
+    command2="_keys_to_element(q|I'm looking for|,'bicycle')"
+    command3='_keys_to_element("Postcode or location","SE1 1TL")'
+    verifytext="get_current_url,get_body_text"
+    verifypositive="you agree to the use of cookies"
+/>
+
+<case
+    id="110"
+    description1="Submit search"
+    method="selenium"
+    command3='_click("Go","SE1 1TL")'
+    verifytext="get_current_url,get_body_text"
+    verifypositive="ads for bicycle in Bikes"
+/>
+
+</testcases>

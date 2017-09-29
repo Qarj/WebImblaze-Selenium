@@ -1,0 +1,40 @@
+<testcases repeat="1">
+
+<case
+    section="Locators for Testers Example - GrainCorp"
+    id="100"
+    description1="Get homepage"
+    method="selenium"
+    command1='$driver->get("http://www.graincorp.com.au")'
+    verifytext="get_current_url,get_body_text"
+    verifypositive="About GrainCorp"
+/>
+
+<case
+    id="110"
+    description1="Click magnifying glass to open search form"
+    method="selenium"
+    command1='_click("icon-magnify")'
+    verifytext="get_current_url,get_body_text"
+    verifypositive="Search"
+/>
+
+<case
+    id="120"
+    description1="Fill out search form"
+    method="selenium"
+    command1='_keys_to_element_after("Search","prime hard")'
+    verifytext="get_current_url,get_body_text"
+    verifypositive="prime hard"
+/>
+
+<case
+    id="130"
+    description1="Submit search"
+    method="selenium"
+    command1='_click("GO")'
+    verifytext="get_current_url,get_body_text"
+    verifypositive="Search results"
+/>
+
+</testcases>

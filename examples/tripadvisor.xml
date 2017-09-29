@@ -1,0 +1,34 @@
+<testcases repeat="1">
+
+<case
+    section="Locators for Testers Example - tripadvisor"
+    id="100"
+    description1="Fill out search form"
+    method="selenium"
+    command1='$driver->get("https://www.tripadvisor.co.uk")'
+    command2='_keys_to_element("City or hotel name","Bad Blumau\t")'
+    command3="_click('Check In')"
+    verifytext="get_current_url,get_body_text"
+    verifypositive="TripAdvisor uses cookies"
+/>
+
+<case
+    id="110"
+    description1="Enter from and to dates"
+    method="selenium"
+    command1="_click('2|||2')"
+    command2="_click('9')"
+    verifytext="get_current_url,get_body_text"
+    verifypositive="TripAdvisor uses cookies"
+/>
+
+<case
+    id="120"
+    description1="Submit search"
+    method="selenium"
+    command1="_click('Find hotels')"
+    verifytext="get_current_url,get_body_text"
+    verifypositive="Lowest prices for"
+/>
+
+</testcases>
