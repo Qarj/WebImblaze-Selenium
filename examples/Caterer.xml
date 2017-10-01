@@ -11,6 +11,7 @@
     command4="_keys_to_element_after('Where','5 miles','SELECT')"
     verifytext="get_current_url,get_body_text"
     verifypositive="the best jobs"
+    checkpoint="true"
 />
 
 <case

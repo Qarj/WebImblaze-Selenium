@@ -9,7 +9,7 @@
     command1="_get_element('Copyright and database rights')"
     verifytext="get_current_url,get_body_text"
     verifypositive="Companies hiring"
-    retry="3"
+    checkpoint="true"
 />
 
 <case

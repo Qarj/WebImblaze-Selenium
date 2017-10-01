@@ -8,6 +8,7 @@
     command1='$driver->get("http://webinject-check.azurewebsites.net/")'
     verifytext="get_current_url,get_body_text"
     verifypositive="site to aid in the self test of webinject"
+    checkpoint="true"
 />
 
 <case

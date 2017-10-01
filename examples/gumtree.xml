@@ -10,6 +10,7 @@
     command3='_keys_to_element("Postcode or location","SE1 1TL")'
     verifytext="get_current_url,get_body_text"
     verifypositive="you agree to the use of cookies"
+    checkpoint="true"
 />
 
 <case
