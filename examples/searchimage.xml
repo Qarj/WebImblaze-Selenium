@@ -13,6 +13,8 @@
     verifypositive="WebInject is a powerful free automated test tool"
     searchimage1="{PROJECT}examples\search_images\menu_hamburger.png"
     searchimage2="{PROJECT}examples\search_images\Learn_more.png"
+    retry="3"
+    restartbrowseronfail="true"
 />
 
 <case
