@@ -295,10 +295,11 @@ The [WebInject-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the h
 
 8. Reinstall the packages needed for WebInject in the perlbrew sub system
     ```
-    cpan File::Slurp
-    cpan XML::Simple
-    cpan Math::Random::ISAAC
-    cpan IO::Socket::SSL
+    sudo cpan File::Slurp
+    sudo cpan XML::Simple
+    sudo cpan Math::Random::ISAAC
+    sudo cpan IO::Socket::SSL
+    sudo cpan LWP::Protocol::https
     ```
 
 8. Install Selenium::Remote::Driver from cpan
@@ -318,7 +319,7 @@ perlbrew list
 
 Check the output, e.g. if it is `* perl-5.24.1` then just:
 ```
-perlbrew use perl-5.24.1
+sudo perlbrew use perl-5.24.1
 ```
 
 
