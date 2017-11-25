@@ -10,7 +10,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '0.2.0';
+$VERSION = '0.3.0';
 
 use Time::HiRes 'time','sleep';
 use File::Copy qw(copy), qw(move);

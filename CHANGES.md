@@ -3,6 +3,9 @@
 ---------------------------------
 ## Release History:
 
+### Version 0.3.0 - Nov 25, 2017
+* --keep-session and --resume-session parameters now supported to make it easier to debug tests deep into a workflow
+* plugin now displays the command line options that are relevant to this plugin instead of the main WebInject code
 
 ### Version 0.2.0 - Sept 14, 2017
 * helper_ functions now simply begin with _
