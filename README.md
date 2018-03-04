@@ -22,6 +22,8 @@ Selenium WebDriver using ChromeDriver
 3. Optional - download selenium-server-standalone-2.53.1.jar from http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.1.jar
 and place it in `C:\selenium`
 
+	Be sure to also install the Java runtime as well - https://ninite.com/ makes this easy.
+
 ### Create your first WebInject-Selenium test
 
 In the `tests` folder, create a file called `test_jobs.xml`.
