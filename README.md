@@ -73,7 +73,7 @@ Copy and paste the following into the file and save it.
 
 1. From an administrator command prompt, `cd C:\git\WebInject`
 
-2. Run the tests with `webinject.pl tests/test_jobs.xml`
+2. Run the tests with `perl webinject.pl tests/test_jobs.xml`
 
 If all is ok, you'll see Chrome open and run the test steps. You'll also see output like the following
 at the command prompt:
@@ -177,13 +177,13 @@ In my experience, running tests using Selenium Server is more robust than runnin
 You can excute the tests using Selenium Server as in the following example:
 
 ```
-webinject.pl examples/selenium.xml --driver chrome --chromedriver-binary C:\selenium\chromedriver.exe --selenium-binary C:\selenium\selenium-server-standalone-2.53.1.jar
+perl webinject.pl examples/selenium.xml --driver chrome --chromedriver-binary C:\selenium\chromedriver.exe --selenium-binary C:\selenium\selenium-server-standalone-2.53.1.jar
 ```
 
 Or more simply, because the locations of the chromedriver and selenium binaries are specified in config.xml:
 
 ```
-webinject.pl examples/selenium.xml --driver chrome
+perl webinject.pl examples/selenium.xml --driver chrome
 ```
 
 ### Resources for creating your own tests
@@ -335,7 +335,7 @@ See https://github.com/Qarj/search-image for full installation instructions.
 To test that it works, run the following. If all test steps pass, then everything is setup ok.
 
 ```
-webinject.pl ./../WebInject-Selenium/examples/searchimage.xml
+perl webinject.pl ./../WebInject-Selenium/examples/searchimage.xml
 ```
 
 You can also check the result by looking at `output\100.png' and also `output\200.png`. You'll see that
