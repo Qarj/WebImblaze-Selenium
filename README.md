@@ -14,8 +14,11 @@ Selenium WebDriver using ChromeDriver
 
 1. Open a command prompt as an administrator and issue the following command:
     ```
-    cpan Selenium::Remote::Driver
+    cpanm -v git://github.com/gempesaw/Selenium-Remote-Driver.git@build/master
     ```
+    This will install version 1.12 of Selenium::Remote::Driver which is compatible with Selenium Server Standalone 2.53.1 and also this package.
+    
+    Do not use the latest version from CPAN, it will not work.
 
 2. Obtain chromedriver.exe from https://sites.google.com/a/chromium.org/chromedriver/ and place it in `C:\selenium\`
 

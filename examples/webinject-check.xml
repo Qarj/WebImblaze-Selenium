@@ -97,8 +97,7 @@
     method="selenium"
     command1='_click("Details")'
     verifytext="get_current_url,get_body_text"
-    verifypositive1="Meat Pie"
-    verifypositive2="Back to List"
+    verifypositive1="Back to List"
 />
 
 </testcases>

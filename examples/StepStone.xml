@@ -1,4 +1,4 @@
-<testcases repeat="1">
+﻿<testcases repeat="1">
 
 <case
     section="Locators for Testers Example - StepStone"
@@ -9,7 +9,7 @@
     command2="_keys_to_element('Jobtitel, Kompetenz','Test Automation')"
     command3="_keys_to_element('Ort oder 5','Berlin')"
     verifytext="get_current_url,get_body_text"
-    verifypositive="Job nach Berufsfeld"
+    verifypositive="Stellenanzeige"
 />
 
 <case
@@ -17,9 +17,17 @@
     description1="Click Suchen"
     method="selenium"
     command1="_click('Suchen')"
-    command2="_wait_for_text_visible('Ihre Suche nach')"
+    command2="_wait_for_text_visible('Kompetenzen')"
     verifytext="get_current_url,get_body_text"
     verifypositive="Found sought text"
+/>
+
+<case
+    id="115"
+    description1="Click Schließen"
+    method="selenium"
+    command1="_click('Schließen')"
+    verifytext="get_current_url,get_body_text"
 />
 
 <case
@@ -27,7 +35,7 @@
     description1="Click Sortieren nach"
     method="selenium"
     command1="_click('Datum')"
-    command2="_wait_for_text_visible('Ihre Suche nach')"
+    command2="_wait_for_text_visible('Kompetenzen')"
     verifytext="get_current_url,get_body_text"
     verifypositive="Found sought text"
 />
