@@ -18,7 +18,7 @@ Selenium WebDriver using ChromeDriver
     ```
     This will install version 1.12 of Selenium::Remote::Driver which is compatible with Selenium Server Standalone 2.53.1 and also this package.
     
-    Do not use the latest version from CPAN, it will not work.
+    Do not use the latest version from CPAN - it will not work.
 
 2. Obtain chromedriver.exe from https://sites.google.com/a/chromium.org/chromedriver/ and place it in `C:\selenium\`
 
@@ -307,9 +307,9 @@ The [WebInject-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the h
     sudo cpan LWP::Protocol::https
     ```
 
-8. Install Selenium::Remote::Driver from cpan
+8. Install Selenium::Remote::Driver version 1.12
     ```
-    sudo cpan Selenium::Remote::Driver
+    sudo cpanm -v git://github.com/gempesaw/Selenium-Remote-Driver.git@build/master
     ```
 
 9. Check that it works
