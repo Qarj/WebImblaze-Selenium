@@ -6,13 +6,20 @@ You have the choice of using the Selenium Server (which I find to be more robust
 Selenium WebDriver using ChromeDriver
 -------------------------------------
 
-### All platforms
-
-1. Download this project and copy `WebInjectSelenium.pm` from the plugins folder to the plugins folder of the WebInject project.
-
 ### Windows (instructions for Linux and Mac below)
 
-1. Open a command prompt as an administrator and issue the following command:
+1. After installing WebInject to `C:\git`, clone this plugin project
+    ```
+    cd C:\git
+    git clone https://github.com/Qarj/WebInject-Selenium.git
+    ```
+
+2. Copy `WebInject-Selenium.pm` into `WebInject\plugins`
+    ```
+    perl WebInject-Selenium/plugins/update.pl
+    ```
+
+3. Open a command prompt as an administrator and issue the following command:
     ```
     cpanm -v git://github.com/gempesaw/Selenium-Remote-Driver.git@build/master
     ```
@@ -20,10 +27,10 @@ Selenium WebDriver using ChromeDriver
     
     Do not use the latest version from CPAN - it will not work.
 
-2. Obtain chromedriver.exe from https://sites.google.com/a/chromium.org/chromedriver/ and place it in `C:\selenium\`
+4. Obtain chromedriver.exe from https://sites.google.com/a/chromium.org/chromedriver/ and place it in `C:\selenium\`
 
-3. Optional - download selenium-server-standalone-2.53.1.jar from http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.1.jar
-and place it in `C:\selenium`
+5. Optional - download selenium-server-standalone-2.53.1.jar from http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.1.jar
+and place it in `C:\selenium` (Make sure you get version 2.53.1 - not compatible with v3)
 
 	Be sure to also install the Java runtime as well - https://ninite.com/ makes this easy.
 
@@ -202,16 +209,28 @@ The [WebInject-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the h
 
 ### Linux
 
-1. First obtain ChromeDriver and put it in a folder called ~/selenium by running these commands
+1. After installing WebInject to `~/git`, clone this plugin project
+    ```
+    cd ~/git
+    git clone https://github.com/Qarj/WebInject-Selenium.git
+    ```
+
+2. Copy `WebInject-Selenium.pm` into `WebInject\plugins`
+    ```
+    perl WebInject-Selenium/plugins/update.pl
+    ```
+
+3. Now obtain latest version of ChromeDriver and put it in a folder called ~/selenium by running these commands (double check version number)
     ```
     mkdir ~/selenium
-    wget -N http://chromedriver.storage.googleapis.com/2.27/chromedriver_linux64.zip -P ~/selenium
+    wget -N http://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip -P ~/selenium
     sudo apt install unzip
     unzip ~/selenium/chromedriver_linux64.zip -d ~/selenium
     chmod +x ~/selenium/chromedriver
     ```
+    If someone knows a command to install the latest chromedriver (rather than a specific version), please let me know.
 
-2. Now obtain the Selenium Standalone Server and put it in ~/selenium with this command
+4. Obtain Selenium Standalone Server 2.53.1 (not v3) and put it in ~/selenium with this command
     ```
     wget -N http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.1.jar -P ~/selenium
     ```
@@ -219,10 +238,18 @@ The [WebInject-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the h
 3. A few extra commands are needed to ensure the dependencies are covered
     ```
     sudo apt-get update
+
     sudo apt install gnome-terminal
+
     sudo apt install default-jre
-    sudo cpan Selenium::Remote::Driver
+
+    sudo cpan Test::LWP::UserAgent
+    sudo cpan namespace::clean
+    sudo apt install cpanminus
+    sudo cpanm -v git://github.com/gempesaw/Selenium-Remote-Driver.git@build/master
     ```
+    The cpanm command should install version 1.12 of Selenium::Remote::Driver which is compatible with this project
+    and Selenium Standalone Server 2.53.1.
 
 4. Now you should install Chrome, on Ubuntu / Debian / Linux Mint you can do it with these commands
     ```
@@ -236,6 +263,7 @@ The [WebInject-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the h
 
 6. You can check that it works by running an example:
     ```
+    cd ~/git/WebInject
     perl webinject.pl examples/selenium.xml
     ```    
 
@@ -327,6 +355,12 @@ Check the output, e.g. if it is `* perl-5.24.1` then just:
 sudo perlbrew use perl-5.24.1
 ```
 
+Self Tests
+----------
+```
+cd C:\git\WebInject
+perl webinject.pl ../WebInject-Selenium/selftest/all_selenium.xml
+```
 
 Plugins
 -------
