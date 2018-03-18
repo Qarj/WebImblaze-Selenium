@@ -202,7 +202,7 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
                     $main::results_stdout .= "    [Starting ChromeDriver on port $_port through proxy on port $main::opt_proxy]\n";
                     $driver = Selenium::Chrome->new (binary => $main::opt_chromedriver_binary,
                                                  binary_port => $_port,
-                                                 _binary_args => " --port=$_port --url-base=/wd/hub --verbose --log-path=$main::output".'chromedriver.log',
+                                                 _binary_args => " --port=$_port --url-base=/wd/hub --verbose --log-path=$main::results_output_folder".'chromedriver.log',
                                                  'browser_name' => 'chrome',
                                                  'auto_close' => $_auto_close,
                                                  'session_id' => $_session_id,
@@ -214,7 +214,7 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
                     $main::results_stdout .= "    [Starting ChromeDriver on port $_port]\n";
                     $driver = Selenium::Chrome->new (binary => $main::opt_chromedriver_binary,
                                                  binary_port => $_port,
-                                                 _binary_args => " --port=$_port --url-base=/wd/hub --verbose --log-path=$main::output".'chromedriver.log',
+                                                 _binary_args => " --port=$_port --url-base=/wd/hub --verbose --log-path=$main::results_output_folder".'chromedriver.log',
                                                  'browser_name' => 'chrome',
                                                  'auto_close' => $_auto_close,
                                                  'session_id' => $_session_id,
@@ -459,24 +459,24 @@ sub _start_selenium_server {
     }
 
     # copy chromedriver - source location hardcoded for now
-    copy $main::opt_chromedriver_binary, $main::output_folder;
+    copy $main::opt_chromedriver_binary, $main::results_output_folder;
 
     # find free port
     my $_selenium_port = find_available_port(int(rand 999)+11_000);
     #print "_selenium_port:$_selenium_port\n";
 
-    my $_abs_selenium_log_full = File::Spec->rel2abs( $main::output_folder.'/selenium_log.txt' );
+    my $_abs_selenium_log_full = File::Spec->rel2abs( $main::results_output_folder.'selenium_log.txt' );
 
     my $_os = $^O;
     if ($main::is_windows) {
-        my $_abs_chromedriver_full = File::Spec->rel2abs( "$main::output_folder/chromedriver.eXe" );
+        my $_abs_chromedriver_full = File::Spec->rel2abs( "$main::results_output_folder".'chromedriver.eXe' );
         my $_pid = _start_windows_process(qq{cmd /c java -Dwebdriver.chrome.driver="$_abs_chromedriver_full" -Dwebdriver.chrome.logfile="$_abs_selenium_log_full" -jar $main::opt_selenium_binary -port $_selenium_port -trustAllSSLCertificates});
     } elsif ($_os eq 'darwin') {
-        my $_abs_chromedriver_full = File::Spec->rel2abs( "$main::output_folder/chromedriver" );
+        my $_abs_chromedriver_full = File::Spec->rel2abs( "$main::results_output_folder".'chromedriver' );
         chmod 0775, $_abs_chromedriver_full; # Linux loses the write permission with file copy
         _start_osx_process(qq{java -Dwebdriver.chrome.driver=$_abs_chromedriver_full -Dwebdriver.chrome.logfile=$_abs_selenium_log_full -jar $main::opt_selenium_binary -port $_selenium_port -trustAllSSLCertificates}); ## note quotes removed
     } else {
-        my $_abs_chromedriver_full = File::Spec->rel2abs( "$main::output_folder/chromedriver" );
+        my $_abs_chromedriver_full = File::Spec->rel2abs( "$main::results_output_folder".'chromedriver' );
         chmod 0775, $_abs_chromedriver_full; # Linux loses the write permission with file copy
         _start_linux_process(qq{java -Dwebdriver.chrome.driver="$_abs_chromedriver_full" -Dwebdriver.chrome.logfile="$_abs_selenium_log_full" -jar $main::opt_selenium_binary -port $_selenium_port -trustAllSSLCertificates});
     }
