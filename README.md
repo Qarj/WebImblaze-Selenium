@@ -1,4 +1,4 @@
-# WebInject-Selenium 0.3.0
+# WebInject-Selenium 0.4.0
 WebInject, the project found at [https://github.com/Qarj/WebInject](https://github.com/Qarj/WebInject), can also drive Selenium using the Chrome browser.
 
 You have the choice of using the Selenium Server (which I find to be more robust), or you can drive ChromeDriver directly (Java not required!).
@@ -21,16 +21,14 @@ Selenium WebDriver using ChromeDriver
 
 3. Open a command prompt as an administrator and issue the following command:
     ```
-    cpanm -v git://github.com/gempesaw/Selenium-Remote-Driver.git@build/master
+    cpan Selenium::Remote::Driver
     ```
-    This will install version 1.12 of Selenium::Remote::Driver which is compatible with Selenium Server Standalone 2.53.1 and also this package.
+    This will install the latest version of Selenium::Remote::Driver - 1.26 at the time of writing.
     
-    Do not use the latest version from CPAN - it will not work.
-
 4. Obtain chromedriver.exe from https://sites.google.com/a/chromium.org/chromedriver/ and place it in `C:\selenium\`
 
-5. Optional - download selenium-server-standalone-2.53.1.jar from http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.1.jar
-and place it in `C:\selenium` (Make sure you get version 2.53.1 - not compatible with v3)
+5. Optional - download selenium-server-standalone-3.11.0.jar from http://selenium-release.storage.googleapis.com/3.11/selenium-server-standalone-3.11.0.jar
+and place it in `C:\selenium`
 
 	Be sure to also install the Java runtime as well - https://ninite.com/ makes this easy.
 
@@ -230,9 +228,9 @@ The [WebInject-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the h
     ```
     If someone knows a command to install the latest chromedriver (rather than a specific version), please let me know.
 
-4. Obtain Selenium Standalone Server 2.53.1 (not v3) and put it in ~/selenium with this command
+4. Obtain Selenium Standalone Server 3.11.0 and put it in ~/selenium with this command
     ```
-    wget -N http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.1.jar -P ~/selenium
+    wget -N http://selenium-release.storage.googleapis.com/3.11/selenium-server-standalone-3.11.0.jar -P ~/selenium
     ```
 
 3. A few extra commands are needed to ensure the dependencies are covered
@@ -243,13 +241,9 @@ The [WebInject-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the h
 
     sudo apt install default-jre
 
-    sudo cpan Test::LWP::UserAgent
-    sudo cpan namespace::clean
-    sudo apt install cpanminus
-    sudo cpanm -v git://github.com/gempesaw/Selenium-Remote-Driver.git@build/master
+    sudo cpan Selenium::Remote::Driver
     ```
-    The cpanm command should install version 1.12 of Selenium::Remote::Driver which is compatible with this project
-    and Selenium Standalone Server 2.53.1.
+    This will install the latest version of Selenium::Remote::Driver.
 
 4. Now you should install Chrome, on Ubuntu / Debian / Linux Mint you can do it with these commands
     ```
@@ -335,9 +329,9 @@ The [WebInject-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the h
     sudo cpan LWP::Protocol::https
     ```
 
-8. Install Selenium::Remote::Driver version 1.12
+8. Install Selenium::Remote::Driver
     ```
-    sudo cpanm -v git://github.com/gempesaw/Selenium-Remote-Driver.git@build/master
+    sudo cpan Selenium::Remote::Driver
     ```
 
 9. Check that it works

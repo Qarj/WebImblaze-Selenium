@@ -1,4 +1,4 @@
-# Manual for WebInject-Selenium version 0.3.0
+# Manual for WebInject-Selenium version 0.4.0
 
 ## [1 - Overview](#overview)
 

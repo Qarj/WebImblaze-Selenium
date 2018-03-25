@@ -10,7 +10,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '0.3.0';
+$VERSION = '0.4.0';
 
 use Time::HiRes 'time','sleep';
 use File::Copy qw(copy), qw(move);
@@ -19,8 +19,8 @@ use Socket qw( PF_INET SOCK_STREAM INADDR_ANY sockaddr_in );
 our ($selresp, $driver, $selenium_port);
 my $attempts_since_last_locate_success = 0;
 
-## Selenium 2.0 Server support + Running ChromeDriver directly
-#------------------------------------------------------------------
+## Selenium 3 Server support + Running ChromeDriver directly
+#-----------------------------------------------------------
 sub selenium {  ## send Selenium command and read response
     require Selenium::Remote::Driver;
     require Selenium::Chrome;
@@ -175,6 +175,8 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
     
     my @_chrome_args;
     push @_chrome_args, 'window-size=1260,1568';
+    push @_chrome_args, '--disable-web-security';
+    push @_chrome_args, '--ignore-certificate-errors';
     if ($main::opt_headless) {
         push @_chrome_args, '--headless';
     }
@@ -474,11 +476,11 @@ sub _start_selenium_server {
     } elsif ($_os eq 'darwin') {
         my $_abs_chromedriver_full = File::Spec->rel2abs( "$main::results_output_folder".'chromedriver' );
         chmod 0775, $_abs_chromedriver_full; # Linux loses the write permission with file copy
-        _start_osx_process(qq{java -Dwebdriver.chrome.driver=$_abs_chromedriver_full -Dwebdriver.chrome.logfile=$_abs_selenium_log_full -jar $main::opt_selenium_binary -port $_selenium_port -trustAllSSLCertificates}); ## note quotes removed
+        _start_osx_process(qq{java -Dwebdriver.chrome.driver=$_abs_chromedriver_full -Dwebdriver.chrome.logfile=$_abs_selenium_log_full -jar $main::opt_selenium_binary -port $_selenium_port -role node -servlet org.openqa.grid.web.servlet.LifecycleServlet -registerCycle 0}); ## note quotes removed
     } else {
         my $_abs_chromedriver_full = File::Spec->rel2abs( "$main::results_output_folder".'chromedriver' );
         chmod 0775, $_abs_chromedriver_full; # Linux loses the write permission with file copy
-        _start_linux_process(qq{java -Dwebdriver.chrome.driver="$_abs_chromedriver_full" -Dwebdriver.chrome.logfile="$_abs_selenium_log_full" -jar $main::opt_selenium_binary -port $_selenium_port -trustAllSSLCertificates});
+        _start_linux_process(qq{java -Dwebdriver.chrome.driver="$_abs_chromedriver_full" -Dwebdriver.chrome.logfile="$_abs_selenium_log_full" -jar $main::opt_selenium_binary -port $_selenium_port -role node -servlet org.openqa.grid.web.servlet.LifecycleServlet -registerCycle 0});
     }
 
     return $_selenium_port;
@@ -546,7 +548,6 @@ sub shutdown_selenium {
 
     require LWP::Simple;
 
-    my $_url = "http://localhost:$selenium_port/selenium-server/driver/?cmd=shutDownSeleniumServer";
     my $_url = "http://localhost:$selenium_port/extra/LifecycleServlet?action=shutdown";
     my $_content = LWP::Simple::get $_url;
     #print {*STDOUT} "Shutdown Server:$_content\n";
@@ -1465,7 +1466,7 @@ Additional Webinject-Selenium plugin options:
 
 -d|--driver chrome|chromedriver   --driver chrome
 -r|--chromedriver-binary          --chromedriver-binary C:\selenium-server\chromedriver.exe
--s|--selenium-binary              --selenium-binary C:\selenium-server\selenium-server-standalone-2.53.1.jar
+-s|--selenium-binary              --selenium-binary C:\selenium-server\selenium-server-standalone-3.11.0.jar
 -t|--selenium-host                --selenium-host 10.44.1.2
 -p|--selenium-port                --selenium-port 4444
 -l|--headless                     --headless
