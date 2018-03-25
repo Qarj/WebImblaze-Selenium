@@ -14,7 +14,6 @@
 />
 
 <case
-    varSPOTLIGHT_PRESENT=""
     id="110"
     description1="Click Search"
     method="selenium"
@@ -22,41 +21,47 @@
     command2="_wait_for_text_visible('Automated Testing jobs')"
     verifytext="get_current_url,get_body_text"
     verifypositive="Found sought text"
-    pareseresponseSPOTLIGHT_PRESENT="(spotlight_dismiss)|regex|"
 />
 
 <case
     id="120"
-    description1="Dismiss 'Get new jobs' spotlight - [{SPOTLIGHT_PRESENT}]"
+    description1="Dismiss 'Get new jobs' spotlight"
     method="selenium"
-    command1="_click('spotlight_dismiss')"
+    command1="_click('Close Modal')"
     verifytext="get_current_url,get_body_text"
-    runif="{SPOTLIGHT_PRESENT}"
 />
 
 <case
     id="130"
-    description1="Sort jobs by date"
+    description1="Click Relevance to open drop down"
     method="selenium"
-    command1="_keys_to_element_after('sortby', ' Date', 'SELECT')"
+    command1="_click('Relevance')"
     verifytext="get_current_url,get_body_text"
 />
 
 <case
     id="140"
-    description1="Click 'Refine Search'"
+    description1="Click Date to sort by Date"
     method="selenium"
-    command1="_click('Refine Search')"
+    command1="_click('Date')"
     verifytext="get_current_url,get_body_text"
-    verifypositive="Advanced Search"
 />
 
 <case
     id="150"
-    description1="Enter 'Test Manager' into 'Job Title'"
+    description1="Enter 'London' into 'Where'"
     method="selenium"
-    command1="_keys_to_element_after('Job Title', 'Test Manager')"
+    command1="_keys_to_element_after('Where', 'London')"
     verifytext="get_current_url,get_body_text"
+/>
+
+<case
+    id="160"
+    description1="Click 'Search'"
+    method="selenium"
+    command1="_click('Update|||2')"
+    verifytext="get_current_url,get_body_text"
+    verifypositive="Automated Testing jobs in London"
 />
 
 </testcases>
