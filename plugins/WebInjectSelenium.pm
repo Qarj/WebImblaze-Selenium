@@ -470,7 +470,7 @@ sub _start_selenium_server {
     my $_os = $^O;
     if ($main::is_windows) {
         my $_abs_chromedriver_full = File::Spec->rel2abs( "$main::results_output_folder".'chromedriver.eXe' );
-        my $_pid = _start_windows_process(qq{cmd /c java -Dwebdriver.chrome.driver="$_abs_chromedriver_full" -Dwebdriver.chrome.logfile="$_abs_selenium_log_full" -jar $main::opt_selenium_binary -port $_selenium_port -trustAllSSLCertificates});
+        my $_pid = _start_windows_process(qq{cmd /c java -Dwebdriver.chrome.driver="$_abs_chromedriver_full" -Dwebdriver.chrome.logfile="$_abs_selenium_log_full" -jar $main::opt_selenium_binary -port $_selenium_port -role node -servlet org.openqa.grid.web.servlet.LifecycleServlet -registerCycle 0});
     } elsif ($_os eq 'darwin') {
         my $_abs_chromedriver_full = File::Spec->rel2abs( "$main::results_output_folder".'chromedriver' );
         chmod 0775, $_abs_chromedriver_full; # Linux loses the write permission with file copy
@@ -547,6 +547,7 @@ sub shutdown_selenium {
     require LWP::Simple;
 
     my $_url = "http://localhost:$selenium_port/selenium-server/driver/?cmd=shutDownSeleniumServer";
+    my $_url = "http://localhost:$selenium_port/extra/LifecycleServlet?action=shutdown";
     my $_content = LWP::Simple::get $_url;
     #print {*STDOUT} "Shutdown Server:$_content\n";
 
