@@ -272,7 +272,9 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
 
         if ( $@ and $_try++ < $_max )
         {
-            print "\n[Selenium Start Error - possible Chrome and ChromeDriver version compatibility issue]\n$@\nFailed try $_try to connect to $main::opt_driver on port $_connect_port, retrying...\n\n";
+            if ($_try > 2) {
+                print "\n[Selenium Start Error - possible Chrome and ChromeDriver version compatibility issue]\n$@\nFailed try $_try to connect to $main::opt_driver on port $_connect_port, retrying...\n\n";
+            }
             sleep 4; ## sleep for 4 seconds, Selenium Server may still be starting up
             redo ATTEMPT;
         }
@@ -471,7 +473,7 @@ sub _start_selenium_server {
 
     my $_os = $^O;
     if ($main::is_windows) {
-        my $_abs_chromedriver_full = File::Spec->rel2abs( "$main::results_output_folder".'chromedriver.eXe' );
+        my $_abs_chromedriver_full = File::Spec->rel2abs( "$main::results_output_folder".'chromedriver.exe' );
         my $_pid = _start_windows_process(qq{cmd /c java -Dwebdriver.chrome.driver="$_abs_chromedriver_full" -Dwebdriver.chrome.logfile="$_abs_selenium_log_full" -jar $main::opt_selenium_binary -port $_selenium_port -role node -servlet org.openqa.grid.web.servlet.LifecycleServlet -registerCycle 0});
     } elsif ($_os eq 'darwin') {
         my $_abs_chromedriver_full = File::Spec->rel2abs( "$main::results_output_folder".'chromedriver' );
