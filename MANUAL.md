@@ -1,4 +1,4 @@
-# Manual for WebInject-Selenium version 0.4.0
+# Manual for WebInject-Selenium version 0.5.0
 
 ## [1 - Overview](#overview)
 
@@ -16,7 +16,10 @@
 ### [ searchimage searchimage1 ... searchimage5](#searchimage)
 ### [ verifytext](#verifytext)
 
-## [4 - Helper Functions - Locators for Testers](#locators)
+## [4 - Configuration](#config)
+### [ Block urls](#blocker)
+
+## [5 - Helper Functions - Locators for Testers](#locators)
 ### [`target` and `element` parameters described](#target_element)
 ### [`Locators for Testers` helper functions full details](#full_details)
 ### [ _keys_to_element](#_keys_to_element)
@@ -32,14 +35,14 @@
 ### [ _move_to](#_move_to)
 ### [ Locators for Testers - Heuristics full details](#heuristics)
 
-## [5 - Helper Functions - Other](#helper)
+## [6 - Helper Functions - Other](#helper)
 ### [ _clear_and_send_keys](#_clear_and_send_keys)
 ### [ _switch_to_window](#_switch_to_window)
 ### [ _wait_for_text_present](#_wait_for_text_present)
 ### [ _wait_for_text_visible](#_wait_for_text_visible)
 ### [ _check_element_within_pixels](#_check_element_within_pixels)
 
-## [6 - Hints and tips](#tips)
+## [7 - Hints and tips](#tips)
 ### [ Single quote vs Double quote](#tips)
 ### [ Need more quotes!](#more_quotes)
 ### [ Page load timeout](#page_load_timeout)
@@ -250,8 +253,24 @@ Typically you might just get the current URL, the body text and the page source:
 <br />
 
 
+<a name="config"></a>
+## 4 - Configuration
+<br />
+
+<a name="blocker"></a>
+### 4.1 - Block urls
+
+In the file `plugins/blocker/background.js` you can specify urls (or url patters) to block. This is achieved by
+a simple Chrome plugin called "Blocker". Read the comment carefully - if you don't update the `blocked_urls`
+correctly, then the plugin will fail to work at all.
+
+Using this method you can block analytics, or other urls that may make your tests run more quickly (e.g. by stopping banner ads).
+
+<br />
+
+
 <a name="locators"></a>
-## 4 - Helper Functions - Locators for Testers
+## 5 - Helper Functions - Locators for Testers
 
 ### Overview
 
@@ -688,7 +707,7 @@ As per `Phase 1`, however `class three` text is searched.
 
 
 <a name="helper"></a>
-## 5 Helper Functions - Other
+## 6 Helper Functions - Other
 
 
 <a name="_clear_and_send_keys"></a>
@@ -826,7 +845,7 @@ Pixel threshold check passed - Edit profile is 0,0 (x,y) pixels removed from bas
 
 
 <a name="tips"></a>
-## 6 - Hints and tips
+## 7 - Hints and tips
 
 ### Single quote vs Double quote
 

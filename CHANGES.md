@@ -3,6 +3,9 @@
 ---------------------------------
 ## Release History:
 
+### Version 0.5.0 - Apr 23, 2018
+* Block urls via a simple Chrome extension called Blocker
+
 ### Version 0.4.0 - Mar 25, 2018
 * Now supports Selenium Server Standalone 3 (tested with 3.11.0) - no longer supports 2.53.1
 * Improved installation instructions

@@ -10,7 +10,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '0.4.0';
+$VERSION = '0.5.0';
 
 use Time::HiRes 'time','sleep';
 use File::Copy qw(copy), qw(move);
@@ -177,6 +177,7 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
     push @_chrome_args, 'window-size=1260,1568';
     push @_chrome_args, '--disable-web-security';
     push @_chrome_args, '--ignore-certificate-errors';
+    push @_chrome_args, '--load-extension='.$main::this_script_folder_full.'\plugins\blocker';
     if ($main::opt_headless) {
         push @_chrome_args, '--headless';
     }
