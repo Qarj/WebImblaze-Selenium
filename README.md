@@ -14,7 +14,7 @@ Selenium WebDriver using ChromeDriver
     git clone https://github.com/Qarj/WebInject-Selenium.git
     ```
 
-2. Copy `WebInject-Selenium.pm` into `WebInject\plugins`
+2. Copy `WebInject-Selenium.pm` and `blocker` folder into `WebInject\plugins`
     ```
     perl WebInject-Selenium/plugins/update.pl
     ```
