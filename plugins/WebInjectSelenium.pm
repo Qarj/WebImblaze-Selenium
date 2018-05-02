@@ -630,6 +630,16 @@ sub searchimage {  ## search for images in the actual result
 #------------------------------------------------------------------
 # helpers - Locators for Testers
 #------------------------------------------------------------------
+sub _set_dropdown { ## usage: _set_dropdown(anchor|||instance,value);
+                    ##        _set_dropdown('Date Range','Last 30 Days');
+
+    my ($_anchor_parms,$_value) = @_;
+
+    my @_anchor = _unpack_anchor($_anchor_parms);
+
+    return _helper_set_dropdown($_anchor[0],$_anchor[1],'*',0,$_value);
+}
+
 sub _keys_to_element { ## usage: _keys_to_element(anchor|||instance,keys);
                        ##        _keys_to_element('E.g. Regional Manager','Test Automation Architect');
 
@@ -672,30 +682,58 @@ sub _helper_keys_to_element {
 
     my ($_anchor,$_anchor_instance,$_tag,$_tag_instance,$_keys) = @_;
 
+    if ($_tag eq 'SELECT') {
+        return _helper_set_dropdown($_anchor,$_anchor_instance,$_tag,$_tag_instance,$_keys);
+    }
+    
     my $_response = _helper_click_element($_anchor,$_anchor_instance,$_tag,$_tag_instance);
 
     if (%$_response{message} =~ m/Could not find/) { return %$_response{message}; }
 
-    if ($_tag eq 'SELECT') {
-        my $_element = $driver->get_active_element();
-        eval { # Try exact match first so we do not select None instead of No
-            my $_child = $driver->find_child_element($_element, "./option[. = '$_keys']")->click();
-        };
-        if ($@) { # If exact match didn't work, try a contains match since there might be some special characters the Test Automator is trying to avoid using
-            eval {
-                my $_child = $driver->find_child_element($_element, "./option[contains(text(),'$_keys')]")->click();
-            };
-        }
-    } else {
-        eval {
-            my $_keys_response = $driver->get_active_element()->clear();
-            $_keys_response = $driver->send_keys_to_active_element($_keys);
-        };
-    }
+    eval {
+        my $_clear_response = $driver->get_active_element()->clear();
+    };
+  
+    eval {
+        my $_keys_response = $driver->send_keys_to_active_element($_keys);
+    };
 
     if ($@) { return %$_response{message} . " then got an exception clearing or sending keys\n\nSignature of focused element:\n" . %$_response{element_signature} . "\n\n" .$@; }
 
     return %$_response{message} . ' then sent keys OK';
+}
+
+sub _helper_set_dropdown {
+
+    my ($_anchor,$_anchor_instance,$_tag,$_tag_instance,$_keys) = @_;
+
+    my $_response = _helper_click_element($_anchor,$_anchor_instance,$_tag,$_tag_instance);
+
+    if (%$_response{message} =~ m/Could not find/) { return %$_response{message}; }
+
+    my $_element = $driver->get_active_element();
+    eval { # Try exact match first so we do not select None instead of No
+        my $_child = $driver->find_child_element($_element, "./option[. = '$_keys']")->click();
+    };
+    if ($@) { # If exact match didn't work, try a contains match since there might be some special characters the Test Automator is trying to avoid using
+        eval {
+            my $_child = $driver->find_child_element($_element, "./option[contains(text(),'$_keys')]")->click();
+        };
+    }
+    if ($@) { # more general case where maybe optgroup exists, or you can target the actual option itself e.g. _set_dropdown('Last 30 days', 'Last 30 days')
+        eval {
+            my $_child = $driver->find_child_element($_element, "//option[contains(text(),'$_keys')]")->click();
+        };
+    }
+    if ($@) { # instead of setting the dropdown by element text, set it by the value instead
+        eval {
+            my $_child = $driver->find_child_element($_element, "option[value='$_keys']", 'css')->click();
+        };
+    }
+
+    if ($@) { return %$_response{message} . " then got an exception selecting dropdown element\n\nSignature of focused element:\n" . %$_response{element_signature} . "\n\n" .$@; }
+
+    return %$_response{message} . ' then selected dropdown value OK';
 }
 
 sub _helper_click_element {

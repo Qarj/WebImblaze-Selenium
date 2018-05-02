@@ -23,6 +23,7 @@
 ### [`target` and `element` parameters described](#target_element)
 ### [`Locators for Testers` helper functions full details](#full_details)
 ### [ _keys_to_element](#_keys_to_element)
+### [ _set_dropdown](#_set_dropdown)
 ### [ _keys_to_element_after](#_keys_to_element_after)
 ### [ _keys_to_element_before](#_keys_to_element_before)
 ### [ _click](#_click)
@@ -418,6 +419,48 @@ the element is found using the placeholder text.
 <br />
 
 
+<a name="_set_dropdown"></a>
+#### _set_dropdown
+
+_set_dropdown(`target`,`text`)
+
+```
+<h4>Set Date Range</h4>
+<select name="DateRange">
+    <optgroup label="Preset Date">
+        <option value="day|7">Last 7 days</option>
+        <option value="day|30">Last 30 days</option>
+    </optgroup>
+</select>
+```
+
+Will set the dropdown option found by target to the displayed text option.
+```
+    command="_set_dropdown('DateRange','Last 30 days')"
+```
+or
+```
+    command="_set_dropdown('Preset Date','Last 30 days')"
+```
+
+You can also set via the option value.
+```
+    command="_set_dropdown('DateRange','days|30')"
+```
+
+It is even possible to target via the option text.
+
+```
+    command="_set_dropdown('Last 30 days','Last 30 days')"
+```
+
+You can set via partial text too.
+```
+    command="_set_dropdown('Preset Date','Last 30')"
+```
+<br />
+
+
 <a name="_keys_to_element_after"></a>
 #### _keys_to_element_after
 
@@ -428,11 +471,10 @@ Will look for some text in the page source, and enter a value to the following I
     command="_keys_to_element_after('What','WebDriver Jobs')"
 ```
 
-Select "Contract" in the 2nd drop down after the element targeted by "Job Type".
+You can set drop downs this way too.
 ```
-    command="_keys_to_element_after('Job Type','Contract','SELECT|||2')"
+    command="_keys_to_element_after('Set Date Range','Last 7 days','SELECT')"
 ```
-
 <br />
 
 
