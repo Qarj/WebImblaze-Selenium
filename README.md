@@ -207,65 +207,71 @@ The [WebInject-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the h
 
 ### Linux
 
-1. After installing WebInject to `~/git`, clone this plugin project
-    ```
-    cd ~/git
-    git clone https://github.com/Qarj/WebInject-Selenium.git
-    ```
+After installing WebInject to `/usr/local/bin`, clone this plugin project
+```
+cd /usr/local/bin
+sudo git clone https://github.com/Qarj/WebInject-Selenium.git
+```
 
-2. Copy `WebInject-Selenium.pm` into `WebInject\plugins`
-    ```
-    perl WebInject-Selenium/plugins/update.pl
-    ```
+Fix permissions
+```
+cd WebInject-Selenium
+sudo find . -type d -exec chmod a+rwx {} \;
+sudo find . -type f -exec chmod a+rw {} \;
+```
 
-3. Now obtain latest version of ChromeDriver and put it in a folder called ~/selenium by running these commands (double check version number)
-    ```
-    sudo mkdir /usr/local/bin/selenium
-    sudo chmod 777 /usr/local/bin/selenium
-    wget -N https://chromedriver.storage.googleapis.com/2.40/chromedriver_linux64.zip -P /usr/local/bin/selenium
-    sudo apt install unzip
-    unzip /usr/local/bin/selenium/chromedriver_linux64.zip -d /usr/local/bin/selenium
-    ```
-    If someone knows a command to install the latest chromedriver (rather than a specific version), please let me know.
+Copy `WebInject-Selenium.pm` into `WebInject\plugins`
+```
+perl plugins/update.pl
+```
 
-4. Obtain Selenium Standalone Server 3.11.0 and put it in ~/selenium with this command
-    ```
-    wget -N http://selenium-release.storage.googleapis.com/3.11/selenium-server-standalone-3.11.0.jar -P /usr/local/bin/selenium
-    ```
+Now obtain latest version of ChromeDriver and put it in a folder called ~/selenium by running these commands (double check version number)
+```
+cd /usr/local/bin
+sudo mkdir selenium
+sudo chmod 777 selenium
+wget -N https://chromedriver.storage.googleapis.com/2.40/chromedriver_linux64.zip -P selenium
+sudo apt install unzip
+unzip selenium/chromedriver_linux64.zip -d selenium
+```
+If someone knows a command to install the latest chromedriver (rather than a specific version), please let me know.
 
-3. A few extra commands are needed to ensure the dependencies are covered
-    ```
-    sudo apt-get update
+Obtain Selenium Standalone Server 3.11.0 and put it in ~/selenium with this command
+```
+wget -N http://selenium-release.storage.googleapis.com/3.11/selenium-server-standalone-3.11.0.jar -P selenium
+```
 
-    sudo apt install gnome-terminal
+A few extra commands are needed to ensure the dependencies are covered
+```
+sudo apt-get update
+sudo apt install gnome-terminal
+sudo apt install default-jre
+sudo cpan Selenium::Remote::Driver
+```
+This will install the latest version of Selenium::Remote::Driver.
 
-    sudo apt install default-jre
+Now you should install Chrome, on Ubuntu / Debian / Linux Mint you can do it with these commands
+```
+wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+sudo apt-get update
+sudo apt-get install google-chrome-stable
+```
 
-    sudo cpan Selenium::Remote::Driver
-    ```
-    This will install the latest version of Selenium::Remote::Driver.
+Important - Run Chrome at least once and choose whether you want it to be the default browser or not.
+You can then close it or leave it open. If you don't do this, then it will hang when you try to run a test with ChromeDriver.
 
-4. Now you should install Chrome, on Ubuntu / Debian / Linux Mint you can do it with these commands
-    ```
-    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-    sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
-    sudo apt-get update
-    sudo apt-get install google-chrome-stable
-    ```
+You can check that it works by running an example:
+```
+cd /usr/local/bin/WebInject
+perl webinject.pl examples/selenium.xml
+```    
 
-5. Important - Run Chrome at least once and choose whether you want it to be the default browser or not. You can then close it or leave it open. If you don't do this, then it will hang when you try to run a test with ChromeDriver.
+or using Selenium Server
 
-6. You can check that it works by running an example:
-    ```
-    cd ~/git/WebInject
-    perl webinject.pl examples/selenium.xml
-    ```    
-
-    or using Selenium Server
-
-    ```
-    perl webinject.pl examples/selenium.xml --driver chrome
-    ```    
+```
+perl webinject.pl examples/selenium.xml --driver chrome
+```    
 
 ### Mac - (currently only supports driving Chrome directly without Selenium Server)
 
