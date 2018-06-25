@@ -177,8 +177,7 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
     push @_chrome_args, 'window-size=1260,1568';
     push @_chrome_args, '--disable-web-security';
     push @_chrome_args, '--ignore-certificate-errors';
-    push @_chrome_args, '--load-extension='.$main::this_script_folder_full.'\plugins\blocker';
-#    push @_chrome_args, '--load-extension='.$main::this_script_folder_full.main::slash_me('\plugins\blocker');
+    push @_chrome_args, '--load-extension='.$main::this_script_folder_full.'/plugins/blocker';
     if ($main::opt_headless) {
         push @_chrome_args, '--headless';
     }
