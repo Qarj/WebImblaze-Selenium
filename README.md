@@ -220,11 +220,11 @@ The [WebInject-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the h
 
 3. Now obtain latest version of ChromeDriver and put it in a folder called ~/selenium by running these commands (double check version number)
     ```
-    mkdir /usr/local/bin/selenium
+    sudo mkdir /usr/local/bin/selenium
+    sudo chmod 777 /usr/local/bin/selenium
     wget -N https://chromedriver.storage.googleapis.com/2.40/chromedriver_linux64.zip -P /usr/local/bin/selenium
     sudo apt install unzip
     unzip /usr/local/bin/selenium/chromedriver_linux64.zip -d /usr/local/bin/selenium
-    chmod +x /usr/local/bin/selenium/chromedriver
     ```
     If someone knows a command to install the latest chromedriver (rather than a specific version), please let me know.
 
