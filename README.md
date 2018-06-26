@@ -203,7 +203,7 @@ http://search.cpan.org/perldoc/Selenium::Remote::Driver
 
 There are further examples in the `examples` and `selftest\substeps` folders of this project.
 
-The [WebInject-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the helper (start with underscore _) functions available.
+The [WebInject-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the helper (start with underscore `_`) functions available.
 
 ### Linux
 
@@ -234,9 +234,9 @@ wget -N https://chromedriver.storage.googleapis.com/2.40/chromedriver_linux64.zi
 sudo apt install unzip
 unzip selenium/chromedriver_linux64.zip -d selenium
 ```
-If someone knows a command to install the latest chromedriver (rather than a specific version), please let me know.
+If someone knows a command to install the latest chromedriver rather than a (specific version), please let me know.
 
-Obtain Selenium Standalone Server 3.11.0 and put it in ~/selenium with this command
+Obtain Selenium Standalone Server 3.11.0 and put it in `/usr/local/bin/selenium` with this command
 ```
 wget -N http://selenium-release.storage.googleapis.com/3.11/selenium-server-standalone-3.11.0.jar -P selenium
 ```
