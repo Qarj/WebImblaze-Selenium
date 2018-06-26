@@ -151,6 +151,12 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
     require Selenium::Remote::Driver;
     require Selenium::Chrome;
     
+    my @_chrome_args;
+    if ($main::opt_headless) {
+        push @_chrome_args, '--headless';
+        $main::opt_driver = 'chromedriver';
+    }
+
     _check_and_set_selenium_defaults();
 
     _shutdown_any_existing_selenium_session();
@@ -173,10 +179,11 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
     my $_session_id; # if undef, a new session will be created
     my $_auto_close = 1; # 1 auto closes the session, 0 does not
     
-    my @_chrome_args;
     push @_chrome_args, 'window-size=1260,1568';
     push @_chrome_args, '--disable-web-security';
     push @_chrome_args, '--ignore-certificate-errors';
+    push @_chrome_args, '--no-sandbox';
+    push @_chrome_args, '--disable-setuid-sandbox';
     push @_chrome_args, '--load-extension='.$main::this_script_folder_full.'/plugins/blocker';
     if ($main::opt_headless) {
         push @_chrome_args, '--headless';
