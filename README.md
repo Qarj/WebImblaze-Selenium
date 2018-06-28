@@ -244,8 +244,8 @@ wget -N http://selenium-release.storage.googleapis.com/3.11/selenium-server-stan
 A few extra commands are needed to ensure the dependencies are covered
 ```
 sudo apt-get update
-sudo apt install gnome-terminal
-sudo apt install default-jre
+sudo apt  --yes install gnome-terminal
+sudo apt  --yes install default-jre
 sudo cpan Selenium::Remote::Driver
 ```
 This will install the latest version of Selenium::Remote::Driver.
