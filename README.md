@@ -244,8 +244,8 @@ wget -N http://selenium-release.storage.googleapis.com/3.11/selenium-server-stan
 A few extra commands are needed to ensure the dependencies are covered
 ```
 sudo apt-get update
-sudo apt  --yes install gnome-terminal
-sudo apt  --yes install default-jre
+sudo apt --yes install gnome-terminal
+sudo apt --yes install default-jre
 sudo cpan Selenium::Remote::Driver
 ```
 This will install the latest version of Selenium::Remote::Driver.
@@ -255,10 +255,10 @@ Now you should install Chrome, on Ubuntu / Debian / Linux Mint you can do it wit
 wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
 sudo apt-get update
-sudo apt-get install google-chrome-stable
+sudo apt-get --yes install google-chrome-stable
 ```
 
-Important - Run Chrome at least once and choose whether you want it to be the default browser or not.
+**_Important_** - Run Chrome at least once and choose whether you want it to be the default browser or not.
 You can then close it or leave it open. If you don't do this, then it will hang when you try to run a test with ChromeDriver.
 
 You can check that it works by running an example:
