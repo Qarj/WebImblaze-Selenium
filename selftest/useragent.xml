@@ -1,0 +1,35 @@
+<testcases repeat="1">
+
+<!--
+Self test master file. All test steps in this file should pass.
+-->
+
+<case
+    varFEATURE="useragent"
+    varCONFIG_FILE="config.xml"
+    id="5"
+    description1="Set variables"
+    method="cmd"
+    command="echo NOP"
+/>
+
+<include
+    id="10"
+    file="./../WebInject-Selenium/selftest/helpers/selenium_server_runner.xml"
+/>
+
+<case
+    varFEATURE="useragent1"
+    varCONFIG_FILE="./../WebInject-Selenium/selftest/substeps/useragent1_config.xml"
+    id="15"
+    description1="Set variables for {FEATURE}"
+    method="cmd"
+    command="echo NOP"
+/>
+
+<include
+    id="20"
+    file="./../WebInject-Selenium/selftest/helpers/selenium_server_runner.xml"
+/>
+
+</testcases>

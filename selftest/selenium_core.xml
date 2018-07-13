@@ -4,7 +4,14 @@
 Self test master file. All test steps in this file should pass.
 -->
 
-<testvar varname="feature">selenium_core</testvar>
+<case
+    varFEATURE="selenium_core"
+    varCONFIG_FILE="config.xml"
+    id="5"
+    description1="Set variables"
+    method="cmd"
+    command="echo NOP"
+/>
 
 <!-- Windows Manual Start of Selenium Server Example (Info only - WebInject will do this automatically)
 
@@ -38,8 +45,8 @@ command will run on both Windows and Linux
     id="100"
     description1="Run WebInject using Selenium Remote Control Server running under Java"
     method="cmd"
-    command1="webinject.pl -o {PROJECT}selftest\output\${feature}server_chrome_sub --driver chrome --chromedriver-binary C:\selenium\chromedriver.exe --selenium-binary C:\selenium\selenium-server-standalone-3.11.0.jar {PROJECT}selftest\substeps\${feature}.xml"
-    command2="perl $PWD/webinject.pl -o {PROJECT}selftest\output\${feature}server_chrome_sub --driver chrome --chromedriver-binary $HOME/selenium/chromedriver --selenium-binary $HOME/selenium/selenium-server-standalone-3.11.0.jar {PROJECT}selftest\substeps\${feature}.xml"
+    command1="webinject.pl -o {PROJECT}selftest\output\{FEATURE}_server_chrome_sub --config {CONFIG_FILE} --driver chrome --chromedriver-binary C:\selenium\chromedriver.exe --selenium-binary C:\selenium\selenium-server-standalone-3.11.0.jar {PROJECT}selftest\substeps\{FEATURE}.xml"
+    command2="perl $PWD/webinject.pl -o {PROJECT}selftest\output\{FEATURE}_server_chrome_sub --config {CONFIG_FILE} --driver chrome --chromedriver-binary $HOME/selenium/chromedriver --selenium-binary $HOME/selenium/selenium-server-standalone-3.11.0.jar {PROJECT}selftest\substeps\{FEATURE}.xml"
     verifypositive1="AspNetCore.Antiforgery"
     verifypositive2="Test Cases Failed: 0"
     verifypositive3="Started Selenium Remote Control Standalone server on port"
@@ -49,8 +56,8 @@ command will run on both Windows and Linux
     id="200"
     description1="Run WebInject pointing to the ChromeDriver binary - does not require Selenium Server or java"
     method="cmd"
-    command1="webinject.pl -o {PROJECT}selftest\output\${feature}_chromedriver_standalone_sub --driver chromedriver --chromedriver-binary C:\selenium\chromedriver.exe {PROJECT}selftest\substeps\${feature}.xml"
-    command2="perl $PWD/webinject.pl -o {PROJECT}selftest\output\${feature}_chromedriver_standalone_sub --driver chromedriver --chromedriver-binary $HOME/selenium/chromedriver {PROJECT}selftest\substeps\${feature}.xml"
+    command1="webinject.pl -o {PROJECT}selftest\output\{FEATURE}_chromedriver_standalone_sub --config {CONFIG_FILE} --driver chromedriver --chromedriver-binary C:\selenium\chromedriver.exe {PROJECT}selftest\substeps\{FEATURE}.xml"
+    command2="perl $PWD/webinject.pl -o {PROJECT}selftest\output\{FEATURE}_chromedriver_standalone_sub --config {CONFIG_FILE} --driver chromedriver --chromedriver-binary $HOME/selenium/chromedriver {PROJECT}selftest\substeps\{FEATURE}.xml"
     verifypositive1="AspNetCore.Antiforgery"
     verifypositive2="Test Cases Failed: 0"
     verifypositive3="Starting ChromeDriver on port"

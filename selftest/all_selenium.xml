@@ -5,6 +5,14 @@ Run all WebInject Selenium self tests
 -->
 
 <case
+    varCONFIG_FILE="config.xml"
+    id="5"
+    description1="Set variables"
+    method="cmd"
+    command="echo NOP"
+/>
+
+<case
     varPROJECT="./../WebInject-Selenium/"
     varFEATURE="_click"
     id="110"
@@ -49,6 +57,16 @@ Run all WebInject Selenium self tests
     varFEATURE="selenium_core"
     varPROJECT="./../WebInject-Selenium/"
     id="150"
+    description1="{FEATURE}"
+    method="cmd"
+    command="perl webinject.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.xml"
+    verifypositive="TEST CASE PASSED"
+    verifynegative="TEST CASE FAILED"
+/>
+
+<case
+    varFEATURE="useragent"
+    id="160"
     description1="{FEATURE}"
     method="cmd"
     command="perl webinject.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.xml"

@@ -4,7 +4,7 @@
     id="00"
     description1="Run WebInject using Chromedriver directly"
     method="cmd"
-    command1="webinject.pl -o {PROJECT}selftest/output/${feature}server_chrome_sub --driver chromedriver --chromedriver-binary C:\selenium\chromedriver.exe {PROJECT}selftest/substeps/${feature}.xml"
-    command2="perl $PWD/webinject.pl -o {PROJECT}selftest/output/${feature}server_chrome_sub --driver chromedriver --chromedriver-binary $HOME/selenium/chromedriver {PROJECT}selftest/substeps/${feature}.xml"
+    command1="webinject.pl -o {PROJECT}selftest/output/${feature}server_chrome_sub --config {CONFIG_FILE} --driver chromedriver --chromedriver-binary C:\selenium\chromedriver.exe {PROJECT}selftest/substeps/{FEATURE}.xml"
+    command2="perl $PWD/webinject.pl -o {PROJECT}selftest/output/${feature}server_chrome_sub --config {CONFIG_FILE} --driver chromedriver --chromedriver-binary $HOME/selenium/chromedriver {PROJECT}selftest/substeps/{FEATURE}.xml"
     verifypositive2="Test Cases Failed: 0"
 />

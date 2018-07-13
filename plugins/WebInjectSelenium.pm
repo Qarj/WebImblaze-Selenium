@@ -188,6 +188,9 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
     if ($main::opt_headless) {
         push @_chrome_args, '--headless';
     }
+    if ($main::config->{useragent}) {
+        push @_chrome_args, '--user-agent='.$main::config->{useragent};
+    }
 
     if ($main::opt_keep_session) { $_auto_close = 0; }
 
