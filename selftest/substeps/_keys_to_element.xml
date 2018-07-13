@@ -210,7 +210,7 @@
     id="1010"
     description1="Uncheck 'Switch on one-click apply'"
     method="selenium"
-    command1="_click_after('Enable other employers to find me')"
+    command1="_click_after('Share your profile with trusted employers')"
     command3="_get_element('ocaOptIn')"
     verifypositive="isChecked\[false]"
 />
