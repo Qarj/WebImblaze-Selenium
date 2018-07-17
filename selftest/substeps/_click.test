@@ -1,0 +1,72 @@
+step:                   Get Search Recipes
+section:                Click Helper Self Test - Anchors
+selenium:               $driver->get("http://{WIC}/Search/SearchForm")
+verifytext:             get_current_url,get_page_source
+verifypositive:         Recipe Name
+restartbrowseronfail:   true
+retry:                  3
+
+step:                   Click Search
+description2:           Partial match from start of string, 3rd instance
+selenium1:              _click('Search|||3')
+selenium2:              _wait_for_text_visible('MaxPrepTime field is required')
+verifytext:             get_current_url,get_body_text
+verifypositive1:        Focused and clicked tag INPUT WITH\[Search] OK \(text index 0\)
+verifypositive20:       Found sought text
+
+step:                   Click Cancel
+description2:           Exact Match of an attribute
+selenium1:              _click('Cancel')
+verifytext:             get_current_url,get_body_text
+verifypositive:         Recipe Name
+verifypositive1:        Focused and clicked tag INPUT WITH\[Cancel] OK \(exact match\)
+verifynegative:         Please Provide Recipe Name
+
+step:                   Click Recipes
+description2:           Partial Match of an attribute from within string, 3rd instance (1st instance is title element, 2nd instance is h2)
+selenium1:              _click('Recipes|||3')
+selenium2:              _wait_for_text_visible('MaxPrepTime field is required')
+verifytext:             get_current_url,get_body_text
+verifypositive1:        Focused and clicked tag INPUT WITH\[Recipes] OK \(text index 7\)
+verifypositive20:       Found sought text
+
+step:                   Click Cancel
+selenium1:              _click('Cancel')
+verifytext:             get_current_url,get_body_text
+verifypositive:         Recipe Name
+verifynegative:         Please Provide Recipe Name
+
+step:                   Click Search Recipes
+description2:           Exact Match of an attribute
+selenium1:              _click('Search Recipes')
+selenium2:              _wait_for_text_visible('MaxPrepTime field is required')
+verifytext:             get_current_url,get_body_text
+verifypositive1:        Focused and clicked tag INPUT WITH\[Search Recipes] OK \(exact match\)
+verifypositive20:       Found sought text
+
+step:                   Click Search Recipes.
+description2:           Exact Match of element text - H2 tag
+selenium1:              _click('Search Recipes.')
+verifytext:             get_current_url,get_body_text
+verifypositive1:        Focused and clicked tag H2 WITH\[Search Recipes.] OK \(exact match\)
+
+step:                   Get Search Recipes
+section:                Click Before and After
+selenium:               $driver->get("http://{WIC}/Search/SearchForm")
+verifytext:             get_current_url,get_page_source
+verifypositive:         Recipe Name
+
+step:                   Click before Cancel
+description2:           [Should target Search Recipes]
+selenium1:              _click_before('Cancel')
+selenium2:              _wait_for_text_visible('MaxPrepTime field is required')
+verifytext:             get_current_url,get_body_text
+verifypositive20:       Found sought text
+
+step:                   Click after Search Recipes
+description2:           [Exact match to Search Recipes, Should target Cancel]
+selenium1:              _click_after('Search Recipes')
+verifytext:             get_current_url,get_body_text
+verifypositive:         Recipe Name
+verifynegative:         Please Provide Recipe Name
+

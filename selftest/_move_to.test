@@ -1,0 +1,7 @@
+step:                   Set variables
+varCONFIG_FILE:         config.xml
+varFEATURE:             _move_to
+shell:                  echo NOP
+
+include:                ./../WebInject-Selenium/selftest/helpers/selenium_server_runner.test
+

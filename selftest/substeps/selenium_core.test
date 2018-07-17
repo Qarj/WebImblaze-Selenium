@@ -1,0 +1,22 @@
+step:                   Get WEBINJECT-CHECK Search Form
+section:                WEBINJECT-CHECK Search Form
+selenium:               $driver->get("http://{WIC}/Search/SearchForm")
+selenium1:              $driver->get_all_cookies()
+verifytext:             get_page_source,get_current_url
+verifypositive:         Search Recipes
+verifypositive1:        Max Preparation Time
+retry:                  3
+
+step:                   Fill out Search Form
+selenium1:              _clear_and_send_keys('TxtRecipeName','id','Sheperds Pie')
+selenium2:              _clear_and_send_keys('TxtCuisine','id','British')
+selenium3:              _clear_and_send_keys('TxtMaxPrepTime','id','2')
+selenium4:              _wait_for_text_visible('Cuisine', 'body', 'tag_name', 5)
+verifytext:             get_page_source,get_current_url
+verifypositive:         Cuisine
+
+step:                   Submit Search
+selenium1:              $driver->find_element("input[name=BtnSubmit]","css")->click()
+verifytext:             get_page_source,get_current_url
+verifypositive:         you just submitted a search
+

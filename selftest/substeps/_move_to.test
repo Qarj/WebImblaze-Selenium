@@ -1,0 +1,32 @@
+step:                   Get Totaljobs Home Page
+section:                _move_to
+selenium:               $driver->get("https://www.totaljobs.com")
+selenium1:              _get_element('Copyright and database rights')
+verifytext:             get_current_url,get_body_text
+verifypositive:         Companies hiring
+checkpoint:             true
+
+step:                   Check that Register CV is in viewport (top right)
+selenium1:              _get_element('Register CV')
+verifytext:             get_current_url
+verifypositive1:        inViewport\[1]
+
+step:                   Check that StepStone Deutschland is not in viewport (very bottom of page left)
+selenium1:              _get_element('StepStone Deutschland')
+verifytext:             get_current_url
+verifypositive1:        inViewport\[0]
+
+step:                   Move mouse to Copyright message
+selenium1:              _move_to('Copyright and database rights')
+verifytext:             get_current_url
+
+step:                   Check that Register CV is now NOT in viewport (top right)
+selenium1:              _get_element('Register CV')
+verifytext:             get_current_url
+verifypositive1:        inViewport\[0]
+
+step:                   Check that StepStone Deutschland is now IN viewport (very bottom of page left)
+selenium1:              _get_element('StepStone Deutschland')
+verifytext:             get_current_url
+verifypositive1:        inViewport\[1]
+

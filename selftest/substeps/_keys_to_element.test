@@ -1,0 +1,128 @@
+step:                   Get WEBINJECT-CHECK Search Form
+section:                _keys_to_element_after
+selenium:               $driver->get("http://{WIC}/Search/SearchForm")
+verifytext:             get_current_url,get_page_source
+verifypositive:         Search Recipes
+verifypositive1:        Max Preparation Time
+retry:                  3
+
+step:                   Enter Recipe Name
+selenium1:              _keys_to_element_after('Recipe Name','Shepherds Pie')
+selenium2:              _get_element('TxtRecipeName')
+verifytext:             get_current_url
+verifypositive:         Element Value \[Shepherds Pie\]
+
+step:                   Enter Cuisine
+selenium1:              _keys_to_element_after('Cuisine','British')
+selenium2:              _get_element('TxtCuisine')
+verifypositive:         Element Value \[British\]
+
+step:                   Enter Max Preparation Time
+selenium1:              _keys_to_element_after('Max Prep','2')
+selenium2:              _get_element('MaxPrepTime')
+verifypositive:         Element Value \[2\]
+
+step:                   Submit Search
+selenium1:              $driver->find_element("input[name=BtnSubmit]","css")->click()
+verifytext:             get_current_url,get_body_text
+verifypositive:         you just submitted a search
+
+step:                   Get WEBINJECT-CHECK Search Form
+section:                _keys_to_element_before
+selenium:               $driver->get("http://{WIC}/Search/SearchForm")
+verifytext:             get_current_url,get_page_source
+verifypositive:         Search Recipes
+verifypositive1:        Max Preparation Time
+
+step:                   Enter Recipe Name
+selenium1:              _keys_to_element_before('Cuisine','Shepherds Pie')
+selenium2:              _get_element('TxtRecipeName')
+verifytext:             get_current_url
+verifypositive:         Element Value \[Shepherds Pie\]
+
+step:                   Enter Cuisine
+selenium1:              _keys_to_element_before('PrepTime','British')
+selenium2:              _get_element('TxtCuisine')
+verifypositive:         Element Value \[British\]
+
+step:                   Enter Max Preparation Time
+selenium1:              _keys_to_element_before('Search Recipes','2')
+selenium2:              _get_element('MaxPrepTime')
+verifypositive:         Element Value \[2\]
+verifypositive1:        Focused and clicked tag INPUT BEFORE\[Search Recipes] OK \(exact match\) id\[TxtMaxPrepTime] then sent keys OK
+
+step:                   Submit Search
+selenium1:              $driver->find_element("input[name=BtnSubmit]","css")->click()
+verifytext:             get_current_url,get_body_text
+verifypositive:         you just submitted a search
+
+step:                   Get WEBINJECT-CHECK Search Form
+section:                _keys_to_element
+selenium:               $driver->get("http://{WIC}/Search/SearchForm")
+verifytext:             get_current_url,get_page_source
+verifypositive:         Search Recipes
+verifypositive1:        Max Preparation Time
+
+step:                   Enter Recipe Name
+selenium1:              _keys_to_element('RecipeName','Shepherds Pie')
+selenium2:              _get_element('TxtRecipeName')
+verifytext:             get_current_url
+verifypositive:         Element Value \[Shepherds Pie\]
+verifypositive1:        Focused and clicked tag INPUT WITH\[RecipeName] OK \(exact match\) id\[TxtRecipeName] then sent keys OK
+
+step:                   Enter Cuisine
+selenium1:              _keys_to_element('xtCuisine','British')
+selenium2:              _get_element('TxtCuisine')
+verifypositive:         Element Value \[British\]
+verifypositive1:        Focused and clicked tag INPUT WITH\[xtCuisine] OK \(text index 1\) id\[TxtCuisine] then sent keys OK
+
+step:                   Enter Max Preparation Time
+selenium1:              _keys_to_element('PrepTime','2')
+selenium2:              _get_element('MaxPrepTime')
+verifypositive:         Element Value \[2\]
+verifypositive1:        Focused and clicked tag INPUT WITH\[PrepTime] OK \(text index 6\) id\[TxtMaxPrepTime] then sent keys OK
+
+step:                   Submit Search
+selenium1:              $driver->find_element("input[name=BtnSubmit]","css")->click()
+verifytext:             get_current_url,get_body_text
+verifypositive:         you just submitted a search
+
+step:                   Get WEBINJECT-CHECK Search Form
+section:                'INPUT|||3'
+selenium:               $driver->get("http://{WIC}/Search/SearchForm")
+verifytext:             get_current_url,get_page_source
+verifypositive:         Search Recipes
+verifypositive1:        Max Preparation Time
+
+step:                   Enter Max Preparation Time
+selenium1:              _keys_to_element_after('Search Recipes.','2','INPUT|||3')
+selenium2:              _get_element('MaxPrepTime')
+verifypositive:         Element Value \[2\]
+verifypositive1:        Focused and clicked tag INPUT AFTER\[Search Recipes\.] OK \(exact match\) id\[TxtMaxPrepTime] then sent keys OK
+
+step:                   Enter Cuisine
+section:                'anchor|||3'
+selenium1:              _keys_to_element_before('Search|||3','Thai','INPUT|||2')
+selenium2:              _get_element('TxtCuisine')
+verifypositive:         Element Value \[Thai\]
+verifypositive1:        Focused and clicked tag INPUT BEFORE\[Search] OK \(text index 0\) id\[TxtCuisine] then sent keys OK
+
+step:                   Set Highest level of education to Diploma
+section:                Keys to SELECT element
+selenium1:              $driver->get("https://www.totaljobs.com/account/register")
+selenium2:              _keys_to_element_after('Highest level of education','Diploma','SELECT')
+selenium4:              _get_element('educationId')
+verifytext:             get_page_source,get_current_url
+verifypositive:         \[538\] Diploma
+
+step:                   View 'Switch on one-click apply' current state
+section:                Keys to checkbox
+selenium2:              _get_element('ocaOptIn')
+selenium3:              _scroll_to('register')
+verifypositive:         isChecked\[true]
+
+step:                   Uncheck 'Switch on one-click apply'
+selenium1:              _click_after('Share your profile with trusted employers')
+selenium3:              _get_element('ocaOptIn')
+verifypositive:         isChecked\[false]
+
