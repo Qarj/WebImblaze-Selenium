@@ -12,3 +12,9 @@ shell:                  echo NOP
 
 include:                ./../WebInject-Selenium/selftest/helpers/selenium_server_runner.test
 
+step:                   Set variables for {FEATURE}
+varCONFIG_FILE:         ./../WebInject-Selenium/selftest/substeps/useragent1_config.xml
+varFEATURE:             useragent2
+shell:                  echo NOP
+
+include:                ./../WebInject-Selenium/selftest/helpers/selenium_server_runner.test
