@@ -1,0 +1,21 @@
+step:                   Get homepage
+section:                Locators for Testers Example - GrainCorp
+selenium1:              $driver->get("http://www.graincorp.com.au")
+verifytext:             get_current_url,get_body_text
+verifypositive:         About GrainCorp
+
+step:                   Click magnifying glass to open search form
+selenium1:              _click("icon-magnify")
+verifytext:             get_current_url,get_body_text
+verifypositive:         Search
+
+step:                   Fill out search form
+selenium1:              _keys_to_element_after("Search","prime hard")
+verifytext:             get_current_url,get_body_text
+verifypositive:         prime hard
+
+step:                   Submit search
+selenium1:              _click("GO")
+verifytext:             get_current_url,get_body_text
+verifypositive:         Search results
+

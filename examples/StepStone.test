@@ -1,0 +1,29 @@
+step:                   Fill out StepStone search form
+section:                Locators for Testers Example - StepStone
+selenium1:              $driver->get("https://www.stepstone.de/")
+selenium2:              _keys_to_element('Jobtitel, Kompetenz','Test Automation')
+selenium3:              _keys_to_element('Ort oder 5','Berlin')
+verifytext:             get_current_url,get_body_text
+verifypositive:         Stellenanzeige
+
+step:                   Click Suchen
+selenium1:              _click('Suchen')
+selenium2:              _wait_for_text_visible('Kompetenzen')
+verifytext:             get_current_url,get_body_text
+verifypositive:         Found sought text
+
+step:                   Click Schlieﬂen
+selenium1:              _click('Schlieﬂen')
+verifytext:             get_current_url,get_body_text
+
+step:                   Click Sortieren nach
+selenium1:              _click('Datum')
+selenium2:              _wait_for_text_visible('Kompetenzen')
+verifytext:             get_current_url,get_body_text
+verifypositive:         Found sought text
+
+step:                   Click Suche speichern
+selenium1:              _click('Suche speichern')
+selenium2:              _wait_for_text_visible('Wohin sollen wir')
+verifytext:             get_current_url,get_body_text
+

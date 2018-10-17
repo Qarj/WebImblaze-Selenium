@@ -1,0 +1,24 @@
+step:                   Fill out search form
+section:                Locators for Testers Example - rightmove
+selenium1:              $driver->get("http://www.rightmove.co.uk")
+selenium2:              _keys_to_element(q|e.g. 'York'|,'Waterloo Station')
+verifytext:             get_current_url,get_body_text
+verifypositive:         Find your happy
+
+step:                   Submit search
+selenium1:              _click("To rent")
+verifytext:             get_current_url,get_body_text
+verifypositive:         More than one place
+
+step:                   Fill out additional options
+selenium1:              _keys_to_element_after("Search radius","Within 1 mile","SELECT")
+selenium2:              _keys_to_element_after("Price range","800 PCM","SELECT")
+selenium3:              _keys_to_element_after("Price range","1,500 PCM","SELECT|||2")
+verifytext:             get_current_url,get_body_text
+verifypositive:         1,500 PCM
+
+step:                   Submit search
+selenium1:              _click("Find properties")
+verifytext:             get_current_url,get_body_text
+verifypositive:         Properties To Rent near Waterloo Station
+

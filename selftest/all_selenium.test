@@ -4,39 +4,39 @@ shell:                  echo NOP
 
 step:                   {FEATURE}
 varFEATURE:             _click
-varPROJECT:             ./../WebInject-Selenium/
-shell:                  perl webinject.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.test
+varPROJECT:             ./../WebImblaze-Selenium/
+shell:                  perl wi.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.test
 verifypositive:         TEST CASE PASSED
 verifynegative:         TEST CASE FAILED
 
 step:                   {FEATURE}
 varFEATURE:             _keys_to_element
-shell:                  perl webinject.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.test
+shell:                  perl wi.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.test
 verifypositive:         TEST CASE PASSED
 verifynegative:         TEST CASE FAILED
 
 step:                   {FEATURE}
 varFEATURE:             _move_to
-shell:                  perl webinject.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.test
+shell:                  perl wi.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.test
 verifypositive:         TEST CASE PASSED
 verifynegative:         TEST CASE FAILED
 
 step:                   {FEATURE}
 varFEATURE:             _wait_visible
-shell:                  perl webinject.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.test
+shell:                  perl wi.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.test
 verifypositive:         TEST CASE PASSED
 verifynegative:         TEST CASE FAILED
 
 step:                   {FEATURE}
 varFEATURE:             selenium_core
-varPROJECT:             ./../WebInject-Selenium/
-shell:                  perl webinject.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.test
+varPROJECT:             ./../WebImblaze-Selenium/
+shell:                  perl wi.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.test
 verifypositive:         TEST CASE PASSED
 verifynegative:         TEST CASE FAILED
 
 step:                   {FEATURE}
 varFEATURE:             useragent
-shell:                  perl webinject.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.test
+shell:                  perl wi.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.test
 verifypositive:         TEST CASE PASSED
 verifynegative:         TEST CASE FAILED
 

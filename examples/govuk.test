@@ -1,0 +1,46 @@
+step:                   Fill out TFL search form
+section:                Locators for Testers Example - GOV.UK
+selenium1:              $driver->get("https://www.gov.uk")
+selenium2:              _keys_to_element('Search GOV.UK','Driving')
+verifytext:             get_current_url,get_body_text
+verifypositive:         best place to find government services
+
+step:                   Submit search
+selenium1:              _click('submit')
+selenium2:              _wait_for_text_visible('Book your driving test')
+verifytext:             get_current_url,get_body_text
+verifypositive20:       Found sought text
+
+step:                   Click 'book-driving-test'
+selenium1:              _click('book-driving-test')
+verifytext:             get_current_url,get_body_text
+verifypositive20:       buses and coaches
+
+step:                   Click 'Start now'
+selenium1:              _click('Start now')
+selenium2:              _wait_for_text_visible('Choose type of test',25)
+verifytext:             get_current_url,get_body_text
+verifypositive20:       Found sought text
+
+step:                   Click 'manual and automatic'
+selenium1:              _click('manual and automatic')
+selenium2:              _wait_for_text_visible('Driving licence number',25)
+verifytext:             get_current_url,get_body_text
+verifypositive20:       Found sought text
+
+step:                   Click first 'Yes'
+selenium1:              _click('Yes')
+verifytext:             get_current_url
+
+step:                   Click second 'Yes'
+selenium1:              _get_element('extended-test-yes')
+selenium2:              _click('Yes|||2')
+selenium3:              _get_element('extended-test-yes')
+verifytext:             get_current_url
+
+step:                   Enter a driving licence number
+selenium1:              _keys_to_element('eg MORGA','{RANDOM:5:ALPHA}{RANDOM:6:NUMERIC}{RANDOM:4:ALPHA}')
+selenium2:              _get_element('driverLicenceNumber')
+verifytext:             get_current_url
+verifypositive:         driving-licence
+

@@ -1,0 +1,17 @@
+step:                   Get homepage
+section:                Locators for Testers Example - Condobolin
+selenium1:              $driver->get("http://www.condobolin.nsw.au")
+verifytext:             get_current_url,get_body_text
+verifypositive:         Heart of NSW
+checkpoint:             true
+
+step:                   Click Condobolin Directory
+selenium1:              _click("Condobolin Directory")
+verifytext:             get_current_url,get_body_text
+verifypositive:         Condobolin Local Directory
+
+step:                   Click Community Organisations
+selenium1:              _click("Community Organisations")
+verifytext:             get_current_url,get_body_text
+verifypositive:         Western Plains Regional Development
+

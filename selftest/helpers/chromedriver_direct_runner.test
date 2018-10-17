@@ -1,7 +1,7 @@
-step:                   Run WebInject using Chromedriver directly
-varPROJECT:             ./../WebInject-Selenium/
-shell1:                 webinject.pl -o {PROJECT}selftest/output/${feature}server_chrome_sub --config {CONFIG_FILE} --driver chromedriver --chromedriver-binary C:\selenium\chromedriver.exe {PROJECT}selftest/substeps/{FEATURE}.test
-shell2:                 perl $PWD/webinject.pl -o {PROJECT}selftest/output/${feature}server_chrome_sub --config {CONFIG_FILE} --driver chromedriver --chromedriver-binary $HOME/selenium/chromedriver {PROJECT}selftest/substeps/{FEATURE}.test
+step:                   Run WebImblaze using Chromedriver directly
+varPROJECT:             ./../WebImblaze-Selenium/
+shell1:                 wi.pl -o {PROJECT}selftest/output/${feature}server_chrome_sub --config {CONFIG_FILE} --driver chromedriver --chromedriver-binary C:\selenium\chromedriver.exe {PROJECT}selftest/substeps/{FEATURE}.test
+shell2:                 perl $PWD/wi.pl -o {PROJECT}selftest/output/${feature}server_chrome_sub --config {CONFIG_FILE} --driver chromedriver --chromedriver-binary $HOME/selenium/chromedriver {PROJECT}selftest/substeps/{FEATURE}.test
 verifypositive2:        Test Cases Failed: 0
 
 

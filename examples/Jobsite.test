@@ -1,0 +1,36 @@
+step:                   Fill out Jobsite search form
+section:                Locators for Testers Example - Jobsite
+selenium1:              $driver->get("http://www.jobsite.co.uk")
+selenium2:              _keys_to_element_before('Job title or skill','Automated Testing')
+selenium3:              _keys_to_element_before('Location','London')
+selenium4:              _keys_to_element_before('Distance','15 miles','SELECT')
+verifytext:             get_current_url,get_body_text
+verifypositive:         Automated Testing
+
+step:                   Click Search
+selenium1:              _click('Search')
+selenium2:              _wait_for_text_visible('Automated Testing jobs')
+verifytext:             get_current_url,get_body_text
+verifypositive:         Found sought text
+
+step:                   Dismiss 'Get new jobs' spotlight
+selenium1:              _click('Close Modal')
+verifytext:             get_current_url,get_body_text
+
+step:                   Click Relevance to open drop down
+selenium1:              _click('Relevance')
+verifytext:             get_current_url,get_body_text
+
+step:                   Click Date to sort by Date
+selenium1:              _click('Date')
+verifytext:             get_current_url,get_body_text
+
+step:                   Enter 'London' into 'Where'
+selenium1:              _keys_to_element_after('Where', 'London')
+verifytext:             get_current_url,get_body_text
+
+step:                   Click 'Search'
+selenium1:              _click('Update|||2')
+verifytext:             get_current_url,get_body_text
+verifypositive:         Automated Testing jobs in London
+

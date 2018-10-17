@@ -3,17 +3,17 @@ varCONFIG_FILE:         config.xml
 varFEATURE:             selenium_core
 shell:                  echo NOP
 
-step:                   Run WebInject using Selenium Remote Control Server running under Java
-varPROJECT:             ./../WebInject-Selenium/
-shell1:                 webinject.pl -o {PROJECT}selftest\output\{FEATURE}_server_chrome_sub --config {CONFIG_FILE} --driver chrome --chromedriver-binary C:\selenium\chromedriver.exe --selenium-binary C:\selenium\selenium-server-standalone-3.11.0.jar {PROJECT}selftest\substeps\{FEATURE}.test
-shell2:                 perl $PWD/webinject.pl -o {PROJECT}selftest\output\{FEATURE}_server_chrome_sub --config {CONFIG_FILE} --driver chrome --chromedriver-binary $HOME/selenium/chromedriver --selenium-binary $HOME/selenium/selenium-server-standalone-3.11.0.jar {PROJECT}selftest\substeps\{FEATURE}.test
+step:                   Run WebImblaze using Selenium Remote Control Server running under Java
+varPROJECT:             ./../WebImblaze-Selenium/
+shell1:                 wi.pl -o {PROJECT}selftest\output\{FEATURE}_server_chrome_sub --config {CONFIG_FILE} --driver chrome --chromedriver-binary C:\selenium\chromedriver.exe --selenium-binary C:\selenium\selenium-server-standalone-3.11.0.jar {PROJECT}selftest\substeps\{FEATURE}.test
+shell2:                 perl $PWD/wi.pl -o {PROJECT}selftest\output\{FEATURE}_server_chrome_sub --config {CONFIG_FILE} --driver chrome --chromedriver-binary $HOME/selenium/chromedriver --selenium-binary $HOME/selenium/selenium-server-standalone-3.11.0.jar {PROJECT}selftest\substeps\{FEATURE}.test
 verifypositive1:        AspNetCore.Antiforgery
 verifypositive2:        Test Cases Failed: 0
 verifypositive3:        Started Selenium Remote Control Standalone server on port
 
-step:                   Run WebInject pointing to the ChromeDriver binary - does not require Selenium Server or java
-shell1:                 webinject.pl -o {PROJECT}selftest\output\{FEATURE}_chromedriver_standalone_sub --config {CONFIG_FILE} --driver chromedriver --chromedriver-binary C:\selenium\chromedriver.exe {PROJECT}selftest\substeps\{FEATURE}.test
-shell2:                 perl $PWD/webinject.pl -o {PROJECT}selftest\output\{FEATURE}_chromedriver_standalone_sub --config {CONFIG_FILE} --driver chromedriver --chromedriver-binary $HOME/selenium/chromedriver {PROJECT}selftest\substeps\{FEATURE}.test
+step:                   Run WebImblaze pointing to the ChromeDriver binary - does not require Selenium Server or java
+shell1:                 wi.pl -o {PROJECT}selftest\output\{FEATURE}_chromedriver_standalone_sub --config {CONFIG_FILE} --driver chromedriver --chromedriver-binary C:\selenium\chromedriver.exe {PROJECT}selftest\substeps\{FEATURE}.test
+shell2:                 perl $PWD/wi.pl -o {PROJECT}selftest\output\{FEATURE}_chromedriver_standalone_sub --config {CONFIG_FILE} --driver chromedriver --chromedriver-binary $HOME/selenium/chromedriver {PROJECT}selftest\substeps\{FEATURE}.test
 verifypositive1:        AspNetCore.Antiforgery
 verifypositive2:        Test Cases Failed: 0
 verifypositive3:        Starting ChromeDriver on port

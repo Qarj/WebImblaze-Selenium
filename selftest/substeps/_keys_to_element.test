@@ -1,4 +1,4 @@
-step:                   Get WEBINJECT-CHECK Search Form
+step:                   Get WEBIMBLAZE-CHECK Search Form
 section:                _keys_to_element_after
 selenium:               $driver->get("http://{WIC}/Search/SearchForm")
 verifytext:             get_current_url,get_page_source
@@ -27,7 +27,7 @@ selenium1:              $driver->find_element("input[name=BtnSubmit]","css")->cl
 verifytext:             get_current_url,get_body_text
 verifypositive:         you just submitted a search
 
-step:                   Get WEBINJECT-CHECK Search Form
+step:                   Get WEBIMBLAZE-CHECK Search Form
 section:                _keys_to_element_before
 selenium:               $driver->get("http://{WIC}/Search/SearchForm")
 verifytext:             get_current_url,get_page_source
@@ -56,7 +56,7 @@ selenium1:              $driver->find_element("input[name=BtnSubmit]","css")->cl
 verifytext:             get_current_url,get_body_text
 verifypositive:         you just submitted a search
 
-step:                   Get WEBINJECT-CHECK Search Form
+step:                   Get WEBIMBLAZE-CHECK Search Form
 section:                _keys_to_element
 selenium:               $driver->get("http://{WIC}/Search/SearchForm")
 verifytext:             get_current_url,get_page_source
@@ -87,7 +87,7 @@ selenium1:              $driver->find_element("input[name=BtnSubmit]","css")->cl
 verifytext:             get_current_url,get_body_text
 verifypositive:         you just submitted a search
 
-step:                   Get WEBINJECT-CHECK Search Form
+step:                   Get WEBIMBLAZE-CHECK Search Form
 section:                'INPUT|||3'
 selenium:               $driver->get("http://{WIC}/Search/SearchForm")
 verifytext:             get_current_url,get_page_source

@@ -1,5 +1,5 @@
-step:                   Get WEBINJECT-CHECK Search Form
-section:                WEBINJECT-CHECK Search Form
+step:                   Get WEBIMBLAZE-CHECK Search Form
+section:                WEBIMBLAZE-CHECK Search Form
 selenium:               $driver->get("http://{WIC}/Search/SearchForm")
 selenium1:              $driver->get_all_cookies()
 verifytext:             get_page_source,get_current_url

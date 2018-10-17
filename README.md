@@ -1,5 +1,5 @@
-# WebInject-Selenium 0.5.0
-WebInject, the project found at [https://github.com/Qarj/WebInject](https://github.com/Qarj/WebInject), can also drive Selenium using the Chrome browser.
+# WebImblaze-Selenium 0.6.0
+WebImblaze, the project found at [https://github.com/Qarj/WebImblaze](https://github.com/Qarj/WebImblaze), can also drive Selenium using the Chrome browser.
 
 You have the choice of using the Selenium Server (which I find to be more robust), or you can drive ChromeDriver directly (Java not required!).
 
@@ -8,15 +8,15 @@ Selenium WebDriver using ChromeDriver
 
 ### Windows (instructions for Linux and Mac below)
 
-1. After installing WebInject to `C:\git`, clone this plugin project
+1. After installing WebImblaze to `C:\git`, clone this plugin project
     ```
     cd C:\git
-    git clone https://github.com/Qarj/WebInject-Selenium.git
+    git clone https://github.com/Qarj/WebImblaze-Selenium.git
     ```
 
-2. Copy `WebInject-Selenium.pm` and `blocker` folder into `WebInject\plugins`
+2. Copy `WebImblaze-Selenium.pm` and `blocker` folder into `WebImblaze/plugins`
     ```
-    perl WebInject-Selenium/plugins/update.pl
+    perl WebImblaze-Selenium/plugins/update.pl
     ```
 
 3. Open a command prompt as an administrator and issue the following command:
@@ -32,69 +32,53 @@ and place it in `C:\selenium`
 
 	Be sure to also install the Java runtime as well - https://ninite.com/ makes this easy.
 
-### Create your first WebInject-Selenium test
+### Create your first WebImblaze-Selenium test
 
-In the `tests` folder, create a file called `test_jobs.xml`.
+In the `tests` folder, create a file called `test_jobs.test`.
 
 Copy and paste the following into the file and save it.
 
-```xml
-<testcases repeat="1">
+```
+step:                   Get CWJobs home page and fill out search form
+selenium1:              $driver->get("https://www.cwjobs.co.uk/")
+selenium2:              _keys_to_element_after('What','test')
+selenium3:              _keys_to_element('Town, city or postcode','London')
+selenium4:              _keys_to_element_after('Where','20 miles','SELECT')
+verifytext:             get_current_url,get_body_text
+verifypositive1:        home for tech jobs
+verifypositive2:        Companies hiring
 
-<case
-    id="10"
-    description1="Get CWJobs home page and fill out search form"
-    method="selenium"
-    command1='$driver->get("https://www.cwjobs.co.uk/")'
-    command2="_keys_to_element_after('What','test')"
-    command3="_keys_to_element('Town, city or postcode','London')"
-    command4="_keys_to_element_after('Where','20 miles','SELECT')"
-    verifytext="get_current_url,get_body_text"
-    verifypositive1="home for tech jobs"
-    verifypositive2="Companies hiring"
-/>
+step:                   Click Search
+selenium1:              _click('Search')
+selenium2:              _wait_for_text_visible('Explore results',25)
+verifytext:             get_current_url,get_body_text,get_page_source
+verifypositive1:        Found sought text
+verifypositive2:        Test jobs in London \+ 20 miles
 
-<case
-    id="20"
-    description1="Click Search"
-    method="selenium"
-    command1="_click('Search')"
-    command2="_wait_for_text_visible('Explore results',25)"
-    verifytext="get_current_url,get_body_text,get_page_source"
-    verifypositive1="Found sought text"
-    verifypositive2="Test jobs in London \+ 20 miles"
-/>
-
-<case
-    id="30"
-    description1="Click on heading for first job ad on search results to see job details"
-    method="selenium"
-    command1="_click('See details for')"
-    command2="_wait_for_text_visible('Back to search results',25)"
-    verifytext="get_current_url,get_body_text"
-    verifypositive1="Found sought text"
-    verifypositive2="Next job"
-/>
-
-</testcases>
+step:                   Click on heading for first job ad on search results to see job details
+selenium1:              _click('See details for')
+selenium2:              _wait_for_text_visible('Back to search results',25)
+verifytext:             get_current_url,get_body_text
+verifypositive1:        Found sought text
+verifypositive2:        Next job
 ```
 
-### Run your first WebInject-Selenium test
+### Run your first WebImblaze-Selenium test
 
-1. From an administrator command prompt, `cd C:\git\WebInject`
+1. From an administrator command prompt, `cd C:\git\WebImblaze`
 
-2. Run the tests with `perl webinject.pl tests/test_jobs.xml`
+2. Run the tests with `perl wi.pl tests/test_jobs.test`
 
 If all is ok, you'll see Chrome open and run the test steps. You'll also see output like the following
 at the command prompt:
 
 ```
-C:\git\WebInject>webinject.pl tests/test_jobs.xml
+C:\git\WebImblaze>wi.pl tests/test_jobs.test
 
-Starting WebInject Engine...
+Starting WebImblaze Engine...
 
 -------------------------------------------------------
-Test:  tests\test_jobs.xml - 10
+Test:  tests\test_jobs.test - 10
 Get CWJobs home page and fill out search form
 Verify Positive: "home for tech jobs"
 Verify Positive: "Companies hiring"
@@ -114,7 +98,7 @@ Response Time = 1 sec
 Verification Time = 0 sec
 Screenshot Time = 2 sec
 -------------------------------------------------------
-Test:  tests\test_jobs.xml - 20
+Test:  tests\test_jobs.test - 20
 Click Search
 Verify Positive: "Found sought text"
 Verify Positive: "Test jobs in London \+ 20 miles"
@@ -134,7 +118,7 @@ Response Time = 2 sec
 Verification Time = 0 sec
 Screenshot Time = 1 sec
 -------------------------------------------------------
-Test:  tests\test_jobs.xml - 30
+Test:  tests\test_jobs.test - 30
 Click on heading for first job ad on search results to see job details
 Verify Positive: "Found sought text"
 Verify Positive: "Next job"
@@ -169,12 +153,12 @@ Results at: output\results.html
 
 ### Examining the results
 
-If your WebInject/output folder was empty before running the test, you'll now see 10 files there:
+If your WebImblaze/output folder was empty before running the test, you'll now see 10 files there:
 * 10.png, 20.png, 30.png - automatic screen shots taken after each test step was executed
 * 10.html, 20.html, 30.html - a html file showing the individual results for each test step (including the screen shot)
 * results.html - a html version of the output to the console, it links to each individual test step
-* results.xml - an xml version of the results, needed by WebInject-Framework
-* http.txt - verbose log of raw WebInject test output
+* results.xml - an xml version of the results, needed by WebImblaze-Framework
+* http.txt - verbose log of raw WebImblaze test output
 * chromedriver.log
 
 Generally the best way to view the results is to open `output\results.xml` in a browser and click on the links to the
@@ -187,13 +171,13 @@ In my experience, running tests using Selenium Server is more robust than runnin
 You can excute the tests using Selenium Server as in the following example:
 
 ```
-perl webinject.pl examples/selenium.xml --driver chrome --chromedriver-binary C:\selenium\chromedriver.exe --selenium-binary C:\selenium\selenium-server-standalone-2.53.1.jar
+perl wi.pl examples/selenium.test --driver chrome --chromedriver-binary C:\selenium\chromedriver.exe --selenium-binary C:\selenium\selenium-server-standalone-3.11.0.jar
 ```
 
 Or more simply, because the locations of the chromedriver and selenium binaries are specified in config.xml:
 
 ```
-perl webinject.pl examples/selenium.xml --driver chrome
+perl wi.pl examples/selenium.test --driver chrome
 ```
 
 ### Resources for creating your own tests
@@ -203,24 +187,24 @@ http://search.cpan.org/perldoc/Selenium::Remote::Driver
 
 There are further examples in the `examples` and `selftest\substeps` folders of this project.
 
-The [WebInject-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the helper (start with underscore `_`) functions available.
+The [WebImblaze-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the helper (start with underscore `_`) functions available.
 
 ### Linux
 
-After installing WebInject to `/usr/local/bin`, clone this plugin project
+After installing WebImblaze to `/usr/local/bin`, clone this plugin project
 ```
 cd /usr/local/bin
-sudo git clone https://github.com/Qarj/WebInject-Selenium.git
+sudo git clone https://github.com/Qarj/WebImblaze-Selenium.git
 ```
 
 Fix permissions
 ```
-cd WebInject-Selenium
+cd WebImblaze-Selenium
 sudo find . -type d -exec chmod a+rwx {} \;
 sudo find . -type f -exec chmod a+rw {} \;
 ```
 
-Copy `WebInject-Selenium.pm` into `WebInject\plugins`
+Copy `WebImblaze-Selenium.pm` into `WebImblaze\plugins`
 ```
 perl plugins/update.pl
 ```
@@ -263,14 +247,14 @@ You can then close it or leave it open. If you don't do this, then it will hang 
 
 You can check that it works by running an example:
 ```
-cd /usr/local/bin/WebInject
-perl webinject.pl examples/selenium.xml
+cd /usr/local/bin/WebImblaze
+perl wi.pl examples/selenium.test
 ```    
 
 or using Selenium Server
 
 ```
-perl webinject.pl examples/selenium.xml --driver chrome
+perl wi.pl examples/selenium.test --driver chrome
 ```    
 
 ### Mac - (currently only supports driving Chrome directly without Selenium Server)
@@ -326,7 +310,7 @@ perl webinject.pl examples/selenium.xml --driver chrome
     sudo perlbrew install --switch stable
     ```
 
-8. Reinstall the packages needed for WebInject in the perlbrew sub system
+8. Reinstall the packages needed for WebImblaze in the perlbrew sub system
     ```
     sudo cpan File::Slurp
     sudo cpan XML::Simple
@@ -342,7 +326,7 @@ perl webinject.pl examples/selenium.xml --driver chrome
 
 9. Check that it works
     ```
-    sudo perl webinject.pl examples/selenium.xml --driver chrome
+    sudo perl wi.pl examples/selenium.test --driver chrome
     ```    
 
 Later, when you need to start perlbrew again:
@@ -358,8 +342,8 @@ sudo perlbrew use perl-5.24.1
 Self Tests
 ----------
 ```
-cd C:\git\WebInject
-perl webinject.pl ../WebInject-Selenium/selftest/all_selenium.xml
+cd C:\git\WebImblaze
+perl wi.pl ../WebImblaze-Selenium/selftest/all_selenium.test
 ```
 
 Plugins
@@ -367,14 +351,14 @@ Plugins
 
 ### search-image.py (Windows Only)
 
-To use the searchimage parameter (see manual), you need to install the dependencies for the search-image.py plugin. (The plugin itself is already installed in the plugins folder of the WebInject project at https://github.com/Qarj/WebInject)
+To use the searchimage parameter (see manual), you need to install the dependencies for the search-image.py plugin. (The plugin itself is already installed in the plugins folder of the WebImblaze project at https://github.com/Qarj/WebImblaze)
 
 See https://github.com/Qarj/search-image for full installation instructions.
 
 To test that it works, run the following. If all test steps pass, then everything is setup ok.
 
 ```
-perl webinject.pl ./../WebInject-Selenium/examples/searchimage.xml
+perl wi.pl ./../WebImblaze-Selenium/examples/searchimage.test
 ```
 
 You can also check the result by looking at `output\100.png' and also `output\200.png`. You'll see that

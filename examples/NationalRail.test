@@ -1,0 +1,31 @@
+step:                   Fill out search form
+section:                Locators for Testers Example - National Rail
+selenium1:              $driver->get("http://www.nationalrail.co.uk")
+selenium2:              _keys_to_element_after('From','London Waterloo')
+selenium3:              _keys_to_element_after('to','Havant')
+selenium4:              _click('Show Calendar')
+selenium5:              _wait_visible('sprite-main next')
+verifytext:             get_current_url,get_body_text
+verifypositive:         Train times
+
+step:                   Fill out search form - part 2
+selenium1:              _click("Tomorrow")
+selenium5:              _keys_to_element_after('at','09','SELECT')
+selenium6:              _keys_to_element_after('at','00','SELECT|||2')
+selenium7:              _click_before('Return')
+verifytext:             get_current_url,get_body_text
+verifypositive:         Train times
+
+step:                   Fill out search form - part 3
+selenium1:              _click("Tomorrow|||2")
+selenium9:              _keys_to_element_after('at|||2','15','SELECT')
+selenium10:             _keys_to_element_after('at|||2','00','SELECT|||2')
+verifytext:             get_current_url,get_body_text
+verifypositive:         Train times
+
+step:                   Click Go
+selenium1:              _click("Go")
+selenium2:              _wait_visible("Earlier trains")
+verifytext:             get_current_url,get_body_text
+verifypositive:         Later trains
+

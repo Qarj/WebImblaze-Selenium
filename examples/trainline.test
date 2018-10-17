@@ -1,0 +1,21 @@
+step:                   Fill out search form
+section:                Locators for Testers Example - trainline
+selenium1:              $driver->get("https://www.thetrainline.com")
+selenium2:              _keys_to_element('Enter origin station','London Waterloo')
+selenium3:              _keys_to_element('Enter destination','Havant')
+selenium4:              _click('Return')
+selenium5:              _click('Tomorrow')
+selenium6:              _keys_to_element_after('outHour','09','SELECT')
+selenium7:              _keys_to_element_after('outMinute','00','SELECT')
+selenium8:              _click('Same day')
+selenium9:              _keys_to_element_after('returnHour','15','SELECT')
+selenium10:             _keys_to_element_after('returnMinute','30','SELECT')
+verifytext:             get_current_url,get_body_text
+verifypositive:         Open Return
+
+step:                   Submit search
+selenium1:              _click("Get times & tickets")
+selenium2:              _wait_visible("Anytime Day Return")
+verifytext:             get_current_url,get_body_text
+verifypositive:         Off-Peak Day Return
+

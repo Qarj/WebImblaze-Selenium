@@ -4,13 +4,13 @@
 # $Revision$
 # $Date$
 
-package WebInjectSelenium;
+package WebImblazeSelenium;
 
 use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '0.5.0';
+$VERSION = '0.6.0';
 
 use Time::HiRes 'time','sleep';
 use File::Copy qw(copy), qw(move);
@@ -184,7 +184,7 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
     push @_chrome_args, '--ignore-certificate-errors';
     push @_chrome_args, '--no-sandbox';
     push @_chrome_args, '--disable-setuid-sandbox';
-    push @_chrome_args, '--load-extension='.$main::this_script_folder_full.'/plugins/blocker';
+    push @_chrome_args, '--load-extension='.$main::this_script_folder_full.main::slash_me('plugins/blocker');
     if ($main::opt_headless) {
         push @_chrome_args, '--headless';
     }
@@ -296,29 +296,29 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
         $main::results_xml .= qq|            <responsetime>0.001</responsetime>\n|;
         $main::results_xml .= qq|        </testcase>\n|;
         $main::results_xml .= qq|        <testcase id="999999">\n|;
-        $main::results_xml .= qq|            <description1>WebInject ended execution early !!!</description1>\n|;
+        $main::results_xml .= qq|            <description1>WebImblaze ended execution early !!!</description1>\n|;
         $main::results_xml .= qq|            <verifynegative>\n|;
-        $main::results_xml .= qq|                <assert>WebInject Aborted - could not connect to $main::opt_driver on port $_connect_port</assert>\n|;
+        $main::results_xml .= qq|                <assert>WebImblaze Aborted - could not connect to $main::opt_driver on port $_connect_port</assert>\n|;
         $main::results_xml .= qq|                <success>false</success>\n|;
         $main::results_xml .= qq|            </verifynegative>\n|;
         $main::results_xml .= qq|            <success>false</success>\n|;
-        $main::results_xml .= qq|            <result-message>WEBINJECT ABORTED</result-message>\n|;
+        $main::results_xml .= qq|            <result-message>WEBIMBLAZE ABORTED</result-message>\n|;
         $main::results_xml .= qq|            <responsetime>0.001</responsetime>\n|;
         $main::results_xml .= qq|        </testcase>\n|;
         $main::case_failed_count++;
         main::final_tasks();
-        die "\n\nWebInject Aborted - could not connect to $main::opt_driver on port $_connect_port\n";
+        die "\n\nWebImblaze Aborted - could not connect to $main::opt_driver on port $_connect_port\n";
     }
 
     my $_response = eval { $driver->set_timeout('page load', 30_000); };
     if ($main::opt_resume_session && !$_response) {
-        die "\n\nWebInject Aborted - failed to resume session on port $_connect_port\n";
+        die "\n\nWebImblaze Aborted - failed to resume session on port $_connect_port\n";
     }
 
     if ($main::opt_resume_session) {
         my $_url = eval { $driver->get_current_url(); };
         if (!$_url) {
-            die "\n\nWebInject Aborted - failed to connect to browser for session id $_session_id\n";
+            die "\n\nWebImblaze Aborted - failed to connect to browser for session id $_session_id\n";
         }
     }
 
@@ -382,7 +382,7 @@ sub _check_and_set_selenium_defaults {
         # great - externally managed
         $main::opt_selenium_port //= '80';  # default port is 80 - e.g. BrowserStack
         $main::opt_driver //= 'chrome'; ## set default value for Selenium Grid / Server
-    } else { # check that we can access the chromedriver binary - since WebInject needs to invoke it
+    } else { # check that we can access the chromedriver binary - since WebImblaze needs to invoke it
         $main::opt_driver //= 'chromedriver'; ## if no selenium host or driver specified, then we go with the basic chromedriver option - it does not require Java
 
         if (not $main::opt_chromedriver_binary) {
@@ -421,8 +421,8 @@ sub _shutdown_any_existing_selenium_session {
 #------------------------------------------------------------------
 
 sub _selenium_host_specified {
-    ## if a user has passed WebInject has been passed a selenium host, that means they have spun up their own Selenium Server or are using a remote Selenium Grid
-    ## for robustness I find it is better to let WebInject manage the Selenium Server and Chrome browser instead - it means WebInject can give it a good hard kick up the bum if it becomes unresponsive
+    ## if a user has passed WebImblaze has been passed a selenium host, that means they have spun up their own Selenium Server or are using a remote Selenium Grid
+    ## for robustness I find it is better to let WebImblaze manage the Selenium Server and Chrome browser instead - it means WebImblaze can give it a good hard kick up the bum if it becomes unresponsive
     
     if (defined $main::opt_selenium_host) {
         return 1;
@@ -553,7 +553,7 @@ sub shutdown_selenium {
         return;
     }
 
-    if (_selenium_host_specified()) { ## we are not going to shutdown a user supplied Selenium Server - only ones started by WebInject
+    if (_selenium_host_specified()) { ## we are not going to shutdown a user supplied Selenium Server - only ones started by WebImblaze
         return;
     }
 
@@ -1511,7 +1511,7 @@ sub _check_element_within_pixels {     ## usage: helper_check_element_within_pix
 sub print_usage {
         print <<'EOB'
 
-Additional Webinject-Selenium plugin options:
+Additional WebImblaze-Selenium plugin options:
 
 -d|--driver chrome|chromedriver   --driver chrome
 -r|--chromedriver-binary          --chromedriver-binary C:\selenium-server\chromedriver.exe
@@ -1528,7 +1528,7 @@ EOB
 }
 
 sub print_version {
-    print "WebInject-Selenium plugin version $VERSION\nFor more info: https://github.com/Qarj/WebInject-Selenium\n\n";
+    print "WebImblaze-Selenium plugin version $VERSION\nFor more info: https://github.com/Qarj/WebImblaze-Selenium\n\n";
 
     return;
 }

@@ -1,0 +1,23 @@
+step:                   Get CWJobs home page and fill out search form
+selenium1:              $driver->get("https://www.cwjobs.co.uk/")
+selenium2:              _keys_to_element_after('What','test')
+selenium3:              _keys_to_element('Town, city or postcode','London')
+selenium4:              _keys_to_element_after('Where','20 miles','SELECT')
+verifytext:             get_current_url,get_body_text
+verifypositive1:        home for tech jobs
+verifypositive2:        Companies hiring
+
+step:                   Click Search
+selenium1:              _click('Search')
+selenium2:              _wait_for_text_visible('Explore results',25)
+verifytext:             get_current_url,get_body_text,get_page_source
+verifypositive1:        Found sought text
+verifypositive2:        Test jobs in London \+ 20 miles
+
+step:                   Click on heading for first job ad on search results to see job details
+selenium1:              _click('See details for')
+selenium2:              _wait_for_text_visible('Back to search results',25)
+verifytext:             get_current_url,get_body_text
+verifypositive1:        Found sought text
+verifypositive2:        Next job
+

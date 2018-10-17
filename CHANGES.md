@@ -1,7 +1,10 @@
-# WebInject-Selenium change log
+# WebImblaze-Selenium change log
 
 ---------------------------------
 ## Release History:
+
+### Version 0.6.0 - Nov, 2018
+* rename project from WebInject-Selenium to WebImblaze-Selenium
 
 ### Version 0.5.0 - Apr 23, 2018
 * Block urls via a simple Chrome extension called Blocker

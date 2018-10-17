@@ -8,7 +8,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '0.0.4';
+$VERSION = '0.0.5';
 
 use File::Copy qw(copy), qw(move);
 use File::Basename;
@@ -18,9 +18,9 @@ use File::Path qw(make_path);
 my $this_script_folder_full = dirname(__FILE__);
 chdir $this_script_folder_full;
 
-my $dest_folder_path = './../../WebInject/plugins/';
+my $dest_folder_path = './../../WebImblaze/plugins/';
 
-_copy_file('WebInjectSelenium.pm', $dest_folder_path);
+_copy_file('WebImblazeSelenium.pm', $dest_folder_path);
 make_path ($dest_folder_path.'blocker');
 _copy_file('blocker/background.js', $dest_folder_path);
 _copy_file('blocker/manifest.json', $dest_folder_path);
