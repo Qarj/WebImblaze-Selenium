@@ -31,8 +31,8 @@ sub selenium {  ## send Selenium command and read response
     my $_combined_response = q{};
     $main::request = HTTP::Request->new('GET','WebDriver');
 
-    ## commands must be run in this order
-    for (qw/command command1 command2 command3 command4 command5 command6 command7 command8 command9 command10  command11 command12 command13 command14 command15 command16 command17 command18 command19 command20/) {
+    # Selenium commands must be run in this order
+    for (qw/selenium selenium1 selenium2 selenium3 selenium4 selenium5 selenium6 selenium7 selenium8 selenium9 selenium10  selenium11 selenium12 selenium13 selenium14 selenium15 selenium16 selenium17 selenium18 selenium19 selenium20/) {
         if ($main::case{$_}) {#perform command
             my $_command = $main::case{$_};
             undef $selresp;
