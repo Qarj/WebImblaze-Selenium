@@ -1,0 +1,16 @@
+<testcases repeat="1">
+
+<case
+    section="User Agent self test"
+    id="100"
+    description1="Get Search Recipes"
+    method="selenium"
+    command='$driver->get("http://{WIC}/Search/SearchForm")'
+    verifytext="get_current_url,get_page_source,get_user_agent"
+    verifypositive1="Recipe Name"
+    verifypositive2="Selenium thru WebInject"
+    retry="3"
+    restartbrowseronfail="true"
+/>
+
+</testcases>
