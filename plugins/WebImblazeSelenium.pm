@@ -10,7 +10,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '0.6.0';
+$VERSION = '0.6.0'; # Selenium 3 Server support + Running ChromeDriver directly
 
 use Time::HiRes 'time','sleep';
 use File::Copy qw(copy), qw(move);
@@ -19,9 +19,8 @@ use Socket qw( PF_INET SOCK_STREAM INADDR_ANY sockaddr_in );
 our ($selresp, $driver, $selenium_port);
 my $attempts_since_last_locate_success = 0;
 
-## Selenium 3 Server support + Running ChromeDriver directly
 #-----------------------------------------------------------
-sub selenium {  ## send Selenium command and read response
+sub selenium {  # send Selenium command and read response
     require Selenium::Remote::Driver;
     require Selenium::Chrome;
     require Data::Dumper;
@@ -33,15 +32,14 @@ sub selenium {  ## send Selenium command and read response
 
     # Selenium commands must be run in this order
     for (qw/selenium selenium1 selenium2 selenium3 selenium4 selenium5 selenium6 selenium7 selenium8 selenium9 selenium10  selenium11 selenium12 selenium13 selenium14 selenium15 selenium16 selenium17 selenium18 selenium19 selenium20/) {
-        if ($main::case{$_}) {#perform command
+        if ($main::case{$_}) {
             my $_command = $main::case{$_};
             undef $selresp;
             my $_selenium_exception;
             eval { $selresp = eval "$_command"; if ($@) { $_selenium_exception = $@; } }; ## no critic(ProhibitStringyEval)
 
-             #$main::results_stdout .= "EVALRESP:$_eval_response\n";
-            if (defined $selresp) { ## phantomjs does not return a defined response sometimes
-                if (($selresp =~ m/(^|=)HASH\b/) || ($selresp =~ m/(^|=)ARRAY\b/)) { ## check to see if we have a HASH or ARRAY object returned
+            if (defined $selresp) {
+                if (($selresp =~ m/(^|=)HASH\b/) || ($selresp =~ m/(^|=)ARRAY\b/)) {
                     my $_dumper_response = Data::Dumper::Dumper($selresp);
                     $main::results_stdout .= "SELRESP: DUMPED:\n$_dumper_response";
                     $selresp = "selresp:DUMPED:$_dumper_response";
@@ -58,33 +56,33 @@ sub selenium {  ## send Selenium command and read response
                     $selresp = "selresp:<undefined>\n";
                 }
             }
-            $_combined_response =~ s{$}{<$_>$_command</$_>\n$selresp\n\n\n}; ## include it in the response
+            $_combined_response =~ s{$}{<$_>$_command</$_>\n$selresp\n\n\n}; # include it in the response
         }
     }
     $selresp = $_combined_response;
 
-    if ($selresp =~ /^ERROR/) { ## Selenium returned an error
-       $selresp =~ s{^}{HTTP/1.1 500 Selenium returned an error\n\n}; ## pretend this is an HTTP response - 100 means continue
+    if ($selresp =~ /^ERROR/) { # Selenium returned an error
+       $selresp =~ s{^}{HTTP/1.1 500 Selenium returned an error\n\n}; # pretend this is an HTTP response - 100 means continue
     }
     else {
-       $selresp =~ s{^}{HTTP/1.1 100 OK\n\n}; ## pretend this is an HTTP response - 100 means continue
+       $selresp =~ s{^}{HTTP/1.1 100 OK\n\n}; # pretend this is an HTTP response - 100 means continue
     }
 
     $main::latency = main::_get_latency_since($_start_timer);
 
-    _get_verifytext(); ## will be injected into $selresp
-    $main::response = HTTP::Response->parse($selresp); ## pretend the response is an http response - inject it into the object
+    _get_verifytext(); # will be injected into $selresp
+    $main::response = HTTP::Response->parse($selresp); # pretend the response is an http response - inject it into the object
 
     _screenshot();
 
     return;
-} ## end sub
+}
 
 sub _get_verifytext {
-    my $_start_timer = time; ## measure latency for the verification
-    sleep 0.020; ## Sleep for 20 milliseconds
+    my $_start_timer = time; # measure latency for the verification
+    sleep 0.020;
 
-    ## multiple verifytexts are separated by commas
+    # multiple verifytexts are separated by commas
     if ($main::case{verifytext}) {
         my @_parse_verify = split /,/, $main::case{verifytext} ;
         foreach (@_parse_verify) {
@@ -96,20 +94,19 @@ sub _get_verifytext {
                 print "GET_BODY_TEXT:$_verify_text\n";
                 eval { @_verify_response =  $driver->find_element('body','tag_name')->get_text(); };
             } else {
-                eval { @_verify_response = $driver->$_verify_text(); }; ## sometimes Selenium will return an array
+                eval { @_verify_response = $driver->$_verify_text(); }; # sometimes Selenium will return an array
             }
 
-            $selresp =~ s{$}{\n\n\n\n}; ## put in a few carriage returns after any Selenium server message first
+            $selresp =~ s{$}{\n\n\n\n}; # put in a few carriage returns after any Selenium server message first
             my $_idx = 0;
             foreach my $_vresp (@_verify_response) {
-                $_vresp =~ s/[^[:ascii:]]+//g; ## get rid of non-ASCII characters in the string element
-                $_idx++; ## we number the verifytexts from 1 onwards to tell them apart in the tags
-                $selresp =~ s{$}{<$_verify_text$_idx>$_vresp</$_verify_text$_idx>\n}; ## include it in the response
-                if (($_vresp =~ m/(^|=)HASH\b/) || ($_vresp =~ m/(^|=)ARRAY\b/)) { ## check to see if we have a HASH or ARRAY object returned
+                $_vresp =~ s/[^[:ascii:]]+//g; # get rid of non-ASCII characters in the string element
+                $_idx++; # we number the verifytexts from 1 onwards to tell them apart in the tags
+                $selresp =~ s{$}{<$_verify_text$_idx>$_vresp</$_verify_text$_idx>\n}; # include it in the response
+                if (($_vresp =~ m/(^|=)HASH\b/) || ($_vresp =~ m/(^|=)ARRAY\b/)) { # check to see if we have a HASH or ARRAY object returned
                     my $_dumper_response = Data::Dumper::Dumper($_vresp);
                     my $_dumped = 'dumped';
-                    $selresp =~ s{$}{<$_verify_text$_dumped$_idx>$_dumper_response</$_verify_text$_dumped$_idx>\n}; ## include it in the response
-                    ## ^ means match start of string, $ end of string
+                    $selresp =~ s{$}{<$_verify_text$_dumped$_idx>$_dumper_response</$_verify_text$_dumped$_idx>\n}; # include it in the response
                 }
             }
         }
@@ -121,22 +118,22 @@ sub _get_verifytext {
 }
 
 sub _screenshot {
-    my $_start_timer = time; ## measure latency for the screenshot
+    my $_start_timer = time; # measure latency for the screenshot
 
     my $_abs_screenshot_full = File::Spec->rel2abs( "$main::opt_publish_full$main::testnum_display$main::jumpbacks_print$main::retries_print.png" );
 
-    ## do the screenshot, needs to be in eval in case modal popup is showing (screenshot not possible)
+    # do the screenshot, needs to be in eval in case modal popup is showing (screenshot not possible)
     my $png_base64;
     eval { $png_base64 = $driver->screenshot(); };
 
-    ## if there was an error in taking the screenshot, $@ will have content
+    # if there was an error in taking the screenshot, $@ will have content
     if ($@) {
         $main::results_stdout .= "Selenium full page grab failed.\n";
         $main::results_stdout .= "ERROR:$@";
     } else {
         require MIME::Base64;
         open my $_FH, '>', main::slash_me($_abs_screenshot_full) or die "\nCould not open $_abs_screenshot_full for writing\n";
-        binmode $_FH; ## set binary mode
+        binmode $_FH; # set binary mode
         print {$_FH} MIME::Base64::decode_base64($png_base64);
         close $_FH or die "\nCould not close page capture file handle\n";
     }
@@ -147,7 +144,7 @@ sub _screenshot {
 }
 
 #------------------------------------------------------------------
-sub start_selenium_browser {     ## start Browser using Selenium Server or ChromeDriver
+sub start_selenium_browser { # start browser using Selenium Server or ChromeDriver
     require Selenium::Remote::Driver;
     require Selenium::Chrome;
     
@@ -198,19 +195,19 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
         ($_selenium_host, $selenium_port, $_session_id) = _read_selenium_session_info();
     }
 
-    ## --load-extension Loads an extension from the specified directory
-    ## --whitelisted-extension-id
-    ## http://rdekleijn.nl/functional-test-automation-over-a-proxy/
-    ## http://bmp.lightbody.net/
+    # --load-extension Loads an extension from the specified directory
+    # --whitelisted-extension-id
+    # http://rdekleijn.nl/functional-test-automation-over-a-proxy/
+    # http://bmp.lightbody.net/
     ATTEMPT:
     {
         eval
         {
 
-            ## ChromeDriver without Selenium Server or JRE
+            # ChromeDriver without Selenium Server or JRE
             if ($main::opt_driver eq 'chromedriver') {
-                my $_port = find_available_port(9585); ## find a free port to bind to, starting from this number
-                $_connect_port = $_port; ## for stdout
+                my $_port = find_available_port(9585); # find a free port to bind to, starting from this number
+                $_connect_port = $_port; # for stdout
                 if ($main::opt_proxy) {
                     $main::results_stdout .= "    [Starting ChromeDriver on port $_port through proxy on port $main::opt_proxy]\n";
                     $driver = Selenium::Chrome->new (binary => $main::opt_chromedriver_binary,
@@ -236,7 +233,7 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
                 }
             }
 
-            ## Chrome
+            # Chrome
             if ($main::opt_driver eq 'chrome') {
                 $_connect_port = $selenium_port;
                 my $_chrome_proxy = q{};
@@ -277,17 +274,17 @@ sub start_selenium_browser {     ## start Browser using Selenium Server or Chrom
                                                    #                          }
                                                    #      }
 
-        }; ## end eval
+        }; # end eval
 
         if ( $@ and $_try++ < $_max )
         {
             if ($_try > 2) {
                 print "\n[Selenium Start Error - possible Chrome and ChromeDriver version compatibility issue]\n$@\nFailed try $_try to connect to $main::opt_driver on port $_connect_port, retrying...\n\n";
             }
-            sleep 4; ## sleep for 4 seconds, Selenium Server may still be starting up
+            sleep 4; # sleep for 4 seconds, Selenium Server may still be starting up
             redo ATTEMPT;
         }
-    } ## end ATTEMPT
+    } # end ATTEMPT
 
     if ($@) {
         print "\nError: $@ Failed to connect to $main::opt_driver after $_max tries\n\n";
@@ -361,7 +358,6 @@ sub _read_selenium_session_info {
     require Config::Tiny;
     my $_session = Config::Tiny->read( 'session.config' );
 
-    # main
     my $_selenium_host = $_session->{main}->{selenium_host};
     my $_selenium_port = $_session->{main}->{selenium_port};
     my $_session_id = $_session->{main}->{session_id};
@@ -381,15 +377,15 @@ sub _check_and_set_selenium_defaults {
     if (_selenium_host_specified()) {
         # great - externally managed
         $main::opt_selenium_port //= '80';  # default port is 80 - e.g. BrowserStack
-        $main::opt_driver //= 'chrome'; ## set default value for Selenium Grid / Server
+        $main::opt_driver //= 'chrome'; # set default value for Selenium Grid / Server
     } else { # check that we can access the chromedriver binary - since WebImblaze needs to invoke it
-        $main::opt_driver //= 'chromedriver'; ## if no selenium host or driver specified, then we go with the basic chromedriver option - it does not require Java
+        $main::opt_driver //= 'chromedriver'; # if no selenium host or driver specified, then we go with the basic chromedriver option - it does not require Java
 
         if (not $main::opt_chromedriver_binary) {
             die "\n\nYou must specify --chromedriver-binary for Selenium tests\n\n";
         }
     
-        $main::opt_chromedriver_binary =~ s/(\$[\w{}""]+)/$1/eeg; ## expand perl environment variables like $ENV{"HOME"} / $ENV{"HOMEPATH"}
+        $main::opt_chromedriver_binary =~ s/(\$[\w{}""]+)/$1/eeg; # expand perl environment variables like $ENV{"HOME"} / $ENV{"HOMEPATH"}
         if (not -e $main::opt_chromedriver_binary) {
             die "\n\nCannot find ChromeDriver at $main::opt_chromedriver_binary\n\n";
         }
@@ -411,7 +407,7 @@ sub _shutdown_any_existing_selenium_session {
     if (defined $driver) {
         $main::results_stdout .= "    [\$driver is defined so shutting down Selenium session first]\n";
         shutdown_selenium();
-        sleep 2.1; ## Sleep for 2.1 seconds, give system a chance to settle before starting new browser
+        sleep 2.1; # Sleep for 2.1 seconds, give system a chance to settle before starting new browser
         $main::results_stdout .= "    [Done shutting down Selenium session]\n";
     }
 
@@ -421,8 +417,8 @@ sub _shutdown_any_existing_selenium_session {
 #------------------------------------------------------------------
 
 sub _selenium_host_specified {
-    ## if a user has passed WebImblaze has been passed a selenium host, that means they have spun up their own Selenium Server or are using a remote Selenium Grid
-    ## for robustness I find it is better to let WebImblaze manage the Selenium Server and Chrome browser instead - it means WebImblaze can give it a good hard kick up the bum if it becomes unresponsive
+    # if a user has passed WebImblaze has been passed a selenium host, that means they have spun up their own Selenium Server or are using a remote Selenium Grid
+    # for robustness I find it is better to let WebImblaze manage the Selenium Server and Chrome browser instead - it means WebImblaze can give it a good hard kick up the bum if it becomes unresponsive
     
     if (defined $main::opt_selenium_host) {
         return 1;
@@ -438,7 +434,7 @@ sub port_available {
     my $_family = PF_INET;
     my $_type   = SOCK_STREAM;
     my $_proto  = getprotobyname 'tcp' or die "getprotobyname: $!\n";
-    my $_host   = INADDR_ANY;  # Use inet_aton for a specific interface
+    my $_host   = INADDR_ANY;  # use inet_aton for a specific interface
 
     socket my $_sock, $_family, $_type, $_proto or die "socket: $!\n";
     my $_name = sockaddr_in($_port, $_host)     or die "sockaddr_in: $!\n";
@@ -466,7 +462,7 @@ sub find_available_port {
 #------------------------------------------------------------------
 sub _start_selenium_server {
 
-    $main::opt_selenium_binary =~ s/(\$[\w{}""]+)/$1/eeg; ## expand perl environment variables like $ENV{"HOME"} / $ENV{"HOMEPATH"}
+    $main::opt_selenium_binary =~ s/(\$[\w{}""]+)/$1/eeg; # expand perl environment variables like $ENV{"HOME"} / $ENV{"HOMEPATH"}
     if (not -e $main::opt_selenium_binary) {
         die "\nCannot find Selenium Server at $main::opt_selenium_binary\n";
     }
@@ -476,7 +472,6 @@ sub _start_selenium_server {
 
     # find free port
     my $_selenium_port = find_available_port(int(rand 999)+11_000);
-    #print "_selenium_port:$_selenium_port\n";
 
     my $_abs_selenium_log_full = File::Spec->rel2abs( $main::results_output_folder.'selenium_log.txt' );
 
@@ -487,7 +482,7 @@ sub _start_selenium_server {
     } elsif ($_os eq 'darwin') {
         my $_abs_chromedriver_full = File::Spec->rel2abs( "$main::results_output_folder".'chromedriver' );
         chmod 0775, $_abs_chromedriver_full; # Linux loses the write permission with file copy
-        _start_osx_process(qq{java -Dwebdriver.chrome.driver=$_abs_chromedriver_full -Dwebdriver.chrome.logfile=$_abs_selenium_log_full -jar $main::opt_selenium_binary -port $_selenium_port -role node -servlet org.openqa.grid.web.servlet.LifecycleServlet -registerCycle 0}); ## note quotes removed
+        _start_osx_process(qq{java -Dwebdriver.chrome.driver=$_abs_chromedriver_full -Dwebdriver.chrome.logfile=$_abs_selenium_log_full -jar $main::opt_selenium_binary -port $_selenium_port -role node -servlet org.openqa.grid.web.servlet.LifecycleServlet -registerCycle 0}); # note quotes removed
     } else {
         my $_abs_chromedriver_full = File::Spec->rel2abs( "$main::results_output_folder".'chromedriver' );
         chmod 0775, $_abs_chromedriver_full; # Linux loses the write permission with file copy
@@ -503,8 +498,6 @@ sub _start_windows_process {
 
     my $_wmic = "wmic process call create '$_command'"; #
     my $_result = `$_wmic`;
-    #print "_wmic:$_wmic\n";
-    #print "$_result\n";
 
     my $_pid;
     if ( $_result =~ m/ProcessId = (\d+)/ ) {
@@ -520,8 +513,6 @@ sub _start_linux_process {
 
     my $_gnome_terminal = qq{(gnome-terminal -e "$_command" &)}; #
     my $_result = `$_gnome_terminal`;
-    #print "_gnome_terminal:_gnome_terminal\n";
-    #print "$_result\n";
 
     return;
 }
@@ -529,20 +520,17 @@ sub _start_linux_process {
 sub _start_osx_process {
     my ($_command) = @_;
 
-    #osascript -e 'tell application "Terminal" to do script "cd /tmp;pwd"'
     my $_term = qq{(osascript -e 'tell application "Terminal" to do script "$_command"' &)}; #
     my $_result = `$_term`;
-    #print "_term:$_term\n";
-    #print "$_result\n";
 
     return;
 }
 
 sub shutdown_selenium {
     if ($main::opt_driver && !$main::opt_keep_session) {
-        eval { $driver->quit(); }; ## shut down selenium browser session
+        eval { $driver->quit(); }; # shut down selenium browser session
         if ($main::opt_driver eq 'chromedriver') {
-            eval { $driver->shutdown_binary(); }; ## shut down chromedriver binary
+            eval { $driver->shutdown_binary(); }; # shut down chromedriver binary
         }
         undef $driver;
     }
@@ -553,7 +541,7 @@ sub shutdown_selenium {
         return;
     }
 
-    if (_selenium_host_specified()) { ## we are not going to shutdown a user supplied Selenium Server - only ones started by WebImblaze
+    if (_selenium_host_specified()) { # we are not going to shutdown a user supplied Selenium Server - only ones started by WebImblaze
         return;
     }
 
@@ -561,7 +549,6 @@ sub shutdown_selenium {
 
     my $_url = "http://localhost:$selenium_port/extra/LifecycleServlet?action=shutdown";
     my $_content = LWP::Simple::get $_url;
-    #print {*STDOUT} "Shutdown Server:$_content\n";
 
     return;
 }
@@ -569,7 +556,7 @@ sub shutdown_selenium {
 #------------------------------------------------------------------
 # search image plugin - see https://github.com/Qarj/search-image
 #------------------------------------------------------------------
-sub searchimage {  ## search for images in the actual result
+sub searchimage {  # search for images in the actual result
 
     my $_unmarked = 'true';
 
@@ -599,14 +586,14 @@ sub searchimage {  ## search for images in the actual result
                 $main::results_xml .= qq|            <$_>\n|;
                 $main::results_xml .= qq|                <assert>$main::case{$_}</assert>\n|;
 
-                if ($_image_in_image_result =~ m/was found/s) { ## was the image found?
+                if ($_image_in_image_result =~ m/was found/s) { # was the image found?
                     $main::results_html .= qq|<span class="found">Found image: $main::case{$_}</span><br />\n|;
                     $main::results_xml .= qq|                <success>true</success>\n|;
                     $main::results_stdout .= "Found: $main::case{$_}\n   $_primary_confidence primary confidence\n   $_alternate_confidence alternate confidence\n   $_location location\n";
                     $main::passed_count++;
                     $main::retry_passed_count++;
                 }
-                else { #the image was not found within the bigger image
+                else { # the image was not found within the bigger image
                     $main::results_html .= qq|<span class="notfound">Image not found: $main::case{$_}</span><br />\n|;
                     $main::results_xml .= qq|                <success>false</success>\n|;
                     $main::results_stdout .= "Not found: $main::case{$_}\n   $_primary_confidence primary confidence\n   $_alternate_confidence alternate confidence\n   $_location location\n";
@@ -615,7 +602,7 @@ sub searchimage {  ## search for images in the actual result
                     $main::is_failure++;
                 }
                 $main::results_xml .= qq|            </$_>\n|;
-            } else {#We were not able to find the image to search for
+            } else { # we were not able to find the image to search for
                 $main::results_html .= qq|<span class="notfound">SearchImage error - was the file path correct? $main::case{$_}</span><br />\n|;
                 $main::results_xml .= qq|                <success>false</success>\n|;
                 $main::results_stdout .= "SearchImage error - was the file path correct? $main::case{$_}\n";
@@ -623,23 +610,23 @@ sub searchimage {  ## search for images in the actual result
                 $main::retry_failed_count++;
                 $main::is_failure++;
             }
-        } ## end first if
-    } ## end for
+        } # end first if
+    } # end for
 
     if ($_unmarked eq 'false') {
-       #keep an unmarked image, make the marked the actual result
+       # keep an unmarked image, make the marked the actual result
        move "$main::opt_publish_full$main::testnum_display$main::jumpbacks_print$main::retries_print.png", "$main::opt_publish_full$main::testnum_display$main::jumpbacks_print$main::retries_print-unmarked.png";
        move "$main::opt_publish_full$main::testnum_display$main::jumpbacks_print$main::retries_print-marked.png", "$main::opt_publish_full$main::testnum_display$main::jumpbacks_print$main::retries_print.png";
     }
 
     return;
-} ## end sub
+}
 
 #------------------------------------------------------------------
 # helpers - Locators for Testers
 #------------------------------------------------------------------
-sub _set_dropdown { ## usage: _set_dropdown(anchor|||instance,value);
-                    ##        _set_dropdown('Date Range','Last 30 Days');
+sub _set_dropdown { # usage: _set_dropdown(anchor|||instance,value);
+                    #        _set_dropdown('Date Range','Last 30 Days');
 
     my ($_anchor_parms,$_value) = @_;
 
@@ -648,8 +635,8 @@ sub _set_dropdown { ## usage: _set_dropdown(anchor|||instance,value);
     return _helper_set_dropdown($_anchor[0],$_anchor[1],'*',0,$_value);
 }
 
-sub _keys_to_element { ## usage: _keys_to_element(anchor|||instance,keys);
-                       ##        _keys_to_element('E.g. Regional Manager','Test Automation Architect');
+sub _keys_to_element { # usage: _keys_to_element(anchor|||instance,keys);
+                       #        _keys_to_element('E.g. Regional Manager','Test Automation Architect');
 
     my ($_anchor_parms,$_keys) = @_;
 
@@ -658,10 +645,10 @@ sub _keys_to_element { ## usage: _keys_to_element(anchor|||instance,keys);
     return _helper_keys_to_element($_anchor[0],$_anchor[1],'*',0,$_keys);
 }
 
-sub _keys_to_element_after { ## usage: _keys_to_element_after(anchor|||instance,keys,tag|||instance);
-                             ##        _keys_to_element_after('Where','London');               # will default to 'INPUT'
-                             ##        _keys_to_element_after('Job Type','Contract','SELECT');
-                             ##        _keys_to_element_after('What|||1','Test Automation','INPUT|||2');
+sub _keys_to_element_after { # usage: _keys_to_element_after(anchor|||instance,keys,tag|||instance);
+                             #        _keys_to_element_after('Where','London');               # will default to 'INPUT'
+                             #        _keys_to_element_after('Job Type','Contract','SELECT');
+                             #        _keys_to_element_after('What|||1','Test Automation','INPUT|||2');
 
     my ($_anchor_parms,$_keys,$_tag_parms) = @_;
 
@@ -671,10 +658,10 @@ sub _keys_to_element_after { ## usage: _keys_to_element_after(anchor|||instance,
     return _helper_keys_to_element($_anchor[0],$_anchor[1],$_tag[0],$_tag[1],$_keys);
 }
 
-sub _keys_to_element_before { ## usage: _keys_to_element_before(anchor|||instance,keys,tag|||instance);
-                              ##        _keys_to_element_before('Where','London');               # will default tag to 'INPUT'
-                              ##        _keys_to_element_before('Job Type','Contract','SELECT');
-                              ##        _keys_to_element_before('Job Type|||2','Contract','SELECT|||2');
+sub _keys_to_element_before { # usage: _keys_to_element_before(anchor|||instance,keys,tag|||instance);
+                              #        _keys_to_element_before('Where','London');               # will default tag to 'INPUT'
+                              #        _keys_to_element_before('Job Type','Contract','SELECT');
+                              #        _keys_to_element_before('Job Type|||2','Contract','SELECT|||2');
 
     my ($_anchor_parms,$_keys,$_tag_parms) = @_;
 
@@ -720,10 +707,10 @@ sub _helper_set_dropdown {
     if (%$_response{message} =~ m/Could not find/) { return %$_response{message}; }
 
     my $_element = $driver->get_active_element();
-    eval { # Try exact match first so we do not select None instead of No
+    eval { # try exact match first so we do not select None instead of No
         my $_child = $driver->find_child_element($_element, "./option[. = '$_keys']")->click();
     };
-    if ($@) { # If exact match didn't work, try a contains match since there might be some special characters the Test Automator is trying to avoid using
+    if ($@) { # if exact match didn't work, try a contains match since there might be some special characters the Test Automator is trying to avoid using
         eval {
             my $_child = $driver->find_child_element($_element, "./option[contains(text(),'$_keys')]")->click();
         };
@@ -747,9 +734,9 @@ sub _helper_set_dropdown {
 sub _helper_click_element {
 
     my ($_anchor,$_anchor_instance,$_tag,$_tag_instance) = @_;
-    $_anchor_instance //= 1; ## 1 means first instance of anchor
-    $_tag //= '*'; ## * means click the tag found by the anchor, whatever it is
-    $_tag_instance //= 0; ## -1 means search for the specified tag BEFORE, 1 means search for specified tag after, 0 is an error unless $_tag is '*' 
+    $_anchor_instance //= 1; # 1 means first instance of anchor
+    $_tag //= '*'; # * means click the tag found by the anchor, whatever it is
+    $_tag_instance //= 0; # -1 means search for the specified tag BEFORE, 1 means search for specified tag after, 0 is an error unless $_tag is '*' 
 
     my $_element_details_ref = _helper_get_element($_anchor,$_anchor_instance,$_tag,$_tag_instance);
     my %_element_details = %$_element_details_ref;
@@ -774,10 +761,10 @@ sub _helper_click_element {
 sub _helper_get_element {
 
     my ($_anchor,$_anchor_instance,$_tag,$_tag_instance,$_auto_wait) = @_;
-    $_anchor_instance //= 1; ## 1 means first instance of anchor
-    $_tag //= '*'; ## * means click the tag found by the anchor, whatever it is
-    $_tag_instance //= 0; ## -1 means search for the specified tag BEFORE, 1 means search for specified tag after, 0 is an error unless $_tag is '*' 
-    $_auto_wait //= 'true'; ## automatically wait for element to be found if it can not be found immediately
+    $_anchor_instance //= 1; # 1 means first instance of anchor
+    $_tag //= '*'; # * means click the tag found by the anchor, whatever it is
+    $_tag_instance //= 0; # -1 means search for the specified tag BEFORE, 1 means search for specified tag after, 0 is an error unless $_tag is '*' 
+    $_auto_wait //= 'true'; # automatically wait for element to be found if it can not be found immediately
 
     my $_script = _helper_javascript_functions() . q`
 
@@ -890,9 +877,9 @@ sub _helper_get_element {
 sub _helper_focus_element {
 
     my ($_anchor,$_anchor_instance,$_tag,$_tag_instance) = @_;
-    $_anchor_instance //= 1; ## 1 means first instance of anchor
-    $_tag //= '*'; ## * means click the tag found by the anchor, whatever it is
-    $_tag_instance //= 0; ## -1 means search for the specified tag BEFORE, 1 means search for specified tag after, 0 is an error unless $_tag is '*' 
+    $_anchor_instance //= 1; # 1 means first instance of anchor
+    $_tag //= '*'; # * means click the tag found by the anchor, whatever it is
+    $_tag_instance //= 0; # -1 means search for the specified tag BEFORE, 1 means search for specified tag after, 0 is an error unless $_tag is '*' 
 
     my $_element_details_ref = _helper_get_element($_anchor,$_anchor_instance,$_tag,$_tag_instance);
     my %_element_details = %$_element_details_ref;
@@ -913,9 +900,9 @@ sub _helper_focus_element {
     return \%_element_details;
 }
 
-sub _move_to { ## usage: _move_to(anchor|||instance,x offset, y offset]);
-               ## usage: _move_to('Yes');
-               ## usage: _move_to('Yes|||2',320,200);
+sub _move_to { # usage: _move_to(anchor|||instance,x offset, y offset]);
+               # usage: _move_to('Yes');
+               # usage: _move_to('Yes|||2',320,200);
 
     my ($_anchor_parms,$_x_offset,$_y_offset) = @_;
 
@@ -933,9 +920,9 @@ sub _move_to { ## usage: _move_to(anchor|||instance,x offset, y offset]);
     return 'Found' . $_element_details{message} . ' then moved mouse';
 }
 
-sub _scroll_to { ## usage: _scroll_to(anchor|||instance);
-                 ## usage: _scroll_to('Yes');
-                 ## usage: _scroll_to('Yes|||2');
+sub _scroll_to { # usage: _scroll_to(anchor|||instance);
+                 # usage: _scroll_to('Yes');
+                 # usage: _scroll_to('Yes|||2');
 
     my ($_anchor_parms) = @_;
 
@@ -957,9 +944,9 @@ sub _scroll_to { ## usage: _scroll_to(anchor|||instance);
     return 'Found' . $_element_details{message} . ' then scrolled into view';
 }
 
-sub _click { ## usage: _click(anchor|||instance]);
-             ## usage: _click('Yes');
-             ## usage: _click('Yes|||2');
+sub _click { # usage: _click(anchor|||instance]);
+             # usage: _click('Yes');
+             # usage: _click('Yes|||2');
 
     my ($_anchor_parms) = @_;
 
@@ -968,7 +955,7 @@ sub _click { ## usage: _click(anchor|||instance]);
     return %{_helper_click_element($_anchor[0],$_anchor[1],'*',0)}{message};
 }
 
-sub _click_after { ## usage: _click_after(anchor|||instance[,element|||instance]);
+sub _click_after { # usage: _click_after(anchor|||instance[,element|||instance]);
 
     my ($_anchor_parms,$_tag_parms) = @_;
     $_tag_parms //= 'INPUT|BUTTON|SELECT|A';
@@ -979,7 +966,7 @@ sub _click_after { ## usage: _click_after(anchor|||instance[,element|||instance]
     return %{_helper_click_element($_anchor[0],$_anchor[1],$_tag[0],$_tag[1])}{message};
 }
 
-sub _click_before { ## usage: _click_before(anchor|||instance);
+sub _click_before { # usage: _click_before(anchor|||instance);
 
     my ($_anchor_parms,$_tag_parms) = @_;
     $_tag_parms //= 'INPUT|BUTTON|SELECT|A';
@@ -1073,12 +1060,12 @@ sub _get_element {
     return $_basic_info . $_extra_info;
 }
 
-sub _wait_visible { ## usage: _wait_visible(anchor|||instance,timeout);
+sub _wait_visible { # usage: _wait_visible(anchor|||instance,timeout);
 
     my ($_anchor_parms,$_timeout) = @_;
     $_timeout //= 5;
 
-    my @_anchor = split /[|][|][|]/, $_anchor_parms ; ## index 0 is anchor, index 1 is instance number
+    my @_anchor = split /[|][|][|]/, $_anchor_parms ; # index 0 is anchor, index 1 is instance number
     $_anchor[1] //= 1;
 
     $main::results_stdout .= "WAIT VISIBLE IN VIEWPORT: [$_anchor_parms] TIMEOUT[$_timeout]\n";
@@ -1090,7 +1077,7 @@ sub _wait_visible { ## usage: _wait_visible(anchor|||instance,timeout);
 
 }
 
-sub _wait_for_item_present { ##should be named _helper_wait_for_item_present
+sub _wait_for_item_present {
 
     my ($_search_expression, $_found_expression, $_timeout, $_message_fragment, $_search_text, $_target, $_locator) = @_;
 
@@ -1103,13 +1090,13 @@ sub _wait_for_item_present { ##should be named _helper_wait_for_item_present
     while ( (($_timestart + $_timeout) > time) && (not $_found_it) ) {
         eval { eval "$_search_expression"; }; ## no critic(ProhibitStringyEval)
         foreach my $__response (@_response) {
-            #if ($_message_fragment eq 'element visible') { print "__response:$__response\n";}
+            # if ($_message_fragment eq 'element visible') { print "__response:$__response\n";}
             if (eval { eval "$_found_expression";} ) { ## no critic(ProhibitStringyEval)
                 $_found_it = 'true';
             }
         }
         if (not $_found_it) {
-            sleep 0.5; # Sleep for 0.5 seconds
+            sleep 0.5;
         }
     }
     my $_try_time = ( int( (time - $_timestart) *10 ) / 10);
@@ -1125,12 +1112,12 @@ sub _wait_for_item_present { ##should be named _helper_wait_for_item_present
     return $_message;
 }
 
-sub _wait_not_visible { ## usage: _wait_not_visible(anchor|||instance,timeout);
+sub _wait_not_visible { # usage: _wait_not_visible(anchor|||instance,timeout);
 
     my ($_anchor_parms,$_timeout) = @_;
     $_timeout //= 5;
 
-    my @_anchor = split /[|][|][|]/, $_anchor_parms ; ## index 0 is anchor, index 1 is instance number
+    my @_anchor = split /[|][|][|]/, $_anchor_parms ; # index 0 is anchor, index 1 is instance number
     $_anchor[1] //= 1;
 
     $main::results_stdout .= "WAIT NOT VISIBLE IN VIEWPORT: [$_anchor_parms] TIMEOUT[$_timeout]\n";
@@ -1142,7 +1129,7 @@ sub _wait_not_visible { ## usage: _wait_not_visible(anchor|||instance,timeout);
 
 }
 
-sub _wait_for_item_not_present { ## should be named _helper_wait_for_item_not_present
+sub _wait_for_item_not_present { # should be named _helper_wait_for_item_not_present
 
     my ($_search_expression, $_found_expression, $_timeout, $_message_fragment, $_search_text, $_anchor_parms) = @_;
 
@@ -1155,7 +1142,7 @@ sub _wait_for_item_not_present { ## should be named _helper_wait_for_item_not_pr
     while ( (($_timestart + $_timeout) > time) && ($_found_it) ) {
         eval { eval "$_search_expression"; }; ## no critic(ProhibitStringyEval)
         foreach my $__response (@_response) {
-            #if ($_message_fragment eq 'element visible') { print "__response:$__response\n";}
+            # if ($_message_fragment eq 'element visible') { print "__response:$__response\n";}
             if (not eval { eval "$_found_expression";} ) { ## no critic(ProhibitStringyEval)
                 undef $_found_it;
             }
@@ -1399,7 +1386,7 @@ sub _unpack_anchor {
 
     my ($_anchor_parms) = @_;
 
-    my @_anchor = split /[|][|][|]/, $_anchor_parms ; ## index 0 is anchor, index 1 is instance number
+    my @_anchor = split /[|][|][|]/, $_anchor_parms ; # index 0 is anchor, index 1 is instance number
     $_anchor[1] //= 1;
 
     return @_anchor;
@@ -1410,7 +1397,7 @@ sub _unpack_tag {
     my ($_tag_parms) = @_;
     $_tag_parms //= 'INPUT';
 
-    my @_tag = split /[|][|][|]/, $_tag_parms ; ## index 0 is tag, index 1 is instance number
+    my @_tag = split /[|][|][|]/, $_tag_parms ; # index 0 is tag, index 1 is instance number
     $_tag[1] //= 1;
 
     return @_tag;
@@ -1419,8 +1406,8 @@ sub _unpack_tag {
 #------------------------------------------------------------------
 # helpers - Other helpers
 #------------------------------------------------------------------
-sub _clear_and_send_keys { ## usage: helper_clear_and_send_keys(Search Target, Locator, Keys);
-                                 ##        helper_clear_and_send_keys('candidateProfileDetails_txtPostCode','id','WC1X 8TG');
+sub _clear_and_send_keys { # usage: _clear_and_send_keys(Search Target, Locator, Keys);
+                           #        _clear_and_send_keys('candidateProfileDetails_txtPostCode','id','WC1X 8TG');
 
     my ($_search_target, $_locator, $_keys) = @_;
 
@@ -1430,9 +1417,9 @@ sub _clear_and_send_keys { ## usage: helper_clear_and_send_keys(Search Target, L
     return $_response;
 }
 
-sub _switch_to_window { ## usage: helper_switch_to_window(window number);
-                              ##        helper_switch_to_window(0);
-                              ##        helper_switch_to_window(1);
+sub _switch_to_window { # usage: _switch_to_window(window number);
+                        #        _switch_to_window(0);
+                        #        _switch_to_window(1);
     my ($_window_number) = @_;
 
     require Data::Dumper;
@@ -1443,10 +1430,10 @@ sub _switch_to_window { ## usage: helper_switch_to_window(window number);
     return 'Handles:' . Data::Dumper::Dumper($_handles) . $_response;
 }
 
-sub _wait_for_text_present { ## usage: helper_wait_for_text_present('Search Text',Timeout);
-                                   ##        helper_wait_for_text_present('Job title',10);
-                                   ##
-                                   ## waits for text to appear in page source
+sub _wait_for_text_present { # usage: _wait_for_text_present('Search Text',Timeout);
+                             #        _wait_for_text_present('Job title',10);
+                             #
+                             # waits for text to appear in page source
 
     my ($_search_text, $_timeout) = @_;
 
@@ -1459,10 +1446,10 @@ sub _wait_for_text_present { ## usage: helper_wait_for_text_present('Search Text
 
 }
 
-sub _wait_for_text_visible { ## usage: helper_wait_for_text_visible('Search Text', timeout, 'target', 'locator');
-                                   ##        helper_wait_for_text_visible('Job title', 10, 'body', 'tag_name');
-                                   ##
-                                   ## Waits for text to appear visible in the body text. This function can sometimes be very slow on some pages.
+sub _wait_for_text_visible { # usage: _wait_for_text_visible('Search Text', timeout, 'target', 'locator');
+                             #        _wait_for_text_visible('Job title', 10, 'body', 'tag_name');
+                             #
+                             # waits for text to appear visible in the body text -his function can sometimes be very slow on some pages
 
     my ($_search_text, $_timeout, $_target, $_locator) = @_;
     $_timeout //= 5;
@@ -1478,20 +1465,20 @@ sub _wait_for_text_visible { ## usage: helper_wait_for_text_visible('Search Text
 
 }
 
-sub _check_element_within_pixels {     ## usage: helper_check_element_within_pixels(searchTarget,id,xBase,yBase,pixelThreshold);
-                                             ##        helper_check_element_within_pixels('txtEmail','id',193,325,30);
+sub _check_element_within_pixels {     # usage: _check_element_within_pixels(searchTarget,id,xBase,yBase,pixelThreshold);
+                                       #        _check_element_within_pixels('txtEmail','id',193,325,30);
 
     my ($_search_target, $_locator, $_x_base, $_y_base, $_pixel_threshold) = @_;
 
-    ## get_element_location will return a reference to a hash associative array
-    ## http://www.troubleshooters.com/codecorn/littperl/perlscal.htm
-    ## the array will look something like this
+    # get_element_location will return a reference to a hash associative array
+    # http://www.troubleshooters.com/codecorn/littperl/perlscal.htm
+    # the array will look something like this
     # { 'y' => 325, 'hCode' => 25296896, 'x' => 193, 'class' => 'org.openqa.selenium.Point' };
     my ($_location) = $driver->find_element("$_search_target", "$_locator")->get_element_location();
 
-    ## if the element doesn't exist, we get an empty output, so presumably this subroutine just dies and the program carries on
+    # if the element doesn't exist, we get an empty output, so presumably this subroutine just dies and the program carries on
 
-    ## we use the -> operator to get to the underlying values in the hash array
+    # we use the -> operator to get to the underlying values in the hash array
     my $_x = $_location->{x};
     my $_y = $_location->{y};
 
