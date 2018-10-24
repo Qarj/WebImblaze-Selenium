@@ -117,7 +117,7 @@ Location of the ChromeDriver binary, example:
 Location of the Selenium Standalone Server binary, example:
 
 ```
---selenium-binary C:\selenium-server\selenium-server-standalone-2.53.1.jar
+--selenium-binary C:\selenium-server\selenium-server-standalone-3.11.0.jar
 ```
 
 <br 
