@@ -48,7 +48,7 @@ sub selenium {  # send Selenium command and read response
                     $selresp = "selresp:$selresp";
                 }
             } else {
-                if (defined $_selenium_exception && $_selenium_exception ne '') {
+                if (defined $_selenium_exception && $_selenium_exception ne q{}) {
                     $main::results_stdout .= "SELRESP:<undefined>, Selenium Exception: $_selenium_exception\n";
                     $selresp = "selresp:<undefined>, Selenium Exception: $_selenium_exception\n";
                 } else {
@@ -144,10 +144,10 @@ sub _screenshot {
 }
 
 #------------------------------------------------------------------
-sub start_selenium_browser { # start browser using Selenium Server or ChromeDriver
+sub start_selenium_browser { ## no critic(ProhibitExcessComplexity) # start browser using Selenium Server or ChromeDriver
     require Selenium::Remote::Driver;
     require Selenium::Chrome;
-    
+
     my @_chrome_args;
     if ($main::opt_headless) {
         push @_chrome_args, '--headless';
@@ -175,7 +175,7 @@ sub start_selenium_browser { # start browser using Selenium Server or ChromeDriv
     my $_connect_port;
     my $_session_id; # if undef, a new session will be created
     my $_auto_close = 1; # 1 auto closes the session, 0 does not
-    
+
     push @_chrome_args, 'window-size=1260,1568';
     push @_chrome_args, '--disable-web-security';
     push @_chrome_args, '--ignore-certificate-errors';
@@ -347,7 +347,7 @@ sub _save_selenium_session_info {
     $_session->{main}->{session_id} = $_session_id;
 
     $_session->write( 'session.config' );
-    
+
     return;
 }
 
@@ -366,7 +366,7 @@ sub _read_selenium_session_info {
     print "    Selenium Host: $_selenium_host\n";
     print "    Selenium Port: $_selenium_port\n";
     print "    Session Id: $_session_id\n\n";
-    
+
     return $_selenium_host, $_selenium_port, $_session_id;
 }
 
@@ -384,7 +384,7 @@ sub _check_and_set_selenium_defaults {
         if (not $main::opt_chromedriver_binary) {
             die "\n\nYou must specify --chromedriver-binary for Selenium tests\n\n";
         }
-    
+
         $main::opt_chromedriver_binary =~ s/(\$[\w{}""]+)/$1/eeg; # expand perl environment variables like $ENV{"HOME"} / $ENV{"HOMEPATH"}
         if (not -e $main::opt_chromedriver_binary) {
             die "\n\nCannot find ChromeDriver at $main::opt_chromedriver_binary\n\n";
@@ -395,7 +395,7 @@ sub _check_and_set_selenium_defaults {
     if ($main::opt_driver ne 'chrome' and $main::opt_driver ne 'chromedriver') {
         die "\n\n'--driver $main::opt_driver' not recognised - only chrome and chromedriver are supported\n\n";
     }
-    
+
     return;
 }
 
@@ -419,7 +419,7 @@ sub _shutdown_any_existing_selenium_session {
 sub _selenium_host_specified {
     # if a user has passed WebImblaze has been passed a selenium host, that means they have spun up their own Selenium Server or are using a remote Selenium Grid
     # for robustness I find it is better to let WebImblaze manage the Selenium Server and Chrome browser instead - it means WebImblaze can give it a good hard kick up the bum if it becomes unresponsive
-    
+
     if (defined $main::opt_selenium_host) {
         return 1;
     }
@@ -632,7 +632,7 @@ sub _set_dropdown { # usage: _set_dropdown(anchor|||instance,value);
 
     my @_anchor = _unpack_anchor($_anchor_parms);
 
-    return _helper_set_dropdown($_anchor[0],$_anchor[1],'*',0,$_value);
+    return _helper_set_dropdown($_anchor[0],$_anchor[1],q{*},0,$_value);
 }
 
 sub _keys_to_element { # usage: _keys_to_element(anchor|||instance,keys);
@@ -642,7 +642,7 @@ sub _keys_to_element { # usage: _keys_to_element(anchor|||instance,keys);
 
     my @_anchor = _unpack_anchor($_anchor_parms);
 
-    return _helper_keys_to_element($_anchor[0],$_anchor[1],'*',0,$_keys);
+    return _helper_keys_to_element($_anchor[0],$_anchor[1],q{*},0,$_keys);
 }
 
 sub _keys_to_element_after { # usage: _keys_to_element_after(anchor|||instance,keys,tag|||instance);
@@ -680,7 +680,7 @@ sub _helper_keys_to_element {
     if ($_tag eq 'SELECT') {
         return _helper_set_dropdown($_anchor,$_anchor_instance,$_tag,$_tag_instance,$_keys);
     }
-    
+
     my $_response = _helper_click_element($_anchor,$_anchor_instance,$_tag,$_tag_instance);
 
     if (%$_response{message} =~ m/Could not find/) { return %$_response{message}; }
@@ -688,7 +688,7 @@ sub _helper_keys_to_element {
     eval {
         my $_clear_response = $driver->get_active_element()->clear();
     };
-  
+
     eval {
         my $_keys_response = $driver->send_keys_to_active_element($_keys);
     };
@@ -735,25 +735,25 @@ sub _helper_click_element {
 
     my ($_anchor,$_anchor_instance,$_tag,$_tag_instance) = @_;
     $_anchor_instance //= 1; # 1 means first instance of anchor
-    $_tag //= '*'; # * means click the tag found by the anchor, whatever it is
+    $_tag //= q{*}; # * means click the tag found by the anchor, whatever it is
     $_tag_instance //= 0; # -1 means search for the specified tag BEFORE, 1 means search for specified tag after, 0 is an error unless $_tag is '*' 
 
     my $_element_details_ref = _helper_get_element($_anchor,$_anchor_instance,$_tag,$_tag_instance);
-    my %_element_details = %$_element_details_ref;
+    my %_element_details = %{$_element_details_ref};
 
     if (not $_element_details{element}) {return \%_element_details;}
 
-    my $_script = _helper_javascript_functions() . q`
+    my $_script = _helper_javascript_functions() . <<'EOB';
 
         var element_ = arguments[0];
         element_.focus();
         element_.click();
         return;
+EOB
 
-    `;
     my $_response = $driver->execute_script($_script,$_element_details{element});
 
-    $_element_details{message} = "Focused and clicked" . $_element_details{message};
+    $_element_details{message} = 'Focused and clicked' . $_element_details{message};
 
     return \%_element_details;
 }
@@ -762,11 +762,11 @@ sub _helper_get_element {
 
     my ($_anchor,$_anchor_instance,$_tag,$_tag_instance,$_auto_wait) = @_;
     $_anchor_instance //= 1; # 1 means first instance of anchor
-    $_tag //= '*'; # * means click the tag found by the anchor, whatever it is
+    $_tag //= q{*}; # * means click the tag found by the anchor, whatever it is
     $_tag_instance //= 0; # -1 means search for the specified tag BEFORE, 1 means search for specified tag after, 0 is an error unless $_tag is '*' 
     $_auto_wait //= 'true'; # automatically wait for element to be found if it can not be found immediately
 
-    my $_script = _helper_javascript_functions() . q`
+    my $_script = _helper_javascript_functions() . <<'EOB';
 
         var anchor_ = arguments[0];
         var anchor_instance_ = parseInt(arguments[1], 10);
@@ -837,7 +837,7 @@ sub _helper_get_element {
             element_value : _all_[target_element_index_].value,
             text : _all_[target_element_index_].text
         }
-    `;
+EOB
 
     my %_response;
     my $_max = 15 - $attempts_since_last_locate_success;
@@ -845,7 +845,7 @@ sub _helper_get_element {
     if ( ($_max < 1) || ($_auto_wait eq 'false') ) {$_max = 1};
     my $_tries = 0;
     my $_found = 0;
-    while ($_tries < $_max && not $_found) {
+    while ($_tries < $_max and not $_found) {
         $_tries++;
 
         %_response = % { $driver->execute_script($_script,$_anchor,$_anchor_instance,$_tag,$_tag_instance) };
@@ -878,24 +878,24 @@ sub _helper_focus_element {
 
     my ($_anchor,$_anchor_instance,$_tag,$_tag_instance) = @_;
     $_anchor_instance //= 1; # 1 means first instance of anchor
-    $_tag //= '*'; # * means click the tag found by the anchor, whatever it is
+    $_tag //= q{*}; # * means click the tag found by the anchor, whatever it is
     $_tag_instance //= 0; # -1 means search for the specified tag BEFORE, 1 means search for specified tag after, 0 is an error unless $_tag is '*' 
 
     my $_element_details_ref = _helper_get_element($_anchor,$_anchor_instance,$_tag,$_tag_instance);
-    my %_element_details = %$_element_details_ref;
+    my %_element_details = %{$_element_details_ref};
 
     if (not $_element_details{element}) {return \%_element_details;}
 
-    my $_script = _helper_javascript_functions() . q`
+    my $_script = _helper_javascript_functions() . <<'EOB';
 
         var element_ = arguments[0];
         element_.focus();
         return;
+EOB
 
-    `;
     my $_response = $driver->execute_script($_script,$_element_details{element});
 
-    $_element_details{message} = "Focused" . $_element_details{message};
+    $_element_details{message} = 'Focused' . $_element_details{message};
 
     return \%_element_details;
 }
@@ -911,7 +911,7 @@ sub _move_to { # usage: _move_to(anchor|||instance,x offset, y offset]);
 
     my @_anchor = _unpack_anchor($_anchor_parms);
 
-    my %_element_details = % { _helper_get_element($_anchor[0],$_anchor[1],'*',0) };
+    my %_element_details = % { _helper_get_element($_anchor[0],$_anchor[1],q{*},0) };
 
     if (not $_element_details{element}) {return $_element_details{message};}
 
@@ -928,17 +928,17 @@ sub _scroll_to { # usage: _scroll_to(anchor|||instance);
 
     my @_anchor = _unpack_anchor($_anchor_parms);
 
-    my %_element_details = % { _helper_get_element($_anchor[0],$_anchor[1],'*',0) };
+    my %_element_details = % { _helper_get_element($_anchor[0],$_anchor[1],q{*},0) };
 
     if (not $_element_details{element}) {return $_element_details{message};}
 
-    my $_script = _helper_javascript_functions() . q`
+    my $_script = _helper_javascript_functions() . <<'EOB';
 
         var element_ = arguments[0];
         element_.scrollIntoView();
         return;
+EOB
 
-    `;
     my $_response = $driver->execute_script($_script,$_element_details{element});
 
     return 'Found' . $_element_details{message} . ' then scrolled into view';
@@ -952,7 +952,7 @@ sub _click { # usage: _click(anchor|||instance]);
 
     my @_anchor = _unpack_anchor($_anchor_parms);
 
-    return %{_helper_click_element($_anchor[0],$_anchor[1],'*',0)}{message};
+    return %{_helper_click_element($_anchor[0],$_anchor[1],q{*},0)}{message};
 }
 
 sub _click_after { # usage: _click_after(anchor|||instance[,element|||instance]);
@@ -985,7 +985,7 @@ sub _get_element {
 
     my @_anchor = _unpack_anchor($_anchor_parms);
 
-    my %_element_details = % { _helper_get_element($_anchor[0],$_anchor[1],'*',0,'false') };
+    my %_element_details = % { _helper_get_element($_anchor[0],$_anchor[1],q{*},0,'false') };
 
     if (not $_element_details{element}) {return $_element_details{message};}
 
@@ -993,10 +993,10 @@ sub _get_element {
     $_element_details{text} //= '_NULL_';
     my $_basic_info = 'Located' . $_element_details{message} . "\n "
                                 . $_element_details{element_signature}
-                                . "\n Element Text [" . $_element_details{text} . "]"
-                                . "\n Element Value [" . $_element_details{element_value} . "]";
+                                . "\n Element Text [" . $_element_details{text} . ']'
+                                . "\n Element Value [" . $_element_details{element_value} . ']';
 
-    my $_script = _helper_javascript_functions() . q`
+    my $_script = _helper_javascript_functions() . <<'EOB';
 
         function isElementInViewport (el) {
         
@@ -1045,17 +1045,17 @@ sub _get_element {
             inViewport : isElementInViewport(_element),
             allText : allText(_element)
         }
+EOB
 
-    `;
     my %_element_extra = % { $driver->execute_script($_script,$_element_details{element}) };
 
-    my $_extra_info = "\n Element Selection [".$_element_extra{selection}."] isChecked[".$_element_extra{isChecked}."]\n".
-                      " scrollTop[".$_element_extra{scrollTop}.
-                      "] offsetWidth[".$_element_extra{offsetWidth}.
-                      "] offsetHeight[".$_element_extra{offsetHeight}.
-                      "] inViewport[".$_element_extra{inViewport}.
+    my $_extra_info = "\n Element Selection [".$_element_extra{selection}.'] isChecked['.$_element_extra{isChecked}."]\n".
+                      ' scrollTop['.$_element_extra{scrollTop}.
+                      '] offsetWidth['.$_element_extra{offsetWidth}.
+                      '] offsetHeight['.$_element_extra{offsetHeight}.
+                      '] inViewport['.$_element_extra{inViewport}.
                       "]\n".
-                      " allText[".$_element_extra{allText}."]\n";
+                      ' allText['.$_element_extra{allText}."]\n";
 
     return $_basic_info . $_extra_info;
 }
@@ -1166,7 +1166,7 @@ sub _wait_for_item_not_present { # should be named _helper_wait_for_item_not_pre
 
 sub _helper_javascript_functions {
 
-    return q`
+    return <<'EOB';
         function get_element_number_by_text(_anchor,_depth,_instance)
         {
             var _textIndex = -1;
@@ -1379,7 +1379,7 @@ sub _helper_javascript_functions {
             }
             return _signature;
         }
-    `; 
+EOB
 }
 
 sub _unpack_anchor {
@@ -1496,7 +1496,7 @@ sub _check_element_within_pixels {     # usage: _check_element_within_pixels(sea
 
 #------------------------------------------------------------------
 sub print_usage {
-        print <<'EOB'
+        print <<'EOB';
 
 Additional WebImblaze-Selenium plugin options:
 
@@ -1509,7 +1509,6 @@ Additional WebImblaze-Selenium plugin options:
 -k|--keep-session                 --keep-session
 -m|--resume-session               --resume-session
 EOB
-    ;
 
     return;
 }
