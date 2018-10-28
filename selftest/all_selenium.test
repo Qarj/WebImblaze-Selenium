@@ -6,37 +6,37 @@ step:                   {FEATURE}
 varFEATURE:             _click
 varPROJECT:             ./../WebImblaze-Selenium/
 shell:                  perl wi.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.test
-verifypositive:         TEST CASE PASSED
-verifynegative:         TEST CASE FAILED
+verifypositive:         TEST STEP PASSED
+verifynegative:         TEST STEP FAILED
 
 step:                   {FEATURE}
 varFEATURE:             _keys_to_element
 shell:                  perl wi.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.test
-verifypositive:         TEST CASE PASSED
-verifynegative:         TEST CASE FAILED
+verifypositive:         TEST STEP PASSED
+verifynegative:         TEST STEP FAILED
 
 step:                   {FEATURE}
 varFEATURE:             _move_to
 shell:                  perl wi.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.test
-verifypositive:         TEST CASE PASSED
-verifynegative:         TEST CASE FAILED
+verifypositive:         TEST STEP PASSED
+verifynegative:         TEST STEP FAILED
 
 step:                   {FEATURE}
 varFEATURE:             _wait_visible
 shell:                  perl wi.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.test
-verifypositive:         TEST CASE PASSED
-verifynegative:         TEST CASE FAILED
+verifypositive:         TEST STEP PASSED
+verifynegative:         TEST STEP FAILED
 
 step:                   {FEATURE}
 varFEATURE:             selenium_core
 varPROJECT:             ./../WebImblaze-Selenium/
 shell:                  perl wi.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.test
-verifypositive:         TEST CASE PASSED
-verifynegative:         TEST CASE FAILED
+verifypositive:         TEST STEP PASSED
+verifynegative:         TEST STEP FAILED
 
 step:                   {FEATURE}
 varFEATURE:             useragent
 shell:                  perl wi.pl -o {PROJECT}selftest\output\{FEATURE} {PROJECT}selftest\{FEATURE}.test
-verifypositive:         TEST CASE PASSED
-verifynegative:         TEST CASE FAILED
+verifypositive:         TEST STEP PASSED
+verifynegative:         TEST STEP FAILED
 

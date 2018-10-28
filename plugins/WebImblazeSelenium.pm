@@ -715,7 +715,7 @@ sub _helper_set_dropdown {
             my $_child = $driver->find_child_element($_element, "./option[contains(text(),'$_keys')]")->click();
         };
     }
-    if ($@) { # more general case where maybe optgroup exists, or you can target the actual option itself e.g. _set_dropdown('Last 30 days', 'Last 30 days')
+    if ($@) { # more general scenario where maybe optgroup exists, or you can target the actual option itself e.g. _set_dropdown('Last 30 days', 'Last 30 days')
         eval {
             my $_child = $driver->find_child_element($_element, "//option[contains(text(),'$_keys')]")->click();
         };
