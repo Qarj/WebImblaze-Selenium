@@ -64,13 +64,13 @@ selenium:               $driver->get("https://www.totaljobs.com")
 
 The method is specified as `selenium` and this is used in conjunction with `command` to drive Selenium.
 
-`$selresp` refers to the Selenium Response. This will be stored in the http.txt file for each step.
+The response will be stored in the http.txt file for each step.
 Typically Selenium just responds with `1` for a command to do something - e.g. click on an element.
 
 The example gets a web page, and automatically takes a screenshot which will be saved in the output folder.
 
 Many different commands are supported, to see them all refer to Selenium::Remote::Driver on cpan which
-can be found here: http://search.cpan.org/~gempesaw/Selenium-Remote-Driver/lib/Selenium/Remote/Driver.pm
+can be found here: https://metacpan.org/pod/Selenium::Remote::Driver
 
 In addition, there are many helper (start with underscore _) functions built into this plugin that make working with Selenium very easy. See the
 [Helper Functions](#helper) section.
@@ -87,12 +87,12 @@ verifypositive:         a job you love
 Here you can see that we also get the body text and page source. WebImblaze then can use this to perform a standard
 assertion within its existing framework.
 
-<br 
+<br />
 
 <a name="options"></a>
 ## 2 - `wi.pl` command line options for WebImblaze-Selenium plugin
 
-<br 
+<br />
 <a name="driver"></a>
 ### --driver
 
@@ -100,9 +100,9 @@ assertion within its existing framework.
 Option `--selenium-binary` must also be used.
 
 `--driver chromedriver` starts ChromeDriver directly without using Selenium Server.
-Option `--chromdriver-binary` must also be used.
+Option `--chromedriver-binary` must also be used.
 
-<br 
+<br />
 <a name="chromedriver-binary"></a>
 ### --chromedriver-binary
 Location of the ChromeDriver binary, example:
@@ -111,7 +111,7 @@ Location of the ChromeDriver binary, example:
 --chromedriver-binary C:\selenium\chromedriver.exe
 ```
 
-<br 
+<br />
 <a name="selenium-binary"></a>
 ### --selenium-binary
 Location of the Selenium Standalone Server binary, example:
@@ -120,36 +120,36 @@ Location of the Selenium Standalone Server binary, example:
 --selenium-binary C:\selenium-server\selenium-server-standalone-3.11.0.jar
 ```
 
-<br 
+<br />
 <a name="selenium-host"></a>
 ### --selenium-host
 If this option and `--selenium-port` is specified, then WebImblaze-Selenium will connect
 to the Selenium Server specified by these options rather than starting its own
-Selenium Server. Used for connecting to Selenium Grid, or Saucelabs or BrowserStack and so on.
+Selenium Server. Used for connecting to Selenium Grid, or Sauce Labs or BrowserStack and so on.
 
 If `--selenium-port` is specified but not this option, then the Selenium host is defaulted
 to `localhost`.
 
-<br 
+<br />
 <a name="selenium-port"></a>
 ### --selenium-port
 Will connect to the Selenium server specified by this port and the option `--selenium-host`.
 
-<br 
+<br />
 <a name="headless"></a>
 ### --headless
 Tells Chrome to start in headless mode.
 
-<br 
+<br />
 <a name="keep-session"></a>
 ### --keep-session
-Does not shutdown the Selenium Server and Chrome browser at the end of the test run.
+Does not shut down the Selenium Server and Chrome browser at the end of the test run.
 
 Also will save the Selenium host, port and session id in a file called `session.config`. 
 
 This option is a "Debug Mode" option only and is not safe to run concurrently.
 
-<br 
+<br />
 <a name="resume-session"></a>
 ### --resume-session
 Reads the file `session.config` then will attempt to connect to the Selenium host, port and
@@ -174,14 +174,14 @@ Selenium Server and the Chrome browser will be left open at the end of the run.
 then run as follows:
 
 ```
-perl wi.pl tests/debug_test_case_file.xml --resume-sesion --keep-session
+perl wi.pl tests/debug_test_case_file.xml --resume-session --keep-session
 ```
 
 Instead of starting a new Selenium server and Chrome browser, the existing server and browser will be
 used from the current state. You specify `--keep-session` again in case your attempt to fix
 the problem does not work and you need to try again.
 
-3. Once you have found a fix for the problem, you fix your orginial test case file and
+3. Once you have found a fix for the problem, you fix your original test case file and
 uncomment all the steps you commented out. You can then run as normal to make sure the full
 workflow now works:
 
@@ -189,19 +189,19 @@ workflow now works:
 perl wi.pl tests/test_case_file.xml
 ```
 
-<br 
+<br />
 
 <a name="parameters"></a>
 ## 3 - Parameters to control Selenium WebDriver Test Execution
 
-<br 
+<br />
 <a name="searchimage"></a>
 ### searchimage searchimage1 ... searchimage5
 
 Requires search-image plugin. The plugin itself is already installed, however there are dependencies on Python and other libraries. Setup
 instructions can be found here: https://github.com/Qarj/search-image
 
-Searches the WebDriver Selenium screenshot for a specified subimage. A small tolerance is allowed in case
+Searches the WebDriver Selenium screenshot for a specified sub image. A small tolerance is allowed in case
 the image cannot be found exactly. This is useful if the baseline image is captured in one browser version /
 operating system, but tested on another.
 
@@ -211,11 +211,11 @@ searchimage:            examples\search_images\menu_hamburger.png
 
 Specify the file path relative to the WebImblaze root folder.
 
-<br 
+<br />
 
 <a name="verifytext"></a>
 ### verifytext
-Fetches from WebDriver / Selenium the details you specify. Used in conjuction with a verifypostive or verifynegative.
+Fetches from WebDriver / Selenium the details you specify. Used in conjunction with a verifypositive or verifynegative.
 If you want to parseresponse, then you will need to use this feature to get something to parse.
 
 Multiple items can be separated with commas. Example:
@@ -231,11 +231,11 @@ verifytext:             get_current_url,get_body_text,get_page_source
 ```
 
 
-<br 
+<br />
 
 <a name="config"></a>
 ## 4 - Configuration
-<br 
+<br />
 <a name="blocker"></a>
 ### 4.1 - Block urls
 
@@ -245,7 +245,7 @@ correctly, then the plugin will fail to work at all.
 
 Using this method you can block analytics, or other urls that may make your tests run more quickly (e.g. by stopping banner ads).
 
-<br 
+<br />
 
 <a name="locators"></a>
 ## 5 - Helper Functions - Locators for Testers
@@ -324,7 +324,7 @@ discovered it had a name="hamburger_icon", you could target it as follows:
 selenium1:              _click('hamburger_icon')
 ```
 
-<br 
+<br />
 
 <a name="target_element"></a>
 ### `target` and `element` parameters described
@@ -338,7 +338,7 @@ to 1 - i.e. the 1st text that matches the target according to the heuristics.
 In this example, `Job title, skill or company` is the target text (refer to the example search form in the Overview).
 `2` says to match the second instance of the target text.
 
-<br 
+<br />
 
 #### element - `tag[|||instance]`
 
@@ -366,7 +366,7 @@ match of `Where` according to the heuristics.
 Note that the tag is always specified in *UPPERCASE*. This is how it is done in JavaScript. These helper
 functions heavily rely on JavaScript for parsing the DOM.
 
-<br 
+<br />
 
 <a name="full_details"></a>
 ### `Locators for Testers` helper functions full details
@@ -377,12 +377,12 @@ functions heavily rely on JavaScript for parsing the DOM.
 _keys_to_element(`target`,`keys`)
 
 Will look for some text in the page source, and enter a value to found element. In this example
-the element is found using the placeholder text.
+the element is found using the place holder text.
 ```
 selenium:               _keys_to_element('Job title, skill or company','WebDriver Jobs')
 ```
 
-<br 
+<br />
 
 <a name="_set_dropdown"></a>
 #### _set_dropdown
@@ -423,7 +423,7 @@ You can set via partial text too.
 ```
 selenium:               _set_dropdown('Preset Date','Last 30')
 ```
-<br 
+<br />
 
 <a name="_keys_to_element_after"></a>
 #### _keys_to_element_after
@@ -439,21 +439,21 @@ You can set drop downs this way too.
 ```
 selenium:               _keys_to_element_after('Set Date Range','Last 7 days','SELECT')
 ```
-<br 
+<br />
 
 <a name="_keys_to_element_before"></a>
 #### _keys_to_element_before
 
 Works just like `_keys_to_element_after` but will search for a matching element before the anchor text.
 
-<br 
+<br />
 
 <a name="_click"></a>
 #### _click
 
 _click(`target`)
 
-Clicks the first element on the page with Yes in it somewhere. Exact matches are priortised over partial matches.
+Clicks the first element on the page with Yes in it somewhere. Exact matches are prioritised over partial matches.
 Element text is prioritised over attribute values.
 ```
 selenium:               _click('Yes')
@@ -464,7 +464,7 @@ Clicks the second instance that matches `Yes`.
 selenium:               _click('Yes',2)
 ```
 
-<br 
+<br />
 
 <a name="_click_after"></a>
 #### _click_after
@@ -487,14 +487,14 @@ Clicks the first button after the second instance that matches `Yes`.
 Due to the heuristics, if there are two exact matches for `Yes` then only those will be counted. The other `Yes` matches will
 be ignored if they are considered to be of poorer quality.
 
-<br 
+<br />
 
 <a name="_click_before"></a>
 #### _click_before
 
 Works just like _click_after, except that it looks before the matching target.
 
-<br 
+<br />
 
 <a name="_get_element"></a>
 #### _get_element
@@ -503,7 +503,7 @@ _get_element(`target`)
 
 Gets various information about the element targeted by the anchor.
 
-The information includes the element attributes, the text, and if the element is in the current viewport.
+The information includes the element attributes, the text, and if the element is in the current view port.
 
 If applicable the currently selected drop down option is returned.
 
@@ -527,19 +527,19 @@ Located tag SELECT WITH[Company Billing Cycle] OK (exact match)
 `inViewport[0]` means the element is not visible in the current view port. It could be further
 down the page (out of the currently scrolled to area). Or it might be completely hidden.
 
-<br 
+<br />
 
 <a name="_wait_visible"></a>
 #### _wait_visible
 
 _wait_visible(`target`,`[timeout]`)
 
-Waits for the element designated by the anchor to be visible in the current viewport. Default timeout is 5 seconds.
+Waits for the element designated by the anchor to be visible in the current view port. Default timeout is 5 seconds.
 
 ```
 selenium:               _wait_visible('txtJobTitle', 10)
 ```
-Will wait up to 10 seconds for element with attribute `txtJobTitle` to become visible in the viewport.
+Will wait up to 10 seconds for element with attribute `txtJobTitle` to become visible in the view port.
 
 The determination of whether an element is visible in the view port is something of a black art. It is done
 using this function found on stack overflow:
@@ -560,14 +560,14 @@ See the `Recommended by John Resig` solution here: http://stackoverflow.com/ques
 
 It works pretty well but not in all cases. If it does work for your scenario, then it should work consistently.
 
-<br 
+<br />
 
 <a name="_wait_not_visible"></a>
 #### _wait_not_visible
 
-Works like _wait_visible except that it waits until the element targeted by the anchor to be not visible in the current viewport.
+Works like _wait_visible except that it waits until the element targeted by the anchor to be not visible in the current view port.
 
-<br 
+<br />
 
 <a name="_scroll_to"></a>
 #### _scroll_to
@@ -576,7 +576,7 @@ _scroll_to(`target`)
 
 Uses the JavaScript element.scrollIntoView method to scroll the element targeted by the anchor into view.
 
-<br 
+<br />
 
 <a name="_move_to"></a>
 #### _move_to
@@ -591,7 +591,7 @@ selenium:               _move_to('Yes|||2',320,200)
 ```
 Moves to an x offset of 320 and a y offset of 200 from the 2nd element with anchor `Yes`.
 
-<br 
+<br />
 
 <a name="heuristics"></a>
 ### Locators for Testers - Heuristics full details
@@ -604,7 +604,7 @@ The second class is what is collectively called the *priority attributes*.
 
 The third class are *all other attributes*.
 
-<br 
+<br />
 
 #### Class one - Text *between* the element tags
 
@@ -642,7 +642,7 @@ Unfortunately this doesn't always work as well as we would hope. Sometimes eleme
 is another element on top of them. In other cases content is hidden by a combination of CSS and JavaScript. In these
 situations you can end up targeting elements you do not expect.
 
-<br 
+<br />
 
 #### Class two - *priority attributes*
 
@@ -658,7 +658,7 @@ Consider this DOM fragment:
 The `placeholder` text is highly likely to be displayed on the web page. So this attribute is searched by the heuristics in preference
 to the other attributes.
 
-<br 
+<br />
 
 #### Class three - *all other attributes*
 
@@ -672,7 +672,7 @@ Consider this DOM fragment:
 
 The attribute values are `search-location`, `search`, `LTxt`, `Town, city or postcode`, and `txt_location`.
 
-<br 
+<br />
 #### Algorithm
 
 ##### Phase 1
@@ -695,7 +695,7 @@ As per `Phase 1`, however `class two` text is searched.
 
 As per `Phase 1`, however `class three` text is searched.
 
-<br 
+<br />
 
 <a name="helper"></a>
 ## 6 Helper Functions - Other
@@ -714,7 +714,7 @@ Refer to the Selenium::Remote:::Driver documentation on cpan for descriptions on
 selenium:               _clear_and_send_keys('candidateProfileDetails_txtPostCode','id','WC1X 8TG')
 ```
 
-<br 
+<br />
 
 <a name="_switch_to_window"></a>
 #### _switch_to_window
@@ -733,7 +733,7 @@ command directly:
 selenium:               $driver->switch_to_window('Homepage')
 ```
 
-<br 
+<br />
 
 <a name="_wait_for_text_present"></a>
 #### _wait_for_text_present
@@ -742,7 +742,7 @@ _wait_for_text_present(`search text`, `timeout`)
 
 Waits for the `search text` to be found in the page source. Waits until the `timeout` has been reached.
 
-When the search text is found, a message will be writen to the response log `Found sought text present`.
+When the search text is found, a message will be written to the response log `Found sought text present`.
 
 ```
 selenium:               _wait_for_text_present('Job title',10)
@@ -763,7 +763,7 @@ When this is run, you might get a response like this:
 Found sought text in page source after 1.6 seconds
 ```
 
-<br 
+<br />
 
 <a name="_wait_for_text_visible"></a>
 #### _wait_for_text_visible
@@ -800,7 +800,7 @@ In the response log you will see a message like the following that you can asser
 Found sought text visible after 3.8 seconds
 ```
 
-<br 
+<br />
 
 <a name="_check_element_within_pixels"></a>
 #### _check_element_within_pixels
@@ -820,7 +820,7 @@ The response log will contain a message like the following that you can assert a
 Pixel threshold check passed - Edit profile is 0,0 (x,y) pixels removed from baseline of 860,549; actual was 860,549
 ```
 
-<br 
+<br />
 
 <a name="tips"></a>
 ## 7 - Hints and tips
@@ -848,7 +848,7 @@ There is always the option of escaping the special characters with a backslash:
 selenium1:              _keys_to_element_after("E-mail","john\@example.com")
 ```
 
-<br 
+<br />
 
 <a name="more_quotes"></a>
 ### Need more quotes!
@@ -862,7 +862,7 @@ selenium:               _wait_for_text_visible(q|my profile and CV|,25,q|label[f
 
 Just use a `q` then immediately following the character you want to act as a quote.
 
-<br 
+<br />
 
 <a name="page_load_timeout"></a>
 ### Page load timeout
@@ -879,7 +879,7 @@ Setting the page load timeout to a low value can help with pages that have a lot
 Sometimes this content can be slow to load, or in fact may never load. Often your test will not
 depend on it at all - for example, banner ads and tracking tags.
 
-<br 
+<br />
 
 <a name="switch_iframe"></a>
 ### Switch to iframe example
@@ -888,7 +888,7 @@ depend on it at all - for example, banner ads and tracking tags.
 selenium:               $driver->switch_to_frame($driver->find_element(q|iframe[title='Third party frame']|,'css'))
 ```
 
-<br 
+<br />
 
 <a name="set_window_size"></a>
 ### Set window size to emulate Mobile view port
@@ -898,7 +898,7 @@ selenium1:              $driver->set_window_size(960, 340)
 ```
 The pixels down is given first, then across.
 
-<br 
+<br />
 
 <a name="javascript_snippet"></a>
 ### Execute a JavaScript snippet

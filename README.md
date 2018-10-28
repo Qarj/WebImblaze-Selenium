@@ -162,13 +162,13 @@ If your WebImblaze/output folder was empty before running the test, you'll now s
 * chromedriver.log
 
 Generally the best way to view the results is to open `output\results.xml` in a browser and click on the links to the
-individual resuls.
+individual results.
 
 ### Using the Selenium Server
 
 In my experience, running tests using Selenium Server is more robust than running through Chrome directly.
 
-You can excute the tests using Selenium Server as in the following example:
+You can execute the tests using Selenium Server as in the following example:
 
 ```
 perl wi.pl examples/selenium.test --driver chrome --chromedriver-binary C:\selenium\chromedriver.exe --selenium-binary C:\selenium\selenium-server-standalone-3.11.0.jar
@@ -298,7 +298,7 @@ perl wi.pl examples/selenium.test --driver chrome
     touch ~/.bash_profile; open ~/.bash_profile
     ```
     copy paste `export JAVA_HOME="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"` into the file and save it (otherwise you have to export every time)
-    * check everything ok
+    - check everything OK
     ```
     java -version
     ```
@@ -355,7 +355,7 @@ To use the searchimage parameter (see manual), you need to install the dependenc
 
 See https://github.com/Qarj/search-image for full installation instructions.
 
-To test that it works, run the following. If all test steps pass, then everything is setup ok.
+To test that it works, run the following. If all test steps pass, then everything is setup OK.
 
 ```
 perl wi.pl ./../WebImblaze-Selenium/examples/searchimage.test
