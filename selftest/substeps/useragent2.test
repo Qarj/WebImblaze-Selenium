@@ -2,11 +2,9 @@ useragent:              Some other user agent
 
 step:                   Get Search Recipes
 section:                User Agent self test
-selenium:               $driver->get("http://{WIC}/Search/SearchForm")
+selenium:               $driver->get("https://postcodes.io/about")
 verifytext:             get_current_url,get_page_source,get_user_agent
-verifypositive1:        Recipe Name
+verifypositive1:        API
 verifypositive2:        Some other user agent
-#restartbrowseronfail:   true
-#retry:                  3
 
 

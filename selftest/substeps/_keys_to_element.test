@@ -1,111 +1,58 @@
-step:                   Get WEBIMBLAZE-CHECK Search Form
+step:                   Get test form
 section:                _keys_to_element_after
-selenium:               $driver->get("http://{WIC}/Search/SearchForm")
+selenium:               $driver->get("http://httpbin.org/forms/post")
 verifytext:             get_current_url,get_page_source
-verifypositive:         Search Recipes
-verifypositive1:        Max Preparation Time
+verifypositive:         Customer
 retry:                  3
 
 step:                   Enter Recipe Name
-selenium1:              _keys_to_element_after('Recipe Name','Shepherds Pie')
-selenium2:              _get_element('TxtRecipeName')
+selenium1:              _keys_to_element_after('Customer name','Shepherds Pie')
+selenium2:              _get_element('custname')
 verifytext:             get_current_url
 verifypositive:         Element Value \[Shepherds Pie\]
+verifypositive1:        Focused and clicked tag INPUT AFTER\[Customer name\] OK \(text index 0\) then sent keys OK
+verifypositive2:        Located tag INPUT WITH\[custname\] OK \(exact match\)
 
 step:                   Enter Cuisine
-selenium1:              _keys_to_element_after('Cuisine','British')
-selenium2:              _get_element('TxtCuisine')
-verifypositive:         Element Value \[British\]
+selenium1:              _keys_to_element_after('Telephone','555888')
+selenium2:              _get_element('custtel')
+verifypositive:         Element Value \[555888\]
 
-step:                   Enter Max Preparation Time
-selenium1:              _keys_to_element_after('Max Prep','2')
-selenium2:              _get_element('MaxPrepTime')
-verifypositive:         Element Value \[2\]
+step:                   Enter email
+selenium1:              _keys_to_element_after('address','steve@example.com')
+selenium2:              _get_element('custemail')
+verifypositive:         Element Value \[steve@example.com\]
 
-step:                   Submit Search
-selenium1:              $driver->find_element("input[name=BtnSubmit]","css")->click()
+step:                   Submit form
+selenium1:              _click("Submit")
 verifytext:             get_current_url,get_body_text
-verifypositive:         you just submitted a search
+verifypositive:         steve
+verifypositive1:        Focused and clicked tag BUTTON WITH\[Submit\] OK \(text index 0\)
 
-step:                   Get WEBIMBLAZE-CHECK Search Form
+step:                   Get form
 section:                _keys_to_element_before
-selenium:               $driver->get("http://{WIC}/Search/SearchForm")
+selenium:               $driver->get("http://httpbin.org/forms/post")
 verifytext:             get_current_url,get_page_source
-verifypositive:         Search Recipes
-verifypositive1:        Max Preparation Time
+verifypositive:         Telephone
 
 step:                   Enter Recipe Name
-selenium1:              _keys_to_element_before('Cuisine','Shepherds Pie')
-selenium2:              _get_element('TxtRecipeName')
+selenium1:              _keys_to_element_before('Telephone','Shepherds Pie')
+selenium2:              _get_element('custname')
 verifytext:             get_current_url
 verifypositive:         Element Value \[Shepherds Pie\]
 
 step:                   Enter Cuisine
-selenium1:              _keys_to_element_before('PrepTime','British')
-selenium2:              _get_element('TxtCuisine')
-verifypositive:         Element Value \[British\]
-
-step:                   Enter Max Preparation Time
-selenium1:              _keys_to_element_before('Search Recipes','2')
-selenium2:              _get_element('MaxPrepTime')
-verifypositive:         Element Value \[2\]
-verifypositive1:        Focused and clicked tag INPUT BEFORE\[Search Recipes] OK \(exact match\) id\[TxtMaxPrepTime] then sent keys OK
-
-step:                   Submit Search
-selenium1:              $driver->find_element("input[name=BtnSubmit]","css")->click()
-verifytext:             get_current_url,get_body_text
-verifypositive:         you just submitted a search
-
-step:                   Get WEBIMBLAZE-CHECK Search Form
-section:                _keys_to_element
-selenium:               $driver->get("http://{WIC}/Search/SearchForm")
-verifytext:             get_current_url,get_page_source
-verifypositive:         Search Recipes
-verifypositive1:        Max Preparation Time
+selenium1:              _keys_to_element_before('mail address','555222')
+selenium2:              _get_element('custtel')
+verifypositive:         Element Value \[555222\]
+verifypositive1:        Focused and clicked tag INPUT BEFORE\[mail address\] OK \(text index 2\) then sent keys OK
 
 step:                   Enter Recipe Name
-selenium1:              _keys_to_element('RecipeName','Shepherds Pie')
-selenium2:              _get_element('TxtRecipeName')
+selenium1:              _keys_to_element('custname','Beef Pie')
+selenium2:              _get_element('custname')
 verifytext:             get_current_url
-verifypositive:         Element Value \[Shepherds Pie\]
-verifypositive1:        Focused and clicked tag INPUT WITH\[RecipeName] OK \(exact match\) id\[TxtRecipeName] then sent keys OK
-
-step:                   Enter Cuisine
-selenium1:              _keys_to_element('xtCuisine','British')
-selenium2:              _get_element('TxtCuisine')
-verifypositive:         Element Value \[British\]
-verifypositive1:        Focused and clicked tag INPUT WITH\[xtCuisine] OK \(text index 1\) id\[TxtCuisine] then sent keys OK
-
-step:                   Enter Max Preparation Time
-selenium1:              _keys_to_element('PrepTime','2')
-selenium2:              _get_element('MaxPrepTime')
-verifypositive:         Element Value \[2\]
-verifypositive1:        Focused and clicked tag INPUT WITH\[PrepTime] OK \(text index 6\) id\[TxtMaxPrepTime] then sent keys OK
-
-step:                   Submit Search
-selenium1:              $driver->find_element("input[name=BtnSubmit]","css")->click()
-verifytext:             get_current_url,get_body_text
-verifypositive:         you just submitted a search
-
-step:                   Get WEBIMBLAZE-CHECK Search Form
-section:                'INPUT|||3'
-selenium:               $driver->get("http://{WIC}/Search/SearchForm")
-verifytext:             get_current_url,get_page_source
-verifypositive:         Search Recipes
-verifypositive1:        Max Preparation Time
-
-step:                   Enter Max Preparation Time
-selenium1:              _keys_to_element_after('Search Recipes.','2','INPUT|||3')
-selenium2:              _get_element('MaxPrepTime')
-verifypositive:         Element Value \[2\]
-verifypositive1:        Focused and clicked tag INPUT AFTER\[Search Recipes\.] OK \(exact match\) id\[TxtMaxPrepTime] then sent keys OK
-
-step:                   Enter Cuisine
-section:                'anchor|||3'
-selenium1:              _keys_to_element_before('Search|||3','Thai','INPUT|||2')
-selenium2:              _get_element('TxtCuisine')
-verifypositive:         Element Value \[Thai\]
-verifypositive1:        Focused and clicked tag INPUT BEFORE\[Search] OK \(text index 0\) id\[TxtCuisine] then sent keys OK
+verifypositive:         Element Value \[Beef Pie\]
+verifypositive1:        Focused and clicked tag INPUT WITH\[custname\] OK \(exact match\) then sent keys OK
 
 step:                   Set Highest level of education to Diploma
 section:                Keys to SELECT element
@@ -125,4 +72,3 @@ step:                   Uncheck 'Switch on one-click apply'
 selenium1:              _click_after('Share your profile with trusted employers')
 selenium3:              _get_element('ocaOptIn')
 verifypositive:         isChecked\[false]
-

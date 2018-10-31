@@ -1,22 +1,18 @@
-step:                   Get WEBIMBLAZE-CHECK Search Form
-section:                WEBIMBLAZE-CHECK Search Form
-selenium:               $driver->get("http://{WIC}/Search/SearchForm")
+step:                   Get form
+section:                Simple form
+selenium:               $driver->get("http://httpbin.org/forms/post")
 selenium1:              $driver->get_all_cookies()
 verifytext:             get_page_source,get_current_url
-verifypositive:         Search Recipes
-verifypositive1:        Max Preparation Time
+verifypositive:         Customer name
 retry:                  3
 
-step:                   Fill out Search Form
-selenium1:              _clear_and_send_keys('TxtRecipeName','id','Sheperds Pie')
-selenium2:              _clear_and_send_keys('TxtCuisine','id','British')
-selenium3:              _clear_and_send_keys('TxtMaxPrepTime','id','2')
-selenium4:              _wait_for_text_visible('Cuisine', 'body', 'tag_name', 5)
+step:                   Fill out form
+selenium1:              _keys_to_element('custname','Shepherds Pie')
 verifytext:             get_page_source,get_current_url
-verifypositive:         Cuisine
+verifypositive:         Pizza
 
 step:                   Submit Search
-selenium1:              $driver->find_element("input[name=BtnSubmit]","css")->click()
+selenium1:              _click("Submit")
 verifytext:             get_page_source,get_current_url
-verifypositive:         you just submitted a search
+verifypositive:         Shepherds Pie
 
