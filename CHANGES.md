@@ -3,8 +3,11 @@
 ---------------------------------
 ## Release History:
 
-### Version 0.6.0 - Nov, 2018
+### Version 0.6.0 - Oct 31, 2018
 * rename project from WebInject-Selenium to WebImblaze-Selenium
+* new helper function _set_dropdown
+* made a blocker extension for Chrome to block get requests (of resources) you specify
+* useragent parameter now honoured
 
 ### Version 0.5.0 - Apr 23, 2018
 * Block urls via a simple Chrome extension called Blocker
