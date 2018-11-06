@@ -32,6 +32,15 @@ and place it in `C:\selenium`
 
 	Be sure to also install the Java runtime as well - https://ninite.com/ makes this easy.
 
+#### Windows installation workaround
+Note as at 25/10/2018, dependant package `Test::Time` is at version v0.07, but last working version on Windows is v0.05.
+Workaround seems to be to:
+1. Download v0.05 from https://github.com/manwar/Test-Time/releases
+2. Extract `Test-Time-0.05.tar.gz` so you have `Test-Time-0.05.tar` then extract the tar
+3. CD to the folder with Makefile.pl, then run it
+4. `cpan .`
+5. `cpan Selenium::Remote::Driver` should now work
+
 ### Create your first WebImblaze-Selenium test
 
 In the `tests` folder, create a file called `test_jobs.test`.
