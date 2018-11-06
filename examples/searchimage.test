@@ -1,23 +1,9 @@
-step:                   Get WEBIMBLAZE-CHECK Home page
-description2:           mobile phone pixel width - 320 wide
-section:                Mobile
+step:                   Get Example domain
 varPROJECT:             ./../WebImblaze-Selenium/
 selenium1:              $driver->set_window_size(960, 320)
-selenium2:              $driver->get('http://{WIC}')
-verifytext:             get_page_source
-verifypositive:         WebImblaze is a powerful free automated test tool
-restartbrowseronfail:   true
-retry:                  3
-searchimage1:           {PROJECT}examples\search_images\menu_hamburger.png
-searchimage2:           {PROJECT}examples\search_images\Learn_more.png
-
-step:                   Get WEBIMBLAZE-CHECK Home page
-description2:           desktop pixel width - 1260 wide
-section:                Desktop
-selenium1:              $driver->set_window_size(960, 1260)
-selenium2:              $driver->get('http://{WIC}')
-verifytext:             get_page_source
-verifypositive:         WebImblaze is a powerful free automated test tool
-searchimage1:           {PROJECT}examples\search_images\menu_desktop.png
-searchimage2:           {PROJECT}examples\search_images\Learn_more.png
+selenium2:              $driver->get('http://example.com')
+verifytext:             get_body_text,get_page_source
+verifypositive:         Example
+searchimage1:           {PROJECT}examples\search_images\Domain.png
+searchimage2:           {PROJECT}examples\search_images\More_information.png
 
