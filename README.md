@@ -180,13 +180,13 @@ In my experience, running tests using Selenium Server is more robust than runnin
 You can execute the tests using Selenium Server as in the following example:
 
 ```
-perl wi.pl examples/selenium.test --driver chrome --chromedriver-binary C:\selenium\chromedriver.exe --selenium-binary C:\selenium\selenium-server-standalone-3.11.0.jar
+perl wi.pl examples/misc/selenium.test --driver chrome --chromedriver-binary C:\selenium\chromedriver.exe --selenium-binary C:\selenium\selenium-server-standalone-3.11.0.jar
 ```
 
 Or more simply, because the locations of the chromedriver and selenium binaries are specified in config.xml:
 
 ```
-perl wi.pl examples/selenium.test --driver chrome
+perl wi.pl examples/misc/selenium.test --driver chrome
 ```
 
 ### Resources for creating your own tests
@@ -257,13 +257,13 @@ You can then close it or leave it open. If you don't do this, then it will hang 
 You can check that it works by running an example:
 ```
 cd /usr/local/bin/WebImblaze
-perl wi.pl examples/selenium.test
+perl wi.pl examples/misc/selenium.test
 ```    
 
 or using Selenium Server
 
 ```
-perl wi.pl examples/selenium.test --driver chrome
+perl wi.pl examples/misc/selenium.test --driver chrome
 ```    
 
 ### Mac - (currently only supports driving Chrome directly without Selenium Server)
@@ -335,7 +335,7 @@ perl wi.pl examples/selenium.test --driver chrome
 
 9. Check that it works
     ```
-    sudo perl wi.pl examples/selenium.test --driver chrome
+    sudo perl wi.pl examples/misc/selenium.test --driver chrome
     ```    
 
 Later, when you need to start perlbrew again:
