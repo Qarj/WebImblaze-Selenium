@@ -212,7 +212,7 @@ sub start_selenium_browser { ## no critic(ProhibitExcessComplexity) # start brow
                     $main::results_stdout .= "    [Starting ChromeDriver on port $_port through proxy on port $main::opt_proxy]\n";
                     $driver = Selenium::Chrome->new (binary => $main::opt_chromedriver_binary,
                                                  binary_port => $_port,
-                                                 _binary_args => " --port=$_port --url-base=/wd/hub --verbose --log-path=$main::results_output_folder".'chromedriver.log',
+                                                 _binary_args => " --port=$_port --url-base=/wd/hub --verbose --log-path=$main::opt_publish_full".'chromedriver.log',
                                                  'browser_name' => 'chrome',
                                                  'auto_close' => $_auto_close,
                                                  'session_id' => $_session_id,
@@ -224,7 +224,7 @@ sub start_selenium_browser { ## no critic(ProhibitExcessComplexity) # start brow
                     $main::results_stdout .= "    [Starting ChromeDriver on port $_port]\n";
                     $driver = Selenium::Chrome->new (binary => $main::opt_chromedriver_binary,
                                                  binary_port => $_port,
-                                                 _binary_args => " --port=$_port --url-base=/wd/hub --verbose --log-path=$main::results_output_folder".'chromedriver.log',
+                                                 _binary_args => " --port=$_port --url-base=/wd/hub --verbose --log-path=$main::opt_publish_full".'chromedriver.log',
                                                  'browser_name' => 'chrome',
                                                  'auto_close' => $_auto_close,
                                                  'session_id' => $_session_id,
@@ -473,7 +473,7 @@ sub _start_selenium_server {
     # find free port
     my $_selenium_port = find_available_port(int(rand 999)+11_000);
 
-    my $_abs_selenium_log_full = File::Spec->rel2abs( $main::results_output_folder.'selenium_log.txt' );
+    my $_abs_selenium_log_full = File::Spec->rel2abs( $main::opt_publish_full.'selenium_log.txt' );
 
     my $_os = $^O;
     if ($main::is_windows) {
