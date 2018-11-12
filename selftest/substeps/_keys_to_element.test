@@ -49,7 +49,8 @@ verifypositive1:        Focused and clicked tag INPUT BEFORE\[mail address\] OK 
 
 step:                   Enter Recipe Name
 selenium1:              _keys_to_element('custname','Beef Pie')
-selenium2:              _get_element('custname')
+selenium2:              _keys_to_element('custname','Beef Pie')
+selenium4:              _get_element('custname')
 verifytext:             get_current_url
 verifypositive:         Element Value \[Beef Pie\]
 verifypositive1:        Focused and clicked tag INPUT WITH\[custname\] OK \(exact match\) then sent keys OK
