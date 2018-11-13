@@ -23,7 +23,7 @@ Selenium WebDriver using ChromeDriver
     ```
     cpan Selenium::Remote::Driver
     ```
-    This will install the latest version of Selenium::Remote::Driver - 1.26 at the time of writing.
+    This will install the latest version of Selenium::Remote::Driver - 1.43 at the time of writing.
     
 4. Obtain chromedriver.exe from https://sites.google.com/a/chromium.org/chromedriver/ and place it in `C:\selenium\`
 
@@ -213,7 +213,7 @@ sudo find . -type d -exec chmod a+rwx {} \;
 sudo find . -type f -exec chmod a+rw {} \;
 ```
 
-Copy `WebImblaze-Selenium.pm` into `WebImblaze\plugins`
+Copy `WebImblaze-Selenium.pm` into `WebImblaze\plugins` by running `update.pl`
 ```
 perl plugins/update.pl
 ```
@@ -223,15 +223,17 @@ Now obtain latest version of ChromeDriver and put it in a folder called ~/seleni
 cd /usr/local/bin
 sudo mkdir selenium
 sudo chmod 777 selenium
-wget -N https://chromedriver.storage.googleapis.com/2.40/chromedriver_linux64.zip -P selenium
+
+wget http://chromedriver.storage.googleapis.com/LATEST_RELEASE -P selenium
+latest=$(cat selenium/LATEST_RELEASE)
+wget -N https://chromedriver.storage.googleapis.com/$latest/chromedriver_linux64.zip -P selenium
 sudo apt install unzip
 unzip selenium/chromedriver_linux64.zip -d selenium
 ```
-If someone knows a command to install the latest chromedriver rather than a (specific version), please let me know.
 
-Obtain Selenium Standalone Server 3.11.0 and put it in `/usr/local/bin/selenium` with this command
+Obtain latest Selenium Standalone 3 Server and put it in `/usr/local/bin/selenium` with this command
 ```
-wget -N http://selenium-release.storage.googleapis.com/3.11/selenium-server-standalone-3.11.0.jar -P selenium
+wget -N https://bit.ly/2yPGjmM -O selenium/selenium-server-3-standalone.jar
 ```
 
 A few extra commands are needed to ensure the dependencies are covered
@@ -243,10 +245,10 @@ sudo cpan Selenium::Remote::Driver
 ```
 This will install the latest version of Selenium::Remote::Driver.
 
-Now you should install Chrome, on Ubuntu / Debian / Linux Mint you can do it with these commands
+Now you should install Chrome, on Ubuntu / Debian / Linux Mint you can do it with these commands (assuming 64-bit)
 ```
 wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
 sudo apt-get update
 sudo apt-get --yes install google-chrome-stable
 ```
@@ -343,20 +345,17 @@ Later, when you need to start perlbrew again:
 perlbrew list
 ```
 
-Check the output, e.g. if it is `* perl-5.24.1` then just:
+Check the output, e.g. if it is `perl-5.24.1` then just:
 ```
 sudo perlbrew use perl-5.24.1
 ```
 
-Self Tests
-----------
+## Self Tests
 ```
-cd C:\git\WebImblaze
 perl wi.pl ../WebImblaze-Selenium/selftest/all_selenium.test
 ```
 
-Plugins
--------
+## Plugins
 
 ### search-image.py (Windows Only)
 
