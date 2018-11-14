@@ -29,7 +29,7 @@ You have the choice of using the Selenium Server (which I find to be more robust
     curl -O  http://chromedriver.storage.googleapis.com/LATEST_RELEASE
     set /p latest=<LATEST_RELEASE
     curl -O https://chromedriver.storage.googleapis.com/%latest%/chromedriver_win32.zip
-    "C:\Program Files\7-Zip\7z.exe" x chromedriver_win32.zip -o"C:\selenium" -r
+    "C:\Program Files\7-Zip\7z.exe" x chromedriver_win32.zip -o"C:\selenium" -r -y
     chromedriver.exe --version
     ```
 
