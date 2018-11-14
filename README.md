@@ -3,14 +3,11 @@ WebImblaze, the project found at [https://github.com/Qarj/WebImblaze](https://gi
 
 You have the choice of using the Selenium Server (which I find to be more robust), or you can drive ChromeDriver directly (Java not required!).
 
-Selenium WebDriver using ChromeDriver
--------------------------------------
-
 ### Windows (instructions for Linux and Mac below)
 
 1. After installing WebImblaze to `C:\git`, clone this plugin project
     ```
-    cd C:\git
+    cd C:/git
     git clone https://github.com/Qarj/WebImblaze-Selenium.git
     ```
 
@@ -23,27 +20,52 @@ Selenium WebDriver using ChromeDriver
     ```
     cpan Selenium::Remote::Driver
     ```
-    This will install the latest version of Selenium::Remote::Driver - 1.43 at the time of writing.
+    This will install the latest version of Selenium::Remote::Driver - 1.30 at the time of writing.
     
-4. Obtain chromedriver.exe from https://sites.google.com/a/chromium.org/chromedriver/ and place it in `C:\selenium\`
+4. Obtain chromedriver.exe from https://sites.google.com/a/chromium.org/chromedriver/ and place it in `C:/selenium/`
+    ```
+    mkdir c:\selenium
+    cd /D c:/selenium
+    curl -O  http://chromedriver.storage.googleapis.com/LATEST_RELEASE
+    set /p latest=<LATEST_RELEASE
+    curl -O https://chromedriver.storage.googleapis.com/%latest%/chromedriver_win32.zip
+    "C:\Program Files\7-Zip\7z.exe" x chromedriver_win32.zip -o"C:\selenium" -r
+    chromedriver.exe --version
+    ```
 
-5. Optional - download selenium-server-standalone-3.11.0.jar from http://selenium-release.storage.googleapis.com/3.11/selenium-server-standalone-3.11.0.jar
-and place it in `C:\selenium`
-
-	Be sure to also install the Java runtime as well - https://ninite.com/ makes this easy.
+5. Optional - download latest selenium-server-standalone-3.*.*.jar from 
+https://www.seleniumhq.org/download/
+and place it in `C:/selenium`, give it the generic name `selenium-server-3-standalone.jar`
+    ```
+    curl --location --output c:/selenium/selenium-server-3-standalone.jar https://bit.ly/2yPGjmM
+    java -jar selenium-server-3-standalone.jar --version
+    ```
+    Be sure to also install the Java runtime as well - https://ninite.com/ makes this easy.
 
 #### Windows installation workaround
 Note as at 25/10/2018, dependant package `Test::Time` is at version v0.07, but last working version on Windows is v0.05.
 Workaround seems to be to:
-1. Download v0.05 from https://github.com/manwar/Test-Time/releases
-2. Extract `Test-Time-0.05.tar.gz` so you have `Test-Time-0.05.tar` then extract the tar
+1. Download `Test-Time-0.05.zip` from https://github.com/manwar/Test-Time/releases
+2. Extract it
 3. CD to the folder with Makefile.pl, then run it
 4. `cpan .`
 5. `cpan Selenium::Remote::Driver` should now work
+```
+curl --location --output %temp%/test-time-0.05.zip https://github.com/manwar/Test-Time/archive/0.05.zip
+"C:\Program Files\7-Zip\7z.exe" x %temp%/test-time-0.05.zip -o"%temp%" -r
+cd %temp%/Test-Time-0.05
+perl Makefile.PL
+cpan .
+cpan Selenium::Remote::Driver
+```
 
 ### Create your first WebImblaze-Selenium test
 
 In the `tests` folder, create a file called `test_jobs.test`.
+```
+cd /D c:/git/WebImblaze
+start notepad++ tests/test_jobs.test
+```
 
 Copy and paste the following into the file and save it.
 
@@ -74,7 +96,7 @@ verifypositive2:        Next job
 
 ### Run your first WebImblaze-Selenium test
 
-1. From an administrator command prompt, `cd C:\git\WebImblaze`
+1. From a command prompt, `cd /D C:/git/WebImblaze`
 
 2. Run the tests with `perl wi.pl tests/test_jobs.test`
 
@@ -82,7 +104,7 @@ If all is ok, you'll see Chrome open and run the test steps. You'll also see out
 at the command prompt:
 
 ```
-C:\git\WebImblaze>wi.pl tests/test_jobs.test
+c:\git\WebImblaze>perl wi.pl tests/test_jobs.test
 
 Starting WebImblaze Engine...
 
@@ -92,20 +114,20 @@ Get CWJobs home page and fill out search form
 Verify Positive: "home for tech jobs"
 Verify Positive: "Companies hiring"
 GET_BODY_TEXT:get_body_text
-    [Starting ChromeDriver without Selenium Server]
+    [Starting ChromeDriver on port 9585]
 SELRESP:1
 SELRESP:Focused and clicked tag INPUT AFTER[What] OK (exact match) id[keywords] then sent keys OK
 SELRESP:Focused and clicked tag INPUT WITH[Town, city or postcode] OK (exact match) id[location] then sent keys OK
-SELRESP:Focused and clicked tag SELECT AFTER[Where] OK (exact match) id[Radius] then sent keys OK
+SELRESP:Focused and clicked tag SELECT AFTER[Where] OK (exact match) id[Radius] then selected dropdown value OK
 get_current_url
 get_body_text
 Passed Positive Verification
 Passed Positive Verification
 Passed HTTP Response Code Verification
-TEST CASE PASSED
-Response Time = 1 sec
-Verification Time = 0 sec
-Screenshot Time = 2 sec
+TEST STEP PASSED
+Response Time = 6.354 sec
+Verification Time = 0.435 sec
+Screenshot Time = 0.816 sec
 -------------------------------------------------------
 Test:  tests\test_jobs.test - 20
 Click Search
@@ -115,17 +137,17 @@ GET_BODY_TEXT:get_body_text
 SELRESP:Focused and clicked tag INPUT WITH[Search] OK (exact match) id[search-button]
 VISIBLE SEARCH TEXT:Explore results
 TIMEOUT:25
-SELRESP:Found sought text visible after 1 seconds
+SELRESP:Found sought text visible after 2 seconds
 get_current_url
 get_body_text
 get_page_source
 Passed Positive Verification
 Passed Positive Verification
 Passed HTTP Response Code Verification
-TEST CASE PASSED
-Response Time = 2 sec
-Verification Time = 0 sec
-Screenshot Time = 1 sec
+TEST STEP PASSED
+Response Time = 7.208 sec
+Verification Time = 2.015 sec
+Screenshot Time = 0.305 sec
 -------------------------------------------------------
 Test:  tests\test_jobs.test - 30
 Click on heading for first job ad on search results to see job details
@@ -135,43 +157,44 @@ GET_BODY_TEXT:get_body_text
 SELRESP:Focused and clicked tag A WITH[See details for] OK (text index 0)
 VISIBLE SEARCH TEXT:Back to search results
 TIMEOUT:25
-SELRESP:Found sought text visible after 1 seconds
+SELRESP:Found sought text visible after 0.9 seconds
 get_current_url
 get_body_text
 Passed Positive Verification
 Passed Positive Verification
 Passed HTTP Response Code Verification
-TEST CASE PASSED
-Response Time = 1 sec
-Verification Time = 0 sec
-Screenshot Time = 0 sec
+TEST STEP PASSED
+Response Time = 3.557 sec
+Verification Time = 1.32 sec
+Screenshot Time = 0.311 sec
 -------------------------------------------------------
-Start Time: Sun 05 Mar 2017, 11:37:06
-Total Run Time: 11.677 seconds
+Start Time: Wed 14 Nov 2018, 14:52:36
+Total Run Time: 28.028 seconds
 
-Total Response Time: 4.000 seconds
+Total Response Time: 17.119 seconds
 
-Test Cases Run: 3
-Test Cases Passed: 3
-Test Cases Failed: 0
+Test Steps Run: 3
+Test Steps Passed: 3
+Test Steps Failed: 0
 Verifications Passed: 12
 Verifications Failed: 0
 
-Results at: output\results.html
+Results at: output\Results.html
 ```
 
 ### Examining the results
 
 If your WebImblaze/output folder was empty before running the test, you'll now see 10 files there:
-* 10.png, 20.png, 30.png - automatic screen shots taken after each test step was executed
-* 10.html, 20.html, 30.html - a html file showing the individual results for each test step (including the screen shot)
-* results.html - a html version of the output to the console, it links to each individual test step
-* results.xml - an xml version of the results, needed by WebImblaze-Framework
-* http.txt - verbose log of raw WebImblaze test output
-* chromedriver.log
+- 10.png, 20.png, 30.png - automatic screen shots taken after each test step was executed
+- 10.html, 20.html, 30.html - a html file showing the individual results for each test step (including the screen shot)
+- Results.html - a html version of the output to the console, it links to each individual test step
+- results.xml - an xml version of the results, needed by the optional WebImblaze-Framework
+- http.txt - verbose log of raw WebImblaze http test output
+- chromedriver.log
 
-Generally the best way to view the results is to open `output\results.xml` in a browser and click on the links to the
-individual results.
+If not using WebInject-Framework, then double click on `output/Results.html` to view
+the test results in a browser. Click on a step number hyperlink to see the individual
+test step result.
 
 ### Using the Selenium Server
 
@@ -180,7 +203,7 @@ In my experience, running tests using Selenium Server is more robust than runnin
 You can execute the tests using Selenium Server as in the following example:
 
 ```
-perl wi.pl examples/misc/selenium.test --driver chrome --chromedriver-binary C:\selenium\chromedriver.exe --selenium-binary C:\selenium\selenium-server-standalone-3.11.0.jar
+perl wi.pl examples/misc/selenium.test --driver chrome --chromedriver-binary C:\selenium\chromedriver.exe --selenium-binary C:\selenium\selenium-server-3-standalone.jar
 ```
 
 Or more simply, because the locations of the chromedriver and selenium binaries are specified in config.xml:
@@ -194,7 +217,7 @@ perl wi.pl examples/misc/selenium.test --driver chrome
 You can see the many Selenium commands you can use by checking the documentation for the Perl bindings:
 http://search.cpan.org/perldoc/Selenium::Remote::Driver
 
-There are further examples in the `examples` and `selftest\substeps` folders of this project.
+There are further examples in the `examples` and `selftest/substeps` folders of this project.
 
 The [WebImblaze-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the helper (start with underscore `_`) functions available.
 
