@@ -100,7 +100,7 @@ verifypositive2:        Next job
 
 2. Run the tests with `perl wi.pl tests/test_jobs.test`
 
-If all is ok, you'll see Chrome open and run the test steps. You'll also see output like the following
+If all is OK, you'll see Chrome open and run the test steps. You'll also see output like the following
 at the command prompt:
 
 ```
@@ -192,7 +192,7 @@ If your WebImblaze/output folder was empty before running the test, you'll now s
 - http.txt - verbose log of raw WebImblaze http test output
 - chromedriver.log
 
-If not using WebInject-Framework, then double click on `output/Results.html` to view
+If not using WebImblaze-Framework, then double click on `output/Results.html` to view
 the test results in a browser. Click on a step number hyperlink to see the individual
 test step result.
 
@@ -241,7 +241,7 @@ Copy `WebImblaze-Selenium.pm` into `WebImblaze\plugins` by running `update.pl`
 perl plugins/update.pl
 ```
 
-Now obtain latest version of ChromeDriver and put it in a folder called ~/selenium by running these commands (double check version number)
+Now obtain latest version of ChromeDriver and place in `/usr/local/bin/selenium`
 ```
 cd /usr/local/bin
 sudo mkdir selenium
@@ -254,7 +254,7 @@ sudo apt install unzip
 unzip selenium/chromedriver_linux64.zip -d selenium
 ```
 
-Obtain latest Selenium Standalone 3 Server and put it in `/usr/local/bin/selenium` with this command
+Obtain latest Selenium Standalone 3 Server and put it in `/usr/local/bin/selenium`
 ```
 wget -N https://bit.ly/2yPGjmM -O selenium/selenium-server-3-standalone.jar
 ```
@@ -267,6 +267,12 @@ sudo apt --yes install default-jre
 sudo cpan Selenium::Remote::Driver
 ```
 This will install the latest version of Selenium::Remote::Driver.
+
+Check Java and Selenium Standalone versions
+```
+java -version
+java -jar selenium/selenium-server-3-standalone.jar --version
+```
 
 Now you should install Chrome, on Ubuntu / Debian / Linux Mint you can do it with these commands (assuming 64-bit)
 ```
@@ -291,77 +297,117 @@ or using Selenium Server
 perl wi.pl examples/misc/selenium.test --driver chrome
 ```    
 
-### Mac - (currently only supports driving Chrome directly without Selenium Server)
+### Mac
 
-1. Install Chrome, run it and decide whether you want it to be the default browser or not.
+First install WebImblaze https://github.com/Qarj/WebImblaze
 
-2. Install Homebrew
-    ```
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-    ```
+Install Chrome, run it and decide whether you want it to be the default browser or not.
 
-3. Install wget
-    ```
-    brew install wget
+Install Homebrew
+```
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     ```
 
-4. Obtain ChromeDriver and put it in a folder called ~/selenium by running these commands
-    ```
-    mkdir ~/selenium
-    wget -N http://chromedriver.storage.googleapis.com/2.27/chromedriver_mac64.zip -P ~/selenium
-    unzip ~/selenium/chromedriver_mac64.zip -d ~/selenium
-    chmod +x ~/selenium/chromedriver
-    ```
+Install wget
+```
+brew install wget
+```
 
-5. Now obtain the Selenium Standalone Server and put it in ~/selenium with this command
-    ```
-    wget -N http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.1.jar -P ~/selenium
-    ```
+Now obtain latest version of ChromeDriver and place in `/usr/local/bin/selenium`
+```
+cd /usr/local/bin
+sudo mkdir selenium
+sudo chmod 777 selenium
 
-6. Install JRE from http://www.oracle.com/technetwork/java/javase/downloads/index.html
-    * click on the JRE link
-    * download the .dmg file for Mac OS X
-    * double click on the downloaded dmg file
-    * double click on the Java icon to start the installer
-    * export it
-    ```
-    export JAVA_HOME="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"
-    ```
-    * put JAVA_HOME in your bash profile
-    ```
-    touch ~/.bash_profile; open ~/.bash_profile
-    ```
-    copy paste `export JAVA_HOME="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"` into the file and save it (otherwise you have to export every time)
-    - check everything OK
-    ```
-    java -version
-    ```
+wget http://chromedriver.storage.googleapis.com/LATEST_RELEASE -P selenium
+latest=$(cat selenium/LATEST_RELEASE)
+wget -N https://chromedriver.storage.googleapis.com/$latest/chromedriver_mac64.zip -P selenium
+unzip -o selenium/chromedriver_mac64.zip -d selenium
+```
 
-7. Install perlbrew and switch shell to latest stable perl version
-    ```
-    sudo cpan App::perlbrew
-    sudo perlbrew init
-    sudo perlbrew install --switch stable
-    ```
+Obtain latest Selenium Standalone 3 Server and put it in `/usr/local/bin/selenium`
+```
+wget -N https://bit.ly/2yPGjmM -O selenium/selenium-server-3-standalone.jar
+```
 
-8. Reinstall the packages needed for WebImblaze in the perlbrew sub system
-    ```
-    sudo cpan File::Slurp
-    sudo cpan XML::Simple
-    sudo cpan Math::Random::ISAAC
-    sudo cpan IO::Socket::SSL
-    sudo cpan LWP::Protocol::https
-    ```
+Install JRE from http://www.oracle.com/technetwork/java/javase/downloads/index.html
+- click on the JRE link
+- download the .dmg file for Mac OS X
+- double click on the downloaded dmg file
+- double click on the Java icon to start the installer
+- export it
+```
+export JAVA_HOME="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"
+```
+- put JAVA_HOME in your bash profile
+```
+touch ~/.bash_profile; open ~/.bash_profile
+```
+copy paste `export JAVA_HOME="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"` into the file and save it (otherwise you have to export every time)
+- check everything OK
+```
+java -version
+java -jar selenium/selenium-server-3-standalone.jar --version
+```
 
-8. Install Selenium::Remote::Driver
-    ```
-    sudo cpan Selenium::Remote::Driver
-    ```
+Install perlbrew
+```
+\curl -L https://install.perlbrew.pl | bash
+```
+Append `source ~/perl5/perlbrew/etc/bashrc` to bash profile and run it now also
+```
+open ~/.bash_profile
+source ~/perl5/perlbrew/etc/bashrc
+```
 
-9. Check that it works
-    ```
-    sudo perl wi.pl examples/misc/selenium.test --driver chrome
-    ```    
+Init perlbrew and switch shell to latest stable perl
+```
+sudo perlbrew init
+sudo perlbrew install --switch stable
+```
+
+Install the packages needed for WebImblaze in the perlbrew sub system
+```
+sudo cpan File::Slurp
+sudo cpan XML::Simple
+sudo cpan Math::Random::ISAAC
+sudo cpan IO::Socket::SSL
+sudo cpan LWP::Protocol::https
+```
+
+Install Selenium::Remote::Driver
+```
+sudo cpan Selenium::Remote::Driver
+```
+
+Clone this plugin project
+```
+cd /usr/local/bin
+sudo git clone https://github.com/Qarj/WebImblaze-Selenium.git
+```
+
+Fix permissions
+```
+cd WebImblaze-Selenium
+sudo find . -type d -exec chmod a+rwx {} \;
+sudo find . -type f -exec chmod a+rw {} \;
+```
+
+Copy `WebImblaze-Selenium.pm` into `WebImblaze\plugins` by running `update.pl`
+```
+perl plugins/update.pl
+```
+
+Check that it all works - with Selenium Server
+```
+cd /usr/local/bin/WebImblaze
+sudo perl wi.pl examples/misc/selenium.test --driver chrome
+```    
+
+Using ChromeDriver directly without Selenium Server
+```
+sudo perl wi.pl examples/misc/selenium.test
+```    
 
 Later, when you need to start perlbrew again:
 ```
