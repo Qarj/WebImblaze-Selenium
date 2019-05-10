@@ -88,6 +88,9 @@
 
 ### [ Execute a JavaScript snippet](#javascript_snippet)
 
+### [ XPATH snippets](#xpath_snippets)
+
+
 <a name="overview"></a>
 
 ## 1 - Overview
@@ -1026,3 +1029,21 @@ selenium:               $driver->execute_script(q|return analytics.Campaign;|)
 Will return the value of the variable `analytics.Campaign`.
 
 The JavaScript can be many lines long if required.
+
+<a name="xpath_snippet"></a>
+
+### XPATH snippets
+
+Xpath with multiple conditions
+```
+selenium:   $driver->find_element(qq|//input[\@type='email' and \@name='login_email']|,qq|xpath|)->send_keys('webinject@googlemail.com')
+```
+Element that is selected (needed when individual values are not unique)
+```
+<input class="text-input-input autofocus" type="email" name="login_email" id="pyxl256037789906648953" />
+```
+ 
+Next input element following element text 'First Name:' - leading and trailing spaces removed
+```
+//*/text()[normalize-space(.)='First Name:']/parent::*/following::input
+```
