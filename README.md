@@ -306,7 +306,7 @@ Install Chrome, run it and decide whether you want it to be the default browser 
 Install Homebrew
 ```
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-    ```
+```
 
 Install wget
 ```
@@ -352,7 +352,7 @@ java -jar selenium/selenium-server-3-standalone.jar --version
 
 Install perlbrew
 ```
-\curl -L https://install.perlbrew.pl | bash
+curl -L https://install.perlbrew.pl | bash
 ```
 Append `source ~/perl5/perlbrew/etc/bashrc` to bash profile and run it now also
 ```

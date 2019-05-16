@@ -10,8 +10,9 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '0.6.0'; # Selenium 3 Server support + Running ChromeDriver directly
+$VERSION = '0.6.1'; # Selenium 3 Server support + Running ChromeDriver directly
 
+use utf8;
 use Time::HiRes 'time','sleep';
 use File::Copy qw(copy), qw(move);
 use Socket qw( PF_INET SOCK_STREAM INADDR_ANY sockaddr_in );
@@ -72,6 +73,7 @@ sub selenium {  # send Selenium command and read response
 
     _get_verifytext(); # will be injected into $selresp
     $main::response = HTTP::Response->parse($selresp); # pretend the response is an http response - inject it into the object
+    $main::resp_content = $selresp;
 
     _screenshot();
 
