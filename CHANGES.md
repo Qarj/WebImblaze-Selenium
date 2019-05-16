@@ -3,6 +3,9 @@
 ---------------------------------
 ## Release History:
 
+### Version 0.6.1 - May 16, 2019
+* support UTF-8 enabled WebImblaze
+
 ### Version 0.6.0 - Oct 31, 2018
 * rename project from WebInject-Selenium to WebImblaze-Selenium
 * new helper function _set_dropdown

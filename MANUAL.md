@@ -1,4 +1,4 @@
-# Manual for WebImblaze-Selenium version 0.6.0
+# Manual for WebImblaze-Selenium version 0.6.1
 
 ## [1 - Overview](#overview)
 
