@@ -11,8 +11,8 @@ selenium1:              _get_element('Register CV')
 verifytext:             get_current_url
 verifypositive1:        inViewport\[1]
 
-step:                   Check that StepStone Deutschland is not in viewport (very bottom of page left)
-selenium1:              _get_element('StepStone Deutschland')
+step:                   Check that Terms and Conditions is not in viewport (very bottom of page left)
+selenium1:              _get_element('Terms and Conditions')
 verifytext:             get_current_url
 verifypositive1:        inViewport\[0]
 
@@ -25,8 +25,8 @@ selenium1:              _get_element('Register CV')
 verifytext:             get_current_url
 verifypositive1:        inViewport\[0]
 
-step:                   Check that StepStone Deutschland is now IN viewport (very bottom of page left)
-selenium1:              _get_element('StepStone Deutschland')
+step:                   Check that Terms and Conditions is now IN viewport (very bottom of page left)
+selenium1:              _get_element('Terms and Conditions')
 verifytext:             get_current_url
 verifypositive1:        inViewport\[1]
 

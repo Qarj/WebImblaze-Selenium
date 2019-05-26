@@ -1,12 +1,12 @@
 step:                   Fill out search form
 section:                Locators for Testers Example - food.gov.uk
 selenium1:              $driver->get("https://www.food.gov.uk")
-selenium2:              _keys_to_element('Search','salt')
+selenium2:              _keys_to_element('Search...','salt')
 verifytext:             get_current_url,get_body_text
-verifypositive:         FSA in Wales
+verifypositive:         Food
 
 step:                   Submit search
-selenium3:              _click("submit-search")
+selenium3:              _click("Submit")
 verifytext:             get_current_url,get_body_text
 verifypositive:         Search results
 

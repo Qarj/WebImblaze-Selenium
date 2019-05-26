@@ -66,10 +66,10 @@ verifypositive:         \[538\] Diploma
 step:                   View 'Switch on one-click apply' current state
 section:                Keys to checkbox
 selenium2:              _get_element('ocaOptIn')
-selenium3:              _scroll_to('register')
+selenium3:              _scroll_to('Share your profile with')
 verifypositive:         isChecked\[true]
 
 step:                   Uncheck 'Switch on one-click apply'
-selenium1:              _click_after('Share your profile with trusted employers')
+selenium1:              _click_after('Help recruiters understand')
 selenium3:              _get_element('ocaOptIn')
 verifypositive:         isChecked\[false]
