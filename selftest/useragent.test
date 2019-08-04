@@ -3,18 +3,18 @@ varCONFIG_FILE:         config.xml
 varFEATURE:             useragent
 shell:                  echo NOP
 
-include:                ./../WebImblaze-Selenium/selftest/helpers/selenium_server_runner.test
+include:                ./../WebImblaze-Selenium/selftest/helpers/chromedriver_direct_runner.test
 
 step:                   Set variables for {FEATURE}
 varCONFIG_FILE:         ./../WebImblaze-Selenium/selftest/substeps/useragent1_config.xml
 varFEATURE:             useragent1
 shell:                  echo NOP
 
-include:                ./../WebImblaze-Selenium/selftest/helpers/selenium_server_runner.test
+include:                ./../WebImblaze-Selenium/selftest/helpers/chromedriver_direct_runner.test
 
 step:                   Set variables for {FEATURE}
 varCONFIG_FILE:         ./../WebImblaze-Selenium/selftest/substeps/useragent1_config.xml
 varFEATURE:             useragent2
 shell:                  echo NOP
 
-include:                ./../WebImblaze-Selenium/selftest/helpers/selenium_server_runner.test
+include:                ./../WebImblaze-Selenium/selftest/helpers/chromedriver_direct_runner.test

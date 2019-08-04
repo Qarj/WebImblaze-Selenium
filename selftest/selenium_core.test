@@ -1,14 +1,17 @@
 step:                   Set variables
 varCONFIG_FILE:         config.xml
 varFEATURE:             selenium_core
+varPROJECT:             ./../WebImblaze-Selenium/
 shell:                  echo NOP
 
+--= Am having a lot of trouble with Selenium Server at the moment - version 3.141.59 is giving Error: `Invalid or corrupt jarfile`
+
 step:                   Run WebImblaze using Selenium Remote Control Server running under Java
-varPROJECT:             ./../WebImblaze-Selenium/
 shell1:                 wi.pl -o {PROJECT}selftest\output\{FEATURE}_server_chrome_sub --config {CONFIG_FILE} --driver chrome --chromedriver-binary C:\selenium\chromedriver.exe --selenium-binary C:\selenium\selenium-server-3-standalone.jar {PROJECT}selftest\substeps\{FEATURE}.test
 shell2:                 perl $PWD/wi.pl -o {PROJECT}selftest\output\{FEATURE}_server_chrome_sub --config {CONFIG_FILE} --driver chrome --chromedriver-binary /usr/local/bin/selenium/chromedriver --selenium-binary /usr/local/bin/selenium/selenium-server-3-standalone.jar {PROJECT}selftest\substeps\{FEATURE}.test
 verifypositive2:        Test Steps Failed: 0
 verifypositive3:        Started Selenium Remote Control Standalone server on port
+=--
 
 step:                   Run WebImblaze pointing to the ChromeDriver binary - does not require Selenium Server or java
 shell1:                 wi.pl -o {PROJECT}selftest\output\{FEATURE}_chromedriver_standalone_sub --config {CONFIG_FILE} --driver chromedriver --chromedriver-binary C:\selenium\chromedriver.exe {PROJECT}selftest\substeps\{FEATURE}.test

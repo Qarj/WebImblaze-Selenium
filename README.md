@@ -1,4 +1,5 @@
 # WebImblaze-Selenium 0.6.1
+
 WebImblaze, the project found at [https://github.com/Qarj/WebImblaze](https://github.com/Qarj/WebImblaze), can also drive Selenium using the Chrome browser.
 
 You have the choice of using the Selenium Server (which I find to be more robust), or you can drive ChromeDriver directly (Java not required!).
@@ -6,50 +7,55 @@ You have the choice of using the Selenium Server (which I find to be more robust
 ### Windows (instructions for Linux and Mac below)
 
 1. After installing WebImblaze to `C:\git`, clone this plugin project
-    ```
-    cd C:/git
-    git clone https://github.com/Qarj/WebImblaze-Selenium.git
-    ```
+
+   ```
+   cd C:/git
+   git clone https://github.com/Qarj/WebImblaze-Selenium.git
+   ```
 
 2. Copy `WebImblaze-Selenium.pm` and `blocker` folder into `WebImblaze/plugins`
-    ```
-    perl WebImblaze-Selenium/plugins/update.pl
-    ```
+
+   ```
+   perl WebImblaze-Selenium/plugins/update.pl
+   ```
 
 3. Open a command prompt as an administrator and issue the following command:
-    ```
-    cpan Selenium::Remote::Driver
-    ```
-    This will install the latest version of Selenium::Remote::Driver - 1.30 at the time of writing.
-    
-4. Obtain chromedriver.exe from https://sites.google.com/a/chromium.org/chromedriver/ and place it in `C:/selenium/`
-    ```
-    mkdir c:\selenium
-    cd /D c:/selenium
-    curl -O  http://chromedriver.storage.googleapis.com/LATEST_RELEASE
-    set /p latest=<LATEST_RELEASE
-    curl -O https://chromedriver.storage.googleapis.com/%latest%/chromedriver_win32.zip
-    "C:\Program Files\7-Zip\7z.exe" x chromedriver_win32.zip -o"C:\selenium" -r -y
-    chromedriver.exe --version
-    ```
 
-5. Optional - download latest selenium-server-standalone-3.*.*.jar from 
-https://www.seleniumhq.org/download/
-and place it in `C:/selenium`, give it the generic name `selenium-server-3-standalone.jar`
-    ```
-    curl --location --output c:/selenium/selenium-server-3-standalone.jar https://bit.ly/2yPGjmM
-    java -jar selenium-server-3-standalone.jar --version
-    ```
-    Be sure to also install the Java runtime as well - https://ninite.com/ makes this easy.
+   ```
+   cpan Selenium::Remote::Driver
+   ```
+
+   This will install the latest version of Selenium::Remote::Driver - 1.30 at the time of writing.
+
+4. Obtain chromedriver.exe from https://sites.google.com/a/chromium.org/chromedriver/ and place it in `C:/selenium/`
+
+   ```
+   mkdir c:\selenium
+   cd /D c:/selenium
+   curl -O  http://chromedriver.storage.googleapis.com/LATEST_RELEASE
+   set /p latest=<LATEST_RELEASE
+   curl -O https://chromedriver.storage.googleapis.com/%latest%/chromedriver_win32.zip
+   "C:\Program Files\7-Zip\7z.exe" x chromedriver_win32.zip -o"C:\selenium" -r -y
+   chromedriver.exe --version
+   ```
+
+5. Optional - download latest selenium-server-standalone-3._._.jar from
+   https://www.seleniumhq.org/download/
+   and place it in `C:/selenium`, give it the generic name `selenium-server-3-standalone.jar`
+   `curl --location --output c:/selenium/selenium-server-3-standalone.jar https://bit.ly/2zm3ZzF java -jar selenium-server-3-standalone.jar --version`
+   Be sure to also install the Java runtime as well - https://ninite.com/ makes this easy.
 
 #### Windows installation workaround
+
 Note as at 25/10/2018, dependant package `Test::Time` is at version v0.07, but last working version on Windows is v0.05.
 Workaround seems to be to:
+
 1. Download `Test-Time-0.05.zip` from https://github.com/manwar/Test-Time/releases
 2. Extract it
 3. CD to the folder with Makefile.pl, then run it
 4. `cpan .`
 5. `cpan Selenium::Remote::Driver` should now work
+
 ```
 curl --location --output %temp%/test-time-0.05.zip https://github.com/manwar/Test-Time/archive/0.05.zip
 "C:\Program Files\7-Zip\7z.exe" x %temp%/test-time-0.05.zip -o"%temp%" -r
@@ -62,6 +68,7 @@ cpan Selenium::Remote::Driver
 ### Create your first WebImblaze-Selenium test
 
 In the `tests` folder, create a file called `test_jobs.test`.
+
 ```
 cd /D c:/git/WebImblaze
 start notepad++ tests/test_jobs.test
@@ -185,6 +192,7 @@ Results at: output\Results.html
 ### Examining the results
 
 If your WebImblaze/output folder was empty before running the test, you'll now see 10 files there:
+
 - 10.png, 20.png, 30.png - automatic screen shots taken after each test step was executed
 - 10.html, 20.html, 30.html - a html file showing the individual results for each test step (including the screen shot)
 - Results.html - a html version of the output to the console, it links to each individual test step
@@ -224,12 +232,14 @@ The [WebImblaze-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the 
 ### Linux
 
 After installing WebImblaze to `/usr/local/bin`, clone this plugin project
+
 ```
 cd /usr/local/bin
 sudo git clone https://github.com/Qarj/WebImblaze-Selenium.git
 ```
 
 Fix permissions
+
 ```
 cd WebImblaze-Selenium
 sudo find . -type d -exec chmod a+rwx {} \;
@@ -237,11 +247,13 @@ sudo find . -type f -exec chmod a+rw {} \;
 ```
 
 Copy `WebImblaze-Selenium.pm` into `WebImblaze\plugins` by running `update.pl`
+
 ```
 perl plugins/update.pl
 ```
 
 Now obtain latest version of ChromeDriver and place in `/usr/local/bin/selenium`
+
 ```
 cd /usr/local/bin
 sudo mkdir selenium
@@ -255,26 +267,31 @@ unzip selenium/chromedriver_linux64.zip -d selenium
 ```
 
 Obtain latest Selenium Standalone 3 Server and put it in `/usr/local/bin/selenium`
+
 ```
-wget -N https://bit.ly/2yPGjmM -O selenium/selenium-server-3-standalone.jar
+wget -N https://bit.ly/2zm3ZzF -O selenium/selenium-server-3-standalone.jar
 ```
 
 A few extra commands are needed to ensure the dependencies are covered
+
 ```
 sudo apt-get update
 sudo apt --yes install gnome-terminal
 sudo apt --yes install default-jre
 sudo cpan Selenium::Remote::Driver
 ```
+
 This will install the latest version of Selenium::Remote::Driver.
 
 Check Java and Selenium Standalone versions
+
 ```
 java -version
 java -jar selenium/selenium-server-3-standalone.jar --version
 ```
 
 Now you should install Chrome, on Ubuntu / Debian / Linux Mint you can do it with these commands (assuming 64-bit)
+
 ```
 wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
@@ -286,16 +303,17 @@ sudo apt-get --yes install google-chrome-stable
 You can then close it or leave it open. If you don't do this, then it will hang when you try to run a test with ChromeDriver.
 
 You can check that it works by running an example:
+
 ```
 cd /usr/local/bin/WebImblaze
 perl wi.pl examples/misc/selenium.test
-```    
+```
 
 or using Selenium Server
 
 ```
 perl wi.pl examples/misc/selenium.test --driver chrome
-```    
+```
 
 ### Mac
 
@@ -304,16 +322,19 @@ First install WebImblaze https://github.com/Qarj/WebImblaze
 Install Chrome, run it and decide whether you want it to be the default browser or not.
 
 Install Homebrew
+
 ```
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 
 Install wget
+
 ```
 brew install wget
 ```
 
 Now obtain latest version of ChromeDriver and place in `/usr/local/bin/selenium`
+
 ```
 cd /usr/local/bin
 sudo mkdir selenium
@@ -326,47 +347,60 @@ unzip -o selenium/chromedriver_mac64.zip -d selenium
 ```
 
 Obtain latest Selenium Standalone 3 Server and put it in `/usr/local/bin/selenium`
+
 ```
-wget -N https://bit.ly/2yPGjmM -O selenium/selenium-server-3-standalone.jar
+wget -N https://bit.ly/2zm3ZzF -O selenium/selenium-server-3-standalone.jar
 ```
 
 Install JRE from http://www.oracle.com/technetwork/java/javase/downloads/index.html
+
 - click on the JRE link
 - download the .dmg file for Mac OS X
 - double click on the downloaded dmg file
 - double click on the Java icon to start the installer
 - export it
+
 ```
 export JAVA_HOME="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"
 ```
+
 - put JAVA_HOME in your bash profile
+
 ```
 touch ~/.bash_profile; open ~/.bash_profile
 ```
+
 copy paste `export JAVA_HOME="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"` into the file and save it (otherwise you have to export every time)
+
 - check everything OK
+
 ```
 java -version
 java -jar selenium/selenium-server-3-standalone.jar --version
 ```
 
 Install perlbrew
+
 ```
 curl -L https://install.perlbrew.pl | bash
 ```
+
 Append `source ~/perl5/perlbrew/etc/bashrc` to bash profile and run it now also
+
 ```
 open ~/.bash_profile
 source ~/perl5/perlbrew/etc/bashrc
 ```
 
 Init perlbrew and switch shell to latest stable perl
+
 ```
 sudo perlbrew init
 sudo perlbrew install --switch stable
 ```
 
 Install the packages needed for WebImblaze in the perlbrew sub system
+
 ```
 sudo cpan File::Slurp
 sudo cpan XML::Simple
@@ -376,17 +410,20 @@ sudo cpan LWP::Protocol::https
 ```
 
 Install Selenium::Remote::Driver
+
 ```
 sudo cpan Selenium::Remote::Driver
 ```
 
 Clone this plugin project
+
 ```
 cd /usr/local/bin
 sudo git clone https://github.com/Qarj/WebImblaze-Selenium.git
 ```
 
 Fix permissions
+
 ```
 cd WebImblaze-Selenium
 sudo find . -type d -exec chmod a+rwx {} \;
@@ -394,32 +431,38 @@ sudo find . -type f -exec chmod a+rw {} \;
 ```
 
 Copy `WebImblaze-Selenium.pm` into `WebImblaze\plugins` by running `update.pl`
+
 ```
 perl plugins/update.pl
 ```
 
 Check that it all works - with Selenium Server
+
 ```
 cd /usr/local/bin/WebImblaze
 sudo perl wi.pl examples/misc/selenium.test --driver chrome
-```    
+```
 
 Using ChromeDriver directly without Selenium Server
+
 ```
 sudo perl wi.pl examples/misc/selenium.test
-```    
+```
 
 Later, when you need to start perlbrew again:
+
 ```
 perlbrew list
 ```
 
 Check the output, e.g. if it is `perl-5.24.1` then just:
+
 ```
 sudo perlbrew use perl-5.24.1
 ```
 
 ## Self Tests
+
 ```
 perl wi.pl ../WebImblaze-Selenium/selftest/all_selenium.test
 ```
@@ -438,5 +481,5 @@ To test that it works, run the following. If all test steps pass, then everythin
 perl wi.pl ./../WebImblaze-Selenium/examples/searchimage.test
 ```
 
-You can also check the result by looking at `output\100.png' and also `output\200.png`. You'll see that
+You can also check the result by looking at `output\100.png' and also`output\200.png`. You'll see that
 search-image.py has marked the locations of the result screenshot where it found the images.

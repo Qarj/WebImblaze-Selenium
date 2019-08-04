@@ -8,7 +8,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '0.0.5';
+$VERSION = '0.0.6';
 
 use File::Copy qw(copy), qw(move);
 use File::Basename;
@@ -28,7 +28,7 @@ make_path ($dest_folder_path.'blocker/images');
 _copy_file('blocker/images/Blocker_128.png', $dest_folder_path);
 
 my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
-printf("Updated at %02d:%02d:%02d", $hour, $min, $sec); #HH:MM:SS
+printf("Updated at %02d:%02d:%02d\n", $hour, $min, $sec); #HH:MM:SS
 
 sub _copy_file {
     my ($_source_file, $_dest_folder_path) = @_;
