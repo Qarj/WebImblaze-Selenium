@@ -1,4 +1,4 @@
-# WebImblaze-Selenium 0.6.1
+# WebImblaze-Selenium 0.6.2
 
 WebImblaze, the project found at [https://github.com/Qarj/WebImblaze](https://github.com/Qarj/WebImblaze), can also drive Selenium using the Chrome browser.
 
@@ -39,10 +39,14 @@ You have the choice of using the Selenium Server (which I find to be more robust
    chromedriver.exe --version
    ```
 
-5. Optional - download latest selenium-server-standalone-3._._.jar from
-   https://www.seleniumhq.org/download/
-   and place it in `C:/selenium`, give it the generic name `selenium-server-3-standalone.jar`
-   `curl --location --output c:/selenium/selenium-server-3-standalone.jar https://bit.ly/2zm3ZzF java -jar selenium-server-3-standalone.jar --version`
+5. Optional - download latest Selenium Server from https://selenium.dev/downloads/ 
+and place it in `C:/selenium`, give it the generic name `selenium-server-3-standalone.jar`
+
+   ```
+   curl --location --output c:/selenium/selenium-server-3-standalone.jar https://bit.ly/2TlkRyu
+   java -jar c:/selenium/selenium-server-3-standalone.jar --version
+   ```
+
    Be sure to also install the Java runtime as well - https://ninite.com/ makes this easy.
 
 #### Windows installation workaround

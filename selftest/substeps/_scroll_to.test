@@ -1,5 +1,5 @@
 step:                   Get Totaljobs Home Page
-section:                _move_to
+section:                _scroll_to
 selenium:               $driver->get("https://www.totaljobs.com")
 selenium1:              _get_element('Copyright and database rights')
 verifytext:             get_current_url,get_body_text
@@ -16,8 +16,8 @@ selenium1:              _get_element('Terms and Conditions')
 verifytext:             get_current_url
 verifypositive1:        inViewport\[0]
 
-step:                   Move mouse to Copyright message
-selenium1:              _move_to('Copyright and database rights')
+step:                   Scroll viewport to Copyright message using JavaScript scrollIntoView() method
+selenium1:              _scroll_to('Copyright and database rights')
 verifytext:             get_current_url
 
 step:                   Check that Register CV is now NOT in viewport (top right)

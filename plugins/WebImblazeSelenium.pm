@@ -10,7 +10,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '0.6.1'; # Selenium 3 Server support + Running ChromeDriver directly
+$VERSION = '0.6.2'; # Selenium 3 Server support + Running ChromeDriver directly
 
 use utf8;
 use Time::HiRes 'time','sleep';
@@ -223,14 +223,14 @@ sub start_selenium_browser { ## no critic(ProhibitExcessComplexity) # start brow
                                                  );
 
                 } else {
-                    $main::results_stdout .= "    [Starting ChromeDriver on port $_port]\n";
+                    $main::results_stdout .= "    [Starting ChromeDriver without Selenium Server on port $_port]\n";
                     $driver = Selenium::Chrome->new (binary => $main::opt_chromedriver_binary,
                                                  binary_port => $_port,
-                                                 _binary_args => " --port=$_port --url-base=/wd/hub --verbose --log-path=$main::opt_publish_full".'chromedriver.log',
+                                                 custom_args => " --url-base=/wd/hub --verbose --log-path=$main::opt_publish_full".'_chromedriver.log',
                                                  'browser_name' => 'chrome',
                                                  'auto_close' => $_auto_close,
                                                  'session_id' => $_session_id,
-                                                 'extra_capabilities' => {'chromeOptions' => {'args' => [@_chrome_args]}}
+                                                 'extra_capabilities' => {'goog:chromeOptions' => {'args' => [@_chrome_args]}}
                                                  );
                 }
             }

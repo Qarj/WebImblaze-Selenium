@@ -1,4 +1,4 @@
-# Manual for WebImblaze-Selenium version 0.6.1
+# Manual for WebImblaze-Selenium version 0.6.2
 
 ## [1 - Overview](#overview)
 
@@ -662,6 +662,18 @@ Uses the JavaScript element.scrollIntoView method to scroll the element targeted
 <a name="_move_to"></a>
 
 #### \_move_to
+
+Important note - this command is currently broken. Refer to this comment in version 1.36 of `Selenium::Remote::Driver`.
+
+```
+Compatibility:
+   Due to limitations in the Webdriver 3 API, mouse movements have to be executed 'lazily' e.g. only right before a click() event occurs.
+   This is because there is no longer any persistent mouse location state; mouse movements are now totally atomic.
+   This has several problematic aspects; for one, I can't think of a way to both hover an element and then do another action relying on the element staying hover()ed,
+   Aside from using javascript workarounds.
+```
+
+It isn't clear what the comment means, but in practice it doesn't work. Use `_scroll_to` instead.
 
 \_move_to(`target`,`x offset`,`y offset`)
 

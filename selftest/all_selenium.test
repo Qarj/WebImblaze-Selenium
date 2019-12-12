@@ -16,7 +16,7 @@ verifypositive:         TEST STEP PASSED
 verifynegative:         TEST STEP FAILED
 
 step:                   {FEATURE}
-varFEATURE:             _move_to
+varFEATURE:             _scroll_to
 shell:                  perl wi.pl -o {PROJECT}selftest/output/{FEATURE} {PROJECT}selftest/{FEATURE}.test
 verifypositive:         TEST STEP PASSED
 verifynegative:         TEST STEP FAILED
