@@ -10,7 +10,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '0.6.2'; # Selenium 3 Server support + Running ChromeDriver directly
+$VERSION = '0.6.3'; # Selenium 3 Server support + Running ChromeDriver directly
 
 use utf8;
 use Time::HiRes 'time','sleep';
@@ -178,6 +178,7 @@ sub start_selenium_browser { ## no critic(ProhibitExcessComplexity) # start brow
     my $_session_id; # if undef, a new session will be created
     my $_auto_close = 1; # 1 auto closes the session, 0 does not
 
+    # https://peter.sh/experiments/chromium-command-line-switches/
     push @_chrome_args, 'window-size=1260,1568';
     push @_chrome_args, '--disable-web-security';
     push @_chrome_args, '--ignore-certificate-errors';
@@ -190,6 +191,7 @@ sub start_selenium_browser { ## no critic(ProhibitExcessComplexity) # start brow
     if ($main::config->{useragent}) {
         push @_chrome_args, '--user-agent='.$main::config->{useragent};
     }
+    push @_chrome_args, '--disable-extensions-except='.$main::this_script_folder_full.main::slash_me('plugins/blocker');
 
     if ($main::opt_keep_session) { $_auto_close = 0; }
 

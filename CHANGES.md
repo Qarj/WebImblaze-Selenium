@@ -3,6 +3,9 @@
 ---------------------------------
 ## Release History:
 
+### Version 0.6.3 - Dec 13, 2019
+* exclude all extensions running in Chrome other than the Blocker addon
+
 ### Version 0.6.2 - Dec 12, 2019
 * with `Selenium::Remote::Driver` version 1.36 and ChromeDriver version 78 the method for starting ChromeDriver directly changed
 * use `_scroll_to` instead of `_move_to` due to W3C standards limitations

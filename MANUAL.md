@@ -1,4 +1,4 @@
-# Manual for WebImblaze-Selenium version 0.6.2
+# Manual for WebImblaze-Selenium version 0.6.3
 
 ## [1 - Overview](#overview)
 
@@ -289,6 +289,8 @@ a simple Chrome plugin called "Blocker". Read the comment carefully - if you don
 correctly, then the plugin will fail to work at all.
 
 Using this method you can block analytics, or other urls that may make your tests run more quickly (e.g. by stopping banner ads).
+
+Note that all other extensions other than this Blocker extension are disabled.
 
 <br />
 
