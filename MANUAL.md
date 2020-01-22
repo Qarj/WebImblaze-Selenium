@@ -620,6 +620,13 @@ selenium:               _wait_visible('txtJobTitle', 10)
 
 Will wait up to 10 seconds for element with attribute `txtJobTitle` to become visible in the view port.
 
+Responses to assert against
+
+```
+Found sought element visible
+Did not find sought element visible
+```
+
 The determination of whether an element is visible in the view port is something of a black art. It is done
 using this function found on stack overflow:
 
@@ -870,6 +877,12 @@ When this is run, you might get a response like this:
 
 ```
 Found sought text in page source after 1.6 seconds
+```
+
+or:
+
+```
+Did not find sought text in page source after 1.6 seconds
 ```
 
 <br />
