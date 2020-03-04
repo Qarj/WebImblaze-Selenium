@@ -263,17 +263,20 @@ cd /usr/local/bin
 sudo mkdir selenium
 sudo chmod 777 selenium
 
-wget http://chromedriver.storage.googleapis.com/LATEST_RELEASE -P selenium
-latest=$(cat selenium/LATEST_RELEASE)
-wget -N https://chromedriver.storage.googleapis.com/$latest/chromedriver_linux64.zip -P selenium
+cd /usr/local/bin/selenium
+sudo wget http://chromedriver.storage.googleapis.com/LATEST_RELEASE -O LATEST_RELEASE
+latest=$(cat LATEST_RELEASE)
+wget -N https://chromedriver.storage.googleapis.com/$latest/chromedriver_linux64.zip -O chromedriver_linux64.zip
 sudo apt install unzip
-unzip selenium/chromedriver_linux64.zip -d selenium
+unzip -o chromedriver_linux64.zip -d .
+./chromedriver --version
 ```
 
 Obtain latest Selenium Standalone 3 Server and put it in `/usr/local/bin/selenium`
 
 ```
-wget -N https://bit.ly/2zm3ZzF -O selenium/selenium-server-3-standalone.jar
+cd /usr/local/bin/selenium
+wget -N https://bit.ly/2TlkRyu -O selenium-server-3-standalone.jar
 ```
 
 A few extra commands are needed to ensure the dependencies are covered
@@ -291,7 +294,7 @@ Check Java and Selenium Standalone versions
 
 ```
 java -version
-java -jar selenium/selenium-server-3-standalone.jar --version
+java -jar /usr/local/bin/selenium/selenium-server-3-standalone.jar --version
 ```
 
 Now you should install Chrome, on Ubuntu / Debian / Linux Mint you can do it with these commands (assuming 64-bit)
