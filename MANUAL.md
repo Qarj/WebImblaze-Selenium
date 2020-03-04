@@ -1029,6 +1029,19 @@ depend on it at all - for example, banner ads and tracking tags.
 selenium:               $driver->switch_to_frame($driver->find_element(q|iframe[title='Third party frame']|,'css'))
 ```
 
+I have found sometimes xpath works when css fails (possible chromedriver related error)
+
+```
+selenium:               $driver->switch_to_frame($driver->find_element(q|//iframe[@title='accessibility title']|, 'xpath'));
+```
+
+It is possible to switch to an inner iframe in the same manner
+
+```
+selenium:               $driver->switch_to_frame($driver->find_element(q|//iframe[@title='Canvas IFrame for application .']|, 'xpath'));
+```
+
+
 <br />
 
 <a name="set_window_size"></a>
