@@ -10,7 +10,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '0.6.3'; # Selenium 3 Server support + Running ChromeDriver directly
+$VERSION = '0.7.0';
 
 use utf8;
 use Time::HiRes 'time','sleep';
@@ -18,6 +18,7 @@ use File::Copy qw(copy), qw(move);
 use Socket qw( PF_INET SOCK_STREAM INADDR_ANY sockaddr_in );
 
 our ($selresp, $driver, $selenium_port);
+my $user_data_dir = '';
 my $attempts_since_last_locate_success = 0;
 
 #-----------------------------------------------------------
@@ -150,6 +151,8 @@ sub start_selenium_browser { ## no critic(ProhibitExcessComplexity) # start brow
     require Selenium::Remote::Driver;
     require Selenium::Chrome;
 
+    if ($main::case{userdatadir}) { $user_data_dir = $main::case{userdatadir}; }
+
     my @_chrome_args;
     if ($main::opt_headless) {
         push @_chrome_args, '--headless';
@@ -179,9 +182,14 @@ sub start_selenium_browser { ## no critic(ProhibitExcessComplexity) # start brow
     my $_auto_close = 1; # 1 auto closes the session, 0 does not
 
     # https://peter.sh/experiments/chromium-command-line-switches/
+    if ($user_data_dir) {
+        push @_chrome_args, 'user-data-dir='.$user_data_dir;
+    }
     push @_chrome_args, 'window-size=1260,1568';
     push @_chrome_args, '--disable-web-security';
     push @_chrome_args, '--ignore-certificate-errors';
+    push @_chrome_args, 'browser-test';
+    push @_chrome_args, 'no-default-browser-check';
     push @_chrome_args, '--no-sandbox';
     push @_chrome_args, '--disable-setuid-sandbox';
     push @_chrome_args, '--load-extension='.$main::this_script_folder_full.main::slash_me('plugins/blocker');

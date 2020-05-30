@@ -1,4 +1,4 @@
-# Manual for WebImblaze-Selenium version 0.6.3
+# Manual for WebImblaze-Selenium version 0.7.0
 
 ## [1 - Overview](#overview)
 
@@ -23,6 +23,8 @@
 ## [3 - Parameters to control Selenium WebDriver Test Execution](#parameters)
 
 ### [ searchimage searchimage1 ... searchimage5](#searchimage)
+
+### [ userdatadir](#userdatadir)
 
 ### [ verifytext](#verifytext)
 
@@ -252,6 +254,25 @@ searchimage:            examples\search_images\menu_hamburger.png
 ```
 
 Specify the file path relative to the WebImblaze root folder.
+
+<br />
+
+<a name="userdatadir"></a>
+
+### userdatadir
+
+Sets the folder Chrome should use for the Chrome profile. If the profile doesn't exist, Chrome will
+create a new one.
+
+This feature enables the same profile to be used for future tests.
+
+```
+step:                   Switch to the Admin persona
+userdatadir:            {SYS_TEMP}Admin_Persona
+restartbrowser:         true
+```
+
+You must use the parameter in conjunction with the `restartbrowser` for it to be read and applied.
 
 <br />
 

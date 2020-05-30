@@ -3,6 +3,9 @@
 ---------------------------------
 ## Release History:
 
+### Version 0.7.0 - May 30, 20202
+* new parameter `userdatadir` for setting a specific Chrome profile that can be reused
+
 ### Version 0.6.3 - Dec 13, 2019
 * exclude all extensions running in Chrome other than the Blocker addon
 
