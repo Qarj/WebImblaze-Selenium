@@ -1108,3 +1108,8 @@ Next input element following element text 'First Name:' - leading and trailing s
 ```
 //*/text()[normalize-space(.)='First Name:']/parent::*/following::input
 ```
+
+Return parent element containing text
+```
+//*[text()[contains(.,'recovery email address')]]
+```
