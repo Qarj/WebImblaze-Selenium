@@ -308,7 +308,7 @@ Install Chrome, run it and decide whether you want it to be the default browser 
 Install Homebrew
 
 ```
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 ```
 
 Install wget
@@ -319,6 +319,8 @@ brew install wget
 
 Now obtain latest version of ChromeDriver and place in `/usr/local/bin/selenium`
 
+Remember that the major version of Chrome and ChromeDriver must be an exact match.
+
 ```
 cd /usr/local/bin
 sudo mkdir selenium
@@ -328,39 +330,52 @@ wget http://chromedriver.storage.googleapis.com/LATEST_RELEASE -P selenium
 latest=$(cat selenium/LATEST_RELEASE)
 wget -N https://chromedriver.storage.googleapis.com/$latest/chromedriver_mac64.zip -P selenium
 unzip -o selenium/chromedriver_mac64.zip -d selenium
+selenium/chromedriver --version
 ```
 
 Obtain latest Selenium Standalone 3 Server and put it in `/usr/local/bin/selenium`
 
 ```
-wget -N https://bit.ly/2zm3ZzF -O selenium/selenium-server-3-standalone.jar
+wget -N https://bit.ly/2TlkRyu -O /usr/local/bin/selenium/selenium-server-3-standalone.jar
 ```
 
-Install JRE from http://www.oracle.com/technetwork/java/javase/downloads/index.html
+Install `OpenJDK 8 (LTS)` from https://adoptopenjdk.net/
 
-- click on the JRE link
-- download the .dmg file for Mac OS X
-- double click on the downloaded dmg file
-- double click on the Java icon to start the installer
-- export it
-
-```
-export JAVA_HOME="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"
-```
-
-- put JAVA_HOME in your bash profile
-
-```
-touch ~/.bash_profile; open ~/.bash_profile
-```
-
-copy paste `export JAVA_HOME="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"` into the file and save it (otherwise you have to export every time)
-
-- check everything OK
+After opening and installing the `.pkg` file, check Java is working
 
 ```
 java -version
-java -jar selenium/selenium-server-3-standalone.jar --version
+.
+openjdk version "1.8.0_265"
+OpenJDK Runtime Environment (AdoptOpenJDK)(build 1.8.0_265-b01)
+OpenJDK 64-Bit Server VM (AdoptOpenJDK)(build 25.265-b01, mixed mode)
+```
+
+Open / create the `.bash_profile` with a text editor
+
+```
+code ~/.bash_profile
+```
+
+Add this line, save
+
+```
+export JAVA_HOME=$(/usr/libexec/java_home)
+```
+
+Source the updated bash profile and check JAVA_HOME is now set correctly
+```
+source ~/.bash_profile
+echo $JAVA_HOME
+.
+/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home
+```
+
+Check version of Selenium Server
+```
+java -jar /usr/local/bin/selenium/selenium-server-3-standalone.jar --version
+.
+Selenium server version: 3.141.59, revision: e82be7d358
 ```
 
 Install perlbrew
@@ -372,7 +387,7 @@ curl -L https://install.perlbrew.pl | bash
 Append `source ~/perl5/perlbrew/etc/bashrc` to bash profile and run it now also
 
 ```
-open ~/.bash_profile
+code ~/.bash_profile
 source ~/perl5/perlbrew/etc/bashrc
 ```
 
@@ -386,7 +401,6 @@ sudo perlbrew install --switch stable
 Install the packages needed for WebImblaze in the perlbrew sub system
 
 ```
-sudo cpan File::Slurp
 sudo cpan XML::Simple
 sudo cpan Math::Random::ISAAC
 sudo cpan IO::Socket::SSL
@@ -439,10 +453,10 @@ Later, when you need to start perlbrew again:
 perlbrew list
 ```
 
-Check the output, e.g. if it is `perl-5.24.1` then just:
+Check the output, e.g. if it is `perl-5.32.0` then just:
 
 ```
-sudo perlbrew use perl-5.24.1
+sudo perlbrew use perl-5.32.0
 ```
 
 ## Self Tests
