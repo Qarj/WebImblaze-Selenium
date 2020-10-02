@@ -25,7 +25,7 @@ You have the choice of using the Selenium Server (which I find to be more robust
    cpan Selenium::Remote::Driver
    ```
 
-   This will install the latest version of Selenium::Remote::Driver - 1.30 at the time of writing.
+   This will install the latest version of Selenium::Remote::Driver - 1.37 at the time of writing.
 
 4. Obtain chromedriver.exe from https://sites.google.com/a/chromium.org/chromedriver/ and place it in `C:/selenium/`
 
@@ -39,6 +39,8 @@ You have the choice of using the Selenium Server (which I find to be more robust
    chromedriver.exe --version
    ```
 
+   7-Zip is easy to install with https://ninite.com/. 
+
 5. Optional - download latest Selenium Server from https://selenium.dev/downloads/ 
 and place it in `C:/selenium`, give it the generic name `selenium-server-3-standalone.jar`
 
@@ -47,27 +49,7 @@ and place it in `C:/selenium`, give it the generic name `selenium-server-3-stand
    java -jar c:/selenium/selenium-server-3-standalone.jar --version
    ```
 
-   Be sure to also install the Java runtime as well - https://ninite.com/ makes this easy.
-
-#### Windows installation workaround
-
-Note as at 25/10/2018, dependant package `Test::Time` is at version v0.07, but last working version on Windows is v0.05.
-Workaround seems to be to:
-
-1. Download `Test-Time-0.05.zip` from https://github.com/manwar/Test-Time/releases
-2. Extract it
-3. CD to the folder with Makefile.pl, then run it
-4. `cpan .`
-5. `cpan Selenium::Remote::Driver` should now work
-
-```
-curl --location --output %temp%/test-time-0.05.zip https://github.com/manwar/Test-Time/archive/0.05.zip
-"C:\Program Files\7-Zip\7z.exe" x %temp%/test-time-0.05.zip -o"%temp%" -r
-cd %temp%/Test-Time-0.05
-perl Makefile.PL
-cpan .
-cpan Selenium::Remote::Driver
-```
+   Be sure to also install the Java 8 runtime as well - https://ninite.com/ makes this easy.
 
 ### Create your first WebImblaze-Selenium test
 
@@ -115,7 +97,7 @@ If all is OK, you'll see Chrome open and run the test steps. You'll also see out
 at the command prompt:
 
 ```
-c:\git\WebImblaze>perl wi.pl tests/test_jobs.test
+C:\git\WebImblaze>perl wi.pl tests/test_jobs.test
 
 Starting WebImblaze Engine...
 
@@ -125,20 +107,20 @@ Get CWJobs home page and fill out search form
 Verify Positive: "home for tech jobs"
 Verify Positive: "Companies hiring"
 GET_BODY_TEXT:get_body_text
-    [Starting ChromeDriver on port 9585]
+    [Starting ChromeDriver without Selenium Server on port 9585]
 SELRESP:1
 SELRESP:Focused and clicked tag INPUT AFTER[What] OK (exact match) id[keywords] then sent keys OK
 SELRESP:Focused and clicked tag INPUT WITH[Town, city or postcode] OK (exact match) id[location] then sent keys OK
-SELRESP:Focused and clicked tag SELECT AFTER[Where] OK (exact match) id[Radius] then selected dropdown value OK
+SELRESP:Focused and clicked tag SELECT AFTER[Where] OK (exact match) id[LocationType] then selected dropdown value OK
 get_current_url
 get_body_text
 Passed Positive Verification
 Passed Positive Verification
 Passed HTTP Response Code Verification
 TEST STEP PASSED
-Response Time = 6.354 sec
-Verification Time = 0.435 sec
-Screenshot Time = 0.816 sec
+Response Time = 1.465 sec
+Verification Time = 0.208 sec
+Screenshot Time = 0.316 sec
 -------------------------------------------------------
 Test:  tests\test_jobs.test - 20
 Click Search
@@ -148,7 +130,7 @@ GET_BODY_TEXT:get_body_text
 SELRESP:Focused and clicked tag INPUT WITH[Search] OK (exact match) id[search-button]
 VISIBLE SEARCH TEXT:Explore results
 TIMEOUT:25
-SELRESP:Found sought text visible after 2 seconds
+SELRESP:Found sought text visible after 0.7 seconds
 get_current_url
 get_body_text
 get_page_source
@@ -156,9 +138,9 @@ Passed Positive Verification
 Passed Positive Verification
 Passed HTTP Response Code Verification
 TEST STEP PASSED
-Response Time = 7.208 sec
-Verification Time = 2.015 sec
-Screenshot Time = 0.305 sec
+Response Time = 1.884 sec
+Verification Time = 0.493 sec
+Screenshot Time = 0.349 sec
 -------------------------------------------------------
 Test:  tests\test_jobs.test - 30
 Click on heading for first job ad on search results to see job details
@@ -168,21 +150,21 @@ GET_BODY_TEXT:get_body_text
 SELRESP:Focused and clicked tag A WITH[See details for] OK (text index 0)
 VISIBLE SEARCH TEXT:Back to search results
 TIMEOUT:25
-SELRESP:Found sought text visible after 0.9 seconds
+SELRESP:Found sought text visible after 0.1 seconds
 get_current_url
 get_body_text
 Passed Positive Verification
 Passed Positive Verification
 Passed HTTP Response Code Verification
 TEST STEP PASSED
-Response Time = 3.557 sec
-Verification Time = 1.32 sec
-Screenshot Time = 0.311 sec
+Response Time = 0.698 sec
+Verification Time = 0.16 sec
+Screenshot Time = 0.203 sec
 -------------------------------------------------------
-Start Time: Wed 14 Nov 2018, 14:52:36
-Total Run Time: 28.028 seconds
+Start Time: Tue 11 Aug 2020, 21:27:02
+Total Run Time: 11.56 seconds
 
-Total Response Time: 17.119 seconds
+Total Response Time: 4.047 seconds
 
 Test Steps Run: 3
 Test Steps Passed: 3
@@ -197,12 +179,12 @@ Results at: output\Results.html
 
 If your WebImblaze/output folder was empty before running the test, you'll now see 10 files there:
 
-- 10.png, 20.png, 30.png - automatic screen shots taken after each test step was executed
-- 10.html, 20.html, 30.html - a html file showing the individual results for each test step (including the screen shot)
-- Results.html - a html version of the output to the console, it links to each individual test step
-- results.xml - an xml version of the results, needed by the optional WebImblaze-Framework
-- http.txt - verbose log of raw WebImblaze http test output
-- chromedriver.log
+- `10.png`, `20.png`, `30.png` - automatic screen shots taken after each test step was executed
+- `10.html`, `20.html`, `30.html` - a html file showing the individual results for each test step (including the screen shot)
+- `Results.html` - a html version of the output to the console, it links to each individual test step
+- `results.xml` - an xml version of the results, needed by the optional WebImblaze-Framework
+- `http.txt` - verbose log of raw WebImblaze http test output
+- `_chromedriver.log`
 
 If not using WebImblaze-Framework, then double click on `output/Results.html` to view
 the test results in a browser. Click on a step number hyperlink to see the individual
@@ -218,7 +200,7 @@ You can execute the tests using Selenium Server as in the following example:
 perl wi.pl examples/misc/selenium.test --driver chrome --chromedriver-binary C:\selenium\chromedriver.exe --selenium-binary C:\selenium\selenium-server-3-standalone.jar
 ```
 
-Or more simply, because the locations of the chromedriver and selenium binaries are specified in config.xml:
+Or more simply, because the locations of the chromedriver and selenium binaries are specified in `config.xml`:
 
 ```
 perl wi.pl examples/misc/selenium.test --driver chrome
@@ -282,7 +264,7 @@ wget -N https://bit.ly/2TlkRyu -O selenium-server-3-standalone.jar
 A few extra commands are needed to ensure the dependencies are covered
 
 ```
-sudo apt-get update
+sudo apt update
 sudo apt --yes install gnome-terminal
 sudo apt --yes install default-jre
 sudo cpan Selenium::Remote::Driver
@@ -297,14 +279,7 @@ java -version
 java -jar /usr/local/bin/selenium/selenium-server-3-standalone.jar --version
 ```
 
-Now you should install Chrome, on Ubuntu / Debian / Linux Mint you can do it with these commands (assuming 64-bit)
-
-```
-wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
-sudo apt-get update
-sudo apt-get --yes install google-chrome-stable
-```
+Now you should install Google Chrome if you haven't already.
 
 **_Important_** - Run Chrome at least once and choose whether you want it to be the default browser or not.
 You can then close it or leave it open. If you don't do this, then it will hang when you try to run a test with ChromeDriver.
@@ -322,6 +297,8 @@ or using Selenium Server
 perl wi.pl examples/misc/selenium.test --driver chrome
 ```
 
+Keep in mind that the major version number of ChromeDriver must match the version of Chrome you have installed.
+
 ### Mac
 
 First install WebImblaze https://github.com/Qarj/WebImblaze
@@ -331,7 +308,7 @@ Install Chrome, run it and decide whether you want it to be the default browser 
 Install Homebrew
 
 ```
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 ```
 
 Install wget
@@ -342,6 +319,8 @@ brew install wget
 
 Now obtain latest version of ChromeDriver and place in `/usr/local/bin/selenium`
 
+Remember that the major version of Chrome and ChromeDriver must be an exact match.
+
 ```
 cd /usr/local/bin
 sudo mkdir selenium
@@ -351,39 +330,52 @@ wget http://chromedriver.storage.googleapis.com/LATEST_RELEASE -P selenium
 latest=$(cat selenium/LATEST_RELEASE)
 wget -N https://chromedriver.storage.googleapis.com/$latest/chromedriver_mac64.zip -P selenium
 unzip -o selenium/chromedriver_mac64.zip -d selenium
+selenium/chromedriver --version
 ```
 
 Obtain latest Selenium Standalone 3 Server and put it in `/usr/local/bin/selenium`
 
 ```
-wget -N https://bit.ly/2zm3ZzF -O selenium/selenium-server-3-standalone.jar
+wget -N https://bit.ly/2TlkRyu -O /usr/local/bin/selenium/selenium-server-3-standalone.jar
 ```
 
-Install JRE from http://www.oracle.com/technetwork/java/javase/downloads/index.html
+Install `OpenJDK 8 (LTS)` from https://adoptopenjdk.net/
 
-- click on the JRE link
-- download the .dmg file for Mac OS X
-- double click on the downloaded dmg file
-- double click on the Java icon to start the installer
-- export it
-
-```
-export JAVA_HOME="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"
-```
-
-- put JAVA_HOME in your bash profile
-
-```
-touch ~/.bash_profile; open ~/.bash_profile
-```
-
-copy paste `export JAVA_HOME="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"` into the file and save it (otherwise you have to export every time)
-
-- check everything OK
+After opening and installing the `.pkg` file, check Java is working
 
 ```
 java -version
-java -jar selenium/selenium-server-3-standalone.jar --version
+.
+openjdk version "1.8.0_265"
+OpenJDK Runtime Environment (AdoptOpenJDK)(build 1.8.0_265-b01)
+OpenJDK 64-Bit Server VM (AdoptOpenJDK)(build 25.265-b01, mixed mode)
+```
+
+Open / create the `.bash_profile` with a text editor
+
+```
+code ~/.bash_profile
+```
+
+Add this line, save
+
+```
+export JAVA_HOME=$(/usr/libexec/java_home)
+```
+
+Source the updated bash profile and check JAVA_HOME is now set correctly
+```
+source ~/.bash_profile
+echo $JAVA_HOME
+.
+/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home
+```
+
+Check version of Selenium Server
+```
+java -jar /usr/local/bin/selenium/selenium-server-3-standalone.jar --version
+.
+Selenium server version: 3.141.59, revision: e82be7d358
 ```
 
 Install perlbrew
@@ -395,7 +387,7 @@ curl -L https://install.perlbrew.pl | bash
 Append `source ~/perl5/perlbrew/etc/bashrc` to bash profile and run it now also
 
 ```
-open ~/.bash_profile
+code ~/.bash_profile
 source ~/perl5/perlbrew/etc/bashrc
 ```
 
@@ -409,7 +401,6 @@ sudo perlbrew install --switch stable
 Install the packages needed for WebImblaze in the perlbrew sub system
 
 ```
-sudo cpan File::Slurp
 sudo cpan XML::Simple
 sudo cpan Math::Random::ISAAC
 sudo cpan IO::Socket::SSL
@@ -462,10 +453,10 @@ Later, when you need to start perlbrew again:
 perlbrew list
 ```
 
-Check the output, e.g. if it is `perl-5.24.1` then just:
+Check the output, e.g. if it is `perl-5.32.0` then just:
 
 ```
-sudo perlbrew use perl-5.24.1
+sudo perlbrew use perl-5.32.0
 ```
 
 ## Self Tests
