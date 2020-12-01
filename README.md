@@ -1,4 +1,4 @@
-# WebImblaze-Selenium 0.7.0
+# WebImblaze-Selenium 0.7.1
 
 WebImblaze, the project found at [https://github.com/Qarj/WebImblaze](https://github.com/Qarj/WebImblaze), can also drive Selenium using the Chrome browser.
 

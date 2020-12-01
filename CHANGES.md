@@ -3,7 +3,10 @@
 ---------------------------------
 ## Release History:
 
-### Version 0.7.0 - May 30, 20202
+### Version 0.7.1 - Dec 1, 2020
+* _get_element now returns offsetLeft and offsetTop which is the x, y for where the element is on the page
+
+### Version 0.7.0 - May 30, 2020
 * new parameter `userdatadir` for setting a specific Chrome profile that can be reused
 
 ### Version 0.6.3 - Dec 13, 2019

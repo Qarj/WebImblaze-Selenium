@@ -10,7 +10,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '0.7.0';
+$VERSION = '0.7.1';
 
 use utf8;
 use Time::HiRes 'time','sleep';
@@ -1052,7 +1052,9 @@ sub _get_element {
             selection : elementSelection(_element),
             isChecked : isElementChecked(_element),
             scrollTop : _element.scrollTop, 
+            offsetTop : _element.offsetTop,
             offsetHeight : _element.offsetHeight,
+            offsetLeft : _element.offsetLeft,
             offsetWidth : _element.offsetWidth,
             inViewport : isElementInViewport(_element),
             allText : allText(_element)
@@ -1063,7 +1065,9 @@ EOB
 
     my $_extra_info = "\n Element Selection [".$_element_extra{selection}.'] isChecked['.$_element_extra{isChecked}."]\n".
                       ' scrollTop['.$_element_extra{scrollTop}.
+                      '] offsetLeft['.$_element_extra{offsetLeft}.
                       '] offsetWidth['.$_element_extra{offsetWidth}.
+                      '] offsetTop['.$_element_extra{offsetTop}.
                       '] offsetHeight['.$_element_extra{offsetHeight}.
                       '] inViewport['.$_element_extra{inViewport}.
                       "]\n".

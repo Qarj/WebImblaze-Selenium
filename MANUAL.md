@@ -1,4 +1,4 @@
-# Manual for WebImblaze-Selenium version 0.7.0
+# Manual for WebImblaze-Selenium version 0.7.1
 
 ## [1 - Overview](#overview)
 
@@ -616,7 +616,7 @@ Located tag SELECT WITH[Company Billing Cycle] OK (exact match)
  Element Text [_NULL_]
  Element Value [MONTHLY]
  Element Selection [[MONTHLY] Monthly] isChecked[false]
- scrollTop[0] offsetWidth[455] offsetHeight[45] inViewport[1]
+ scrollTop[0] offsetLeft[237] offsetWidth[150] offsetTop[186] offsetHeight[42] inViewport[1]
  allText[Please enter the company billing cycle details]
 ```
 
@@ -624,6 +624,8 @@ Located tag SELECT WITH[Company Billing Cycle] OK (exact match)
 
 `inViewport[0]` means the element is not visible in the current view port. It could be further
 down the page (out of the currently scrolled to area). Or it might be completely hidden.
+
+`offsetLeft` and `offsetTop` are the x and y positions of the element on the page.
 
 <br />
 
