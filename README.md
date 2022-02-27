@@ -39,28 +39,43 @@ cd $HOME/selenium
 wget -N https://bit.ly/2TlkRyu -O selenium-server-3-standalone.jar
 ```
 
-A few extra commands are needed to ensure the dependencies are covered
+Ensure you have `gnome-terminal` and a Java runtime
 
 ```sh
 sudo apt update
 sudo apt --yes install gnome-terminal
 sudo apt --yes install default-jre
-cpan Selenium::Remote::Driver
 ```
 
-This will install the latest version of Selenium::Remote::Driver.
+Install the latest version of `Selenium::Remote::Driver`
+
+```sh
+cpan Selenium::Remote::Driver
+```
 
 Check Java and Selenium Standalone versions
 
 ```sh
 java -version
-java -jar /usr/local/bin/selenium/selenium-server-3-standalone.jar --version
+java -jar $HOME/selenium/selenium-server-3-standalone.jar --version
+.
+Selenium server version: 3.141.59, revision: e82be7d358
 ```
 
 Now you should install Google Chrome if you haven't already.
 
+```sh
+cd $HOME/Downloads
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo dpkg -i google-chrome-stable_current_amd64.deb
+```
+
 **_Important_** - Run Chrome at least once and choose whether you want it to be the default browser or not.
 You can then close it or leave it open. If you don't do this, then it will hang when you try to run a test with ChromeDriver.
+
+```
+google-chrome
+```
 
 You can check that it works by running an example:
 
@@ -89,7 +104,11 @@ code tests/test_jobs.test
 Copy and paste the following into the file and save it.
 
 ```yml
-step:                   Get CWJobs home page and fill out search form
+step:                   Get CWJobs home and accept all cookies
+selenium1:              $driver->get("https://www.cwjobs.co.uk/")
+selenium2:              _click('Accept All')
+
+step:                   Fill out search form
 selenium1:              $driver->get("https://www.cwjobs.co.uk/")
 selenium2:              _keys_to_element_after('What','test')
 selenium3:              _keys_to_element('Town, city or postcode','London')
@@ -100,17 +119,16 @@ verifypositive2:        Companies hiring
 
 step:                   Click Search
 selenium1:              _click('Search')
-selenium2:              _wait_for_text_visible('Explore results',25)
+selenium2:              _wait_for_text_visible('Test jobs',25)
 verifytext:             get_current_url,get_body_text,get_page_source
 verifypositive1:        Found sought text
 verifypositive2:        Test jobs in London \+ 20 miles
 
 step:                   Click on heading for first job ad on search results to see job details
-selenium1:              _click('See details for')
+selenium1:              _click('job-item-title')
 selenium2:              _wait_for_text_visible('Back to search results',25)
 verifytext:             get_current_url,get_body_text
 verifypositive1:        Found sought text
-verifypositive2:        Next job
 ```
 
 ### Run your first WebImblaze-Selenium test
@@ -123,40 +141,49 @@ If all is OK, you'll see Chrome open and run the test steps. You'll also see out
 at the command prompt:
 
 ```txt
-C:\git\WebImblaze>perl wi.pl tests/test_jobs.test
-
 Starting WebImblaze Engine...
 
 -------------------------------------------------------
-Test:  tests\test_jobs.test - 10
-Get CWJobs home page and fill out search form
+Test:  tests/test_jobs.test - 10
+Get CWJobs home and accept all cookies
+ Try 1 of 10 failed [Accept All]:[*] ...
+    [Starting ChromeDriver without Selenium Server on port 9585]
+SELRESP:1
+SELRESP:Focused and clicked tag SPAN WITH[Accept All] OK (exact match)
+Passed HTTP Response Code Verification
+TEST STEP PASSED
+Response Time = 3.214 sec
+Verification Time = 0.022 sec
+Screenshot Time = 0.306 sec
+-------------------------------------------------------
+Test:  tests/test_jobs.test - 20
+Fill out search form
 Verify Positive: "home for tech jobs"
 Verify Positive: "Companies hiring"
 GET_BODY_TEXT:get_body_text
-    [Starting ChromeDriver without Selenium Server on port 9585]
 SELRESP:1
 SELRESP:Focused and clicked tag INPUT AFTER[What] OK (exact match) id[keywords] then sent keys OK
 SELRESP:Focused and clicked tag INPUT WITH[Town, city or postcode] OK (exact match) id[location] then sent keys OK
-SELRESP:Focused and clicked tag SELECT AFTER[Where] OK (exact match) id[LocationType] then selected dropdown value OK
+SELRESP:Focused and clicked tag SELECT AFTER[Where] OK (exact match) id[Radius] then selected dropdown value OK
 get_current_url
 get_body_text
 Passed Positive Verification
 Passed Positive Verification
 Passed HTTP Response Code Verification
 TEST STEP PASSED
-Response Time = 1.465 sec
-Verification Time = 0.208 sec
-Screenshot Time = 0.316 sec
+Response Time = 1.629 sec
+Verification Time = 0.157 sec
+Screenshot Time = 0.25 sec
 -------------------------------------------------------
-Test:  tests\test_jobs.test - 20
+Test:  tests/test_jobs.test - 30
 Click Search
 Verify Positive: "Found sought text"
 Verify Positive: "Test jobs in London \+ 20 miles"
 GET_BODY_TEXT:get_body_text
 SELRESP:Focused and clicked tag INPUT WITH[Search] OK (exact match) id[search-button]
-VISIBLE SEARCH TEXT:Explore results
+VISIBLE SEARCH TEXT:Test jobs
 TIMEOUT:25
-SELRESP:Found sought text visible after 0.7 seconds
+SELRESP:Found sought text visible after 0.4 seconds
 get_current_url
 get_body_text
 get_page_source
@@ -164,41 +191,39 @@ Passed Positive Verification
 Passed Positive Verification
 Passed HTTP Response Code Verification
 TEST STEP PASSED
-Response Time = 1.884 sec
-Verification Time = 0.493 sec
-Screenshot Time = 0.349 sec
+Response Time = 2.221 sec
+Verification Time = 0.435 sec
+Screenshot Time = 0.15 sec
 -------------------------------------------------------
-Test:  tests\test_jobs.test - 30
+Test:  tests/test_jobs.test - 40
 Click on heading for first job ad on search results to see job details
 Verify Positive: "Found sought text"
-Verify Positive: "Next job"
 GET_BODY_TEXT:get_body_text
-SELRESP:Focused and clicked tag A WITH[See details for] OK (text index 0)
+SELRESP:Focused and clicked tag A WITH[job-item-title] OK (exact match)
 VISIBLE SEARCH TEXT:Back to search results
 TIMEOUT:25
 SELRESP:Found sought text visible after 0.1 seconds
 get_current_url
 get_body_text
 Passed Positive Verification
-Passed Positive Verification
 Passed HTTP Response Code Verification
 TEST STEP PASSED
-Response Time = 0.698 sec
-Verification Time = 0.16 sec
-Screenshot Time = 0.203 sec
+Response Time = 1.198 sec
+Verification Time = 0.131 sec
+Screenshot Time = 0.144 sec
 -------------------------------------------------------
-Start Time: Tue 11 Aug 2020, 21:27:02
-Total Run Time: 11.56 seconds
+Start Time: Sun 27 Feb 2022, 21:37:24
+Total Run Time: 11.411 seconds
 
-Total Response Time: 4.047 seconds
+Total Response Time: 8.262 seconds
 
-Test Steps Run: 3
-Test Steps Passed: 3
+Test Steps Run: 4
+Test Steps Passed: 4
 Test Steps Failed: 0
-Verifications Passed: 12
+Verifications Passed: 13
 Verifications Failed: 0
 
-Results at: output\Results.html
+Results at: output/Results.html
 ```
 
 ### Examining the results
