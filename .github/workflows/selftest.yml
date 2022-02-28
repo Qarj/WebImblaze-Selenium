@@ -10,6 +10,8 @@ jobs:
         steps:
             - name: Checkout code of this repo
               uses: actions/checkout@v2
+              with:
+                  path: main
 
             - name: What is the current folder
               run: pwd
@@ -18,74 +20,111 @@ jobs:
               uses: actions/checkout@master
               with:
                   repository: Qarj/WebImblaze
+                  path: WebImblaze
 
             - name: What is the current folder
               run: pwd
 
-            - name: Setup Perl
-              uses: shogo82148/actions-setup-perl@v1
-              with:
-                  install-modules-with: cpanm
-                  install-modules-args: --with-develop --with-configure
+            - name: All files in $HOME
+              run: ls -asl $HOME
 
-            - name: Where is HOME
-              run: echo $HOME
+            - name: All files in $HOME/main
+              run: ls -asl $HOME/main
 
-            - name: Where is GITHUB_WORKSPACE
-              run: echo $GITHUB_WORKSPACE
+            - name: All files in $HOME/WebImblaze
+              run: ls -asl $HOME/WebImblaze
 
-            - name: Install LWP::Protocol::https
-              run: cpanm LWP::Protocol::https
+            # - name: Setup Perl
+            #   uses: shogo82148/actions-setup-perl@v1
+            #   with:
+            #       install-modules-with: cpanm
+            #       install-modules-args: --with-develop --with-configure
 
-            - name: Install LWP
-              run: cpanm LWP
+            # - name: Where is HOME
+            #   run: echo $HOME
 
-            - name: Install XML::Simple
-              run: cpanm XML::Simple
+            # - name: Where is GITHUB_WORKSPACE
+            #   run: echo $GITHUB_WORKSPACE
 
-            - name: Install Selenium::Remote::Driver
-              run: cpan Selenium::Remote::Driver
+            # - name: Install LWP::Protocol::https
+            #   run: cpanm LWP::Protocol::https
 
-            - name: Check Perl version
-              run: perl --version
+            # - name: Install LWP
+            #   run: cpanm LWP
 
-            - name: Change into WebImblaze folder
-              run: cd ../WebImblaze
+            # - name: Install XML::Simple
+            #   run: cpanm XML::Simple
 
-            - name: Run update.pl
-              run: perl $HOME/WebImblaze-Selenium/plugins/update.pl
+            # - name: Install Selenium::Remote::Driver
+            #   run: cpan Selenium::Remote::Driver
 
-            - name: Check WebImblaze version
-              run: perl wi.pl --version
+            # - name: Check Perl version
+            #   run: perl --version
 
-            - name: Self test
-              run: perl wi.pl selftest/all_core.test
+            # - name: Change into WebImblaze folder
+            #   run: cd ../WebImblaze
 
-            - name: Archive test report
-              if: always()
-              uses: actions/upload-artifact@v2
-              with:
-                  name: html-results-report
-                  path: output/Results.html
+            # - name: Run update.pl
+            #   run: perl $HOME/WebImblaze-Selenium/plugins/update.pl
 
-            - name: Zip main test output
-              if: always()
-              run: zip -r output-main.zip output
+            # - name: Check WebImblaze version
+            #   run: perl wi.pl --version
 
-            - name: Archive main test output
-              if: always()
-              uses: actions/upload-artifact@v2
-              with:
-                  name: main-test-output
-                  path: output-main.zip
+            # - name: Self test
+            #   run: perl wi.pl selftest/all_core.test
 
-            - name: Zip substeps test output
-              if: always()
-              run: zip -r output-substeps.zip selftest/output
+            # - name: Make selenium folder and cd
+            #   run: mkdir $HOME/selenium && cd $HOME/selenium
 
-            - name: Archive substeps test output
-              if: always()
-              uses: actions/upload-artifact@v2
-              with:
-                  name: substeps-test-output
-                  path: output-substeps.zip
+            # - name: Download latest release of chromedrive version string
+            #   run: wget http://chromedriver.storage.googleapis.com/LATEST_RELEASE -O LATEST_RELEASE
+
+            # - name: Set env variable of latest release
+            #   run: latest=$(cat LATEST_RELEASE) && echo $latest
+
+            # - name: Download the latest release of chromedriver
+            #   run: wget -N https://chromedriver.storage.googleapis.com/$latest/chromedriver_linux64.zip -O chromedriver_linux64.zip
+
+            # - name: Unzip chromedriver
+            #   run: unzip -o chromedriver_linux64.zip -d .
+
+            # - name: Run chromedriver binary to check version
+            #   run: ./chromedriver --version
+
+            # - name: Download latest Selenium Standalone 3 Server
+            #   run: wget -N https://bit.ly/2TlkRyu -O selenium-server-3-standalone.jar
+
+            # - name: Install OpenJDK 8
+            #   uses: actions/setup-java@v2
+            #   with:
+            #       distribution: "zulu"
+            #       java-version: "8"
+
+            # - name: Archive test report
+            #   if: always()
+            #   uses: actions/upload-artifact@v2
+            #   with:
+            #       name: html-results-report
+            #       path: output/Results.html
+
+            # - name: Zip main test output
+            #   if: always()
+            #   run: zip -r output-main.zip output
+
+            # - name: Archive main test output
+            #   if: always()
+            #   uses: actions/upload-artifact@v2
+            #   with:
+            #       name: main-test-output
+            #       path: output-main.zip
+
+            # - name: Zip substeps test output
+            #   if: always()
+            #   run: zip -r output-substeps.zip selftest/output
+
+            # - name: Archive substeps test output
+            #   if: always()
+            #   uses: actions/upload-artifact@v2
+            #   with:
+            #       name: substeps-test-output
+            #       path: output-substeps.zip
