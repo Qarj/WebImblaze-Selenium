@@ -11,7 +11,7 @@ jobs:
             - name: Checkout code of this repo
               uses: actions/checkout@v2
               with:
-                  path: main
+                  path: WebImblaze-Selenium
 
             - name: What is the current folder
               run: pwd
@@ -46,94 +46,100 @@ jobs:
             - name: All files in $GITHUB_WORKSPACE/WebImblaze
               run: ls -asl $GITHUB_WORKSPACE/WebImblaze
 
-            - name: All files in $GITHUB_WORKSPACE/main
-              run: ls -asl $GITHUB_WORKSPACE/main
+            - name: All files in $GITHUB_WORKSPACE/WebImblaze-Selenium
+              run: ls -asl $GITHUB_WORKSPACE/WebImblaze-Selenium
 
-            # - name: Setup Perl
-            #   uses: shogo82148/actions-setup-perl@v1
-            #   with:
-            #       install-modules-with: cpanm
-            #       install-modules-args: --with-develop --with-configure
+            - name: Setup Perl
+              uses: shogo82148/actions-setup-perl@v1
+              with:
+                  install-modules-with: cpanm
+                  install-modules-args: --with-develop --with-configure
 
-            # - name: Install LWP::Protocol::https
-            #   run: cpanm LWP::Protocol::https
+            - name: Install LWP::Protocol::https
+              run: cpanm LWP::Protocol::https
 
-            # - name: Install LWP
-            #   run: cpanm LWP
+            - name: Install XML::Simple
+              run: cpanm XML::Simple
 
-            # - name: Install XML::Simple
-            #   run: cpanm XML::Simple
+            - name: Install Selenium::Remote::Driver
+              run: cpan Selenium::Remote::Driver
 
-            # - name: Install Selenium::Remote::Driver
-            #   run: cpan Selenium::Remote::Driver
+            - name: Check Perl version
+              run: perl --version
 
-            # - name: Check Perl version
-            #   run: perl --version
+            - name: Change into WebImblaze folder
+              run: cd $GITHUB_WORKSPACE/WebImblaze
 
-            # - name: Change into WebImblaze folder
-            #   run: cd ../WebImblaze
+            - name: Run update.pl to move WebImblaze-Selenium plugin into WebImblaze
+              run: perl $GITHUB_WORKSPACE/WebImblaze-Selenium/plugins/update.pl
 
-            # - name: Run update.pl
-            #   run: perl $HOME/WebImblaze-Selenium/plugins/update.pl
+            - name: Check WebImblaze version
+              run: perl wi.pl --version
 
-            # - name: Check WebImblaze version
-            #   run: perl wi.pl --version
+            - name: Self test
+              run: perl wi.pl selftest/all_core.test
 
-            # - name: Self test
-            #   run: perl wi.pl selftest/all_core.test
+            - name: Make selenium folder and cd
+              run: mkdir $HOME/selenium && cd $HOME/selenium
 
-            # - name: Make selenium folder and cd
-            #   run: mkdir $HOME/selenium && cd $HOME/selenium
+            - name: Download latest release of chromedrive version string
+              run: wget http://chromedriver.storage.googleapis.com/LATEST_RELEASE -O LATEST_RELEASE
 
-            # - name: Download latest release of chromedrive version string
-            #   run: wget http://chromedriver.storage.googleapis.com/LATEST_RELEASE -O LATEST_RELEASE
+            - name: Set env variable of latest release
+              run: latest=$(cat LATEST_RELEASE) && echo $latest
 
-            # - name: Set env variable of latest release
-            #   run: latest=$(cat LATEST_RELEASE) && echo $latest
+            - name: Download the latest release of chromedriver
+              run: wget -N https://chromedriver.storage.googleapis.com/$latest/chromedriver_linux64.zip -O chromedriver_linux64.zip
 
-            # - name: Download the latest release of chromedriver
-            #   run: wget -N https://chromedriver.storage.googleapis.com/$latest/chromedriver_linux64.zip -O chromedriver_linux64.zip
+            - name: Unzip chromedriver
+              run: unzip -o chromedriver_linux64.zip -d .
 
-            # - name: Unzip chromedriver
-            #   run: unzip -o chromedriver_linux64.zip -d .
+            - name: Run chromedriver binary to check version
+              run: ./chromedriver --version
 
-            # - name: Run chromedriver binary to check version
-            #   run: ./chromedriver --version
+            - name: Download latest Selenium Standalone 3 Server
+              run: wget -N https://bit.ly/2TlkRyu -O selenium-server-3-standalone.jar
 
-            # - name: Download latest Selenium Standalone 3 Server
-            #   run: wget -N https://bit.ly/2TlkRyu -O selenium-server-3-standalone.jar
+            - name: Check Java and Selenium Standalone versions
+              run: java -version && java -jar $HOME/selenium/selenium-server-3-standalone.jar --version
 
-            # - name: Install OpenJDK 8
-            #   uses: actions/setup-java@v2
-            #   with:
-            #       distribution: "zulu"
-            #       java-version: "8"
+            - name: Install OpenJDK 8
+              uses: actions/setup-java@v2
+              with:
+                  distribution: "zulu"
+                  java-version: "8"
 
-            # - name: Archive test report
-            #   if: always()
-            #   uses: actions/upload-artifact@v2
-            #   with:
-            #       name: html-results-report
-            #       path: output/Results.html
+            - name: Install Google Chrome
+              uses: browser-actions/setup-chrome@latest
+              run: chrome --version
+              with:
+                  chrome-version: stable
 
-            # - name: Zip main test output
-            #   if: always()
-            #   run: zip -r output-main.zip output
+            - name: Archive test report
+              if: always()
+              uses: actions/upload-artifact@v2
+              with:
+                  name: html-results-report
+                  path: output/Results.html
 
-            # - name: Archive main test output
-            #   if: always()
-            #   uses: actions/upload-artifact@v2
-            #   with:
-            #       name: main-test-output
-            #       path: output-main.zip
+            - name: Zip main test output
+              if: always()
+              run: zip -r output-main.zip output
 
-            # - name: Zip substeps test output
-            #   if: always()
-            #   run: zip -r output-substeps.zip selftest/output
+            - name: Archive main test output
+              if: always()
+              uses: actions/upload-artifact@v2
+              with:
+                  name: main-test-output
+                  path: output-main.zip
 
-            # - name: Archive substeps test output
-            #   if: always()
-            #   uses: actions/upload-artifact@v2
-            #   with:
-            #       name: substeps-test-output
-            #       path: output-substeps.zip
+            - name: Zip substeps test output
+              if: always()
+              run: zip -r output-substeps.zip selftest/output
+
+            - name: Archive substeps test output
+              if: always()
+              uses: actions/upload-artifact@v2
+              with:
+                  name: substeps-test-output
+                  path: output-substeps.zip
