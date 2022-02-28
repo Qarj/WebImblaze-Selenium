@@ -111,9 +111,11 @@ jobs:
 
             - name: Install Google Chrome
               uses: browser-actions/setup-chrome@latest
-              run: chrome --version
               with:
                   chrome-version: stable
+
+            - name: Check Chrome version
+              run: chrome --version
 
             - name: Archive test report
               if: always()
