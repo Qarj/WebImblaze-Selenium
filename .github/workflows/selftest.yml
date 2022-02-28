@@ -8,8 +8,19 @@ jobs:
         name: Self test
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout code
+            - name: Checkout code of this repo
               uses: actions/checkout@v2
+
+            - name: What is the current folder
+              run: pwd
+
+            - name: Checkout WebImblaze
+              uses: actions/checkout@master
+              with:
+                  repository: Qarj/WebImblaze
+
+            - name: What is the current folder
+              run: pwd
 
             - name: Setup Perl
               uses: shogo82148/actions-setup-perl@v1
@@ -19,6 +30,9 @@ jobs:
 
             - name: Where is HOME
               run: echo $HOME
+
+            - name: Where is GITHUB_WORKSPACE
+              run: echo $GITHUB_WORKSPACE
 
             - name: Install LWP::Protocol::https
               run: cpanm LWP::Protocol::https
@@ -35,7 +49,13 @@ jobs:
             - name: Check Perl version
               run: perl --version
 
-            - name: Check WebImblaze
+            - name: Change into WebImblaze folder
+              run: cd ../WebImblaze
+
+            - name: Run update.pl
+              run: perl $HOME/WebImblaze-Selenium/plugins/update.pl
+
+            - name: Check WebImblaze version
               run: perl wi.pl --version
 
             - name: Self test
