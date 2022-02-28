@@ -40,8 +40,14 @@ jobs:
             - name: All files in $HOME/work/WebImblaze-Selenium
               run: ls -asl $HOME/work/WebImblaze-Selenium
 
-            - name: All files in $HOME/work/WebImblaze-Selenium/WebImblaze-Selenium
-              run: ls -asl $HOME/work/WebImblaze-Selenium/WebImblaze-Selenium
+            - name: All files in $GITHUB_WORKSPACE
+              run: ls -asl $GITHUB_WORKSPACE
+
+            - name: All files in $GITHUB_WORKSPACE/WebImblaze
+              run: ls -asl $GITHUB_WORKSPACE/WebImblaze
+
+            - name: All files in $GITHUB_WORKSPACE/main
+              run: ls -asl $GITHUB_WORKSPACE/main
 
             # - name: Setup Perl
             #   uses: shogo82148/actions-setup-perl@v1
