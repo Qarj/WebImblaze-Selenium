@@ -28,11 +28,17 @@ jobs:
             - name: All files in $HOME
               run: ls -asl $HOME
 
-            - name: All files in $HOME/main
-              run: ls -asl $HOME/main
+            - name: All files in $HOME/work
+              run: ls -asl $HOME/work
 
-            - name: All files in $HOME/WebImblaze
-              run: ls -asl $HOME/WebImblaze
+            - name: All files in $HOME/runners
+              run: ls -asl $HOME/runners
+
+            - name: All files in $HOME/work/main
+              run: ls -asl $HOME/work/main
+
+            - name: All files in $HOME/work/WebImblaze
+              run: ls -asl $HOME/work/WebImblaze
 
             # - name: Setup Perl
             #   uses: shogo82148/actions-setup-perl@v1
