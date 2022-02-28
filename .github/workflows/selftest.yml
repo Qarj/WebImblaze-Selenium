@@ -25,6 +25,12 @@ jobs:
             - name: What is the current folder
               run: pwd
 
+            - name: Where is HOME
+              run: echo $HOME
+
+            - name: Where is GITHUB_WORKSPACE
+              run: echo $GITHUB_WORKSPACE
+
             - name: All files in $HOME
               run: ls -asl $HOME
 
@@ -34,17 +40,14 @@ jobs:
             - name: All files in $HOME/work/WebImblaze-Selenium
               run: ls -asl $HOME/work/WebImblaze-Selenium
 
+            - name: All files in $HOME/work/WebImblaze-Selenium/WebImblaze-Selenium
+              run: ls -asl $HOME/work/WebImblaze-Selenium/WebImblaze-Selenium
+
             # - name: Setup Perl
             #   uses: shogo82148/actions-setup-perl@v1
             #   with:
             #       install-modules-with: cpanm
             #       install-modules-args: --with-develop --with-configure
-
-            # - name: Where is HOME
-            #   run: echo $HOME
-
-            # - name: Where is GITHUB_WORKSPACE
-            #   run: echo $GITHUB_WORKSPACE
 
             # - name: Install LWP::Protocol::https
             #   run: cpanm LWP::Protocol::https
