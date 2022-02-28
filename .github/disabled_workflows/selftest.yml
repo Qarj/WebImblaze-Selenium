@@ -67,29 +67,29 @@ jobs:
             - name: Check Perl version
               run: perl --version
 
-            - name: Change into WebImblaze folder
-              run: cd $GITHUB_WORKSPACE/WebImblaze
-
             - name: Run update.pl to move WebImblaze-Selenium plugin into WebImblaze
               run: perl $GITHUB_WORKSPACE/WebImblaze-Selenium/plugins/update.pl
 
             - name: Check WebImblaze version
-              run: perl wi.pl --version
+              run: perl $GITHUB_WORKSPACE/WebImblaze/wi.pl --version
 
-            - name: Self test
-              run: perl wi.pl selftest/all_core.test
+            - name: Self test WebImblaze
+              run: perl $GITHUB_WORKSPACE/WebImblaze/wi.pl selftest/all_core.test
 
-            - name: Make selenium folder and cd
-              run: mkdir $HOME/selenium && cd $HOME/selenium
+            - name: Make selenium folder
+              run: mkdir $HOME/selenium
 
-            - name: Download latest release of chromedrive version string
-              run: wget http://chromedriver.storage.googleapis.com/LATEST_RELEASE -O LATEST_RELEASE
+            - name: Download latest release of chromedriver version string
+              run: wget http://chromedriver.storage.googleapis.com/LATEST_RELEASE -O $HOME/selenium/LATEST_RELEASE
 
             - name: Set env variable of latest release
-              run: latest=$(cat LATEST_RELEASE) && echo $latest
+              run: latest=$(cat $HOME/selenium/LATEST_RELEASE) && echo $latest && echo "latest=$latest" >> $GITHUB_ENV
+
+            - name: Can we access it as latest?
+              run: echo $latest
 
             - name: Download the latest release of chromedriver
-              run: wget -N https://chromedriver.storage.googleapis.com/$latest/chromedriver_linux64.zip -O chromedriver_linux64.zip
+              run: wget -N "https://chromedriver.storage.googleapis.com/${{ env.latest }}/chromedriver_linux64.zip" -O chromedriver_linux64.zip
 
             - name: Unzip chromedriver
               run: unzip -o chromedriver_linux64.zip -d .
