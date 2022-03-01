@@ -107,12 +107,13 @@ jobs:
                   java-version: "8"
 
             - name: Install Google Chrome
-              uses: browser-actions/setup-chrome@latest
-              with:
-                  chrome-version: stable
+              uses: browser-actions/setup-chrome@stable
 
             - name: Check Chrome version
               run: chrome --version
+
+            - name: Check where Chrome is
+              run: which chrome
 
             - name: Self test WebImblaze-Selenium
               run: perl "$GITHUB_WORKSPACE/WebImblaze/wi.pl" "$GITHUB_WORKSPACE/WebImblaze-Selenium/selftest/all_selenium.test"
@@ -145,3 +146,4 @@ jobs:
               with:
                   name: substeps-test-output
                   path: output-substeps.zip
+# https://stackoverflow.com/questions/70341964/running-selenium-webdriver-in-github-actions-for-unit-tests
