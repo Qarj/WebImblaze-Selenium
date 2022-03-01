@@ -2,13 +2,10 @@
 //
 // If just one url pattern is not valid, then this addon will fail for all urls
 //    to debug, from chrome://extensions/ click on 'background page' for the extension and view in Console
-var blocked_urls = [
-    'http://www.example.com/this_url_is_blocked',
-    'http://www.example.com/this_url_is_also_blocked'
-];
+var blocked_urls = ["http://www.example.com/this_url_is_blocked", "http://www.example.com/this_url_is_also_blocked"];
 
-var cancel_request = function() {
+var cancel_request = function () {
     return { cancel: true };
-}
+};
 
-chrome.webRequest.onBeforeRequest.addListener(cancel_request, { urls: blocked_urls }, ['blocking'] );
+chrome.webRequest.onBeforeRequest.addListener(cancel_request, { urls: blocked_urls }, ["blocking"]);

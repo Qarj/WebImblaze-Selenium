@@ -2,11 +2,7 @@
     "name": "Blocker",
     "version": "0.0.2",
     "description": "Block content from loading",
-    "permissions": [
-        "webRequest",
-        "webRequestBlocking",
-        "<all_urls>"
-    ],
+    "permissions": ["webRequest", "webRequestBlocking", "<all_urls>"],
     "background": {
         "scripts": ["background.js"]
     },
