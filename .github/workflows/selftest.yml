@@ -74,7 +74,7 @@ jobs:
               run: perl $GITHUB_WORKSPACE/WebImblaze/wi.pl --version
 
             - name: Self test WebImblaze
-              run: perl $GITHUB_WORKSPACE/WebImblaze/wi.pl selftest/all_core.test
+              run: perl $GITHUB_WORKSPACE/WebImblaze/wi.pl $GITHUB_WORKSPACE/WebImblaze/selftest/all_core.test
 
             - name: Make selenium folder
               run: mkdir $HOME/selenium
@@ -89,16 +89,16 @@ jobs:
               run: echo $latest
 
             - name: Download the latest release of chromedriver
-              run: wget -N "https://chromedriver.storage.googleapis.com/${{ env.latest }}/chromedriver_linux64.zip" -O chromedriver_linux64.zip
+              run: wget -N "https://chromedriver.storage.googleapis.com/$latest/chromedriver_linux64.zip" -O $HOME/selenium/chromedriver_linux64.zip
 
             - name: Unzip chromedriver
-              run: unzip -o chromedriver_linux64.zip -d .
+              run: cd $HOME/selenium && unzip -o chromedriver_linux64.zip -d .
 
             - name: Run chromedriver binary to check version
-              run: ./chromedriver --version
+              run: cd $HOME/selenium && ./chromedriver --version
 
             - name: Download latest Selenium Standalone 3 Server
-              run: wget -N https://bit.ly/2TlkRyu -O selenium-server-3-standalone.jar
+              run: wget -N https://bit.ly/2TlkRyu -O $HOME/selenium/selenium-server-3-standalone.jar
 
             - name: Check Java and Selenium Standalone versions
               run: java -version && java -jar $HOME/selenium/selenium-server-3-standalone.jar --version
@@ -122,11 +122,11 @@ jobs:
               uses: actions/upload-artifact@v2
               with:
                   name: html-results-report
-                  path: output/Results.html
+                  path: $GITHUB_WORKSPACE/WebImblaze/output/Results.html
 
             - name: Zip main test output
               if: always()
-              run: zip -r output-main.zip output
+              run: zip -r output-main.zip $GITHUB_WORKSPACE/WebImblaze/output
 
             - name: Archive main test output
               if: always()
@@ -137,7 +137,7 @@ jobs:
 
             - name: Zip substeps test output
               if: always()
-              run: zip -r output-substeps.zip selftest/output
+              run: zip -r output-substeps.zip $GITHUB_WORKSPACE/WebImblaze/selftest/output
 
             - name: Archive substeps test output
               if: always()
