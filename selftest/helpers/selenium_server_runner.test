@@ -1,7 +1,7 @@
-step:                   Run Imblaze using Selenium Remote Control Server
+step:                   Run WebImblaze using Selenium Remote Control Server
 varPROJECT:             ./../WebImblaze-Selenium/
 shell1:                 wi.pl -o {PROJECT}selftest/output/{FEATURE}__server_chrome_sub --config {CONFIG_FILE} --driver chrome --chromedriver-binary C:\selenium\chromedriver.exe --selenium-binary C:\selenium\selenium-server-3-standalone.jar {PROJECT}selftest/substeps/{FEATURE}.test
-shell2:                 perl $PWD/wi.pl -o {PROJECT}selftest\output\{FEATURE}__server_chrome_sub --config {CONFIG_FILE} --driver chrome --chromedriver-binary /usr/local/bin/selenium/chromedriver --selenium-binary /usr/local/bin/selenium/selenium-server-3-standalone.jar {PROJECT}selftest\substeps\{FEATURE}.test
+shell2:                 perl $PWD/wi.pl -o {PROJECT}selftest\output\{FEATURE}__server_chrome_sub --config {CONFIG_FILE} --driver chrome --chromedriver-binary /usr/local/bin/selenium/chromedriver --selenium-binary $HOME/selenium/selenium-server-3-standalone.jar {PROJECT}selftest\substeps\{FEATURE}.test
 verifypositive2:        Test Steps Failed: 0
 
 
