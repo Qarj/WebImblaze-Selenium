@@ -4,21 +4,21 @@
 
 ## [2 - `wi.pl` command line options for WebImblaze-Selenium plugin](#options)
 
-### [ --driver](#driver)
+### [--driver](#driver)
 
-### [ --chromedriver-binary](#chromedriver-binary)
+### [--chromedriver-binary](#chromedriver-binary)
 
-### [ --selenium-binary](#selenium-binary)
+### [--selenium-binary](#selenium-binary)
 
-### [ --selenium-host](#selenium-host)
+### [--selenium-host](#selenium-host)
 
-### [ --selenium-port](#selenium-port)
+### [--selenium-port](#selenium-port)
 
-### [ --headless](#headless)
+### [--headless](#headless)
 
-### [ --keep-session](#keep-session)
+### [--keep-session](#keep-session)
 
-### [ --resume-session](#resume-session)
+### [--resume-session](#resume-session)
 
 ## [3 - Parameters to control Selenium WebDriver Test Execution](#parameters)
 
@@ -38,59 +38,59 @@
 
 ### [`Locators for Testers` helper functions full details](#full_details)
 
-### [ \_keys_to_element](#_keys_to_element)
+### [\_keys_to_element](#_keys_to_element)
 
-### [ \_set_dropdown](#_set_dropdown)
+### [\_set_dropdown](#_set_dropdown)
 
-### [ \_keys_to_element_after](#_keys_to_element_after)
+### [\_keys_to_element_after](#_keys_to_element_after)
 
-### [ \_keys_to_element_before](#_keys_to_element_before)
+### [\_keys_to_element_before](#_keys_to_element_before)
 
-### [ \_click](#_click)
+### [\_click](#_click)
 
-### [ \_click_after](#_click_after)
+### [\_click_after](#_click_after)
 
-### [ \_click_before](#_click_before)
+### [\_click_before](#_click_before)
 
-### [ \_get_element](#_get_element)
+### [\_get_element](#_get_element)
 
-### [ \_wait_visible](#_wait_visible)
+### [\_wait_visible](#_wait_visible)
 
-### [ \_wait_not_visible](#_wait_not_visible)
+### [\_wait_not_visible](#_wait_not_visible)
 
-### [ \_scroll_to](#_scroll_to)
+### [\_scroll_to](#_scroll_to)
 
-### [ \_move_to](#_move_to)
+### [\_move_to](#_move_to)
 
-### [ Locators for Testers - Heuristics full details](#heuristics)
+### [Locators for Testers - Heuristics full details](#heuristics)
 
 ## [6 - Helper Functions - Other](#helper)
 
-### [ \_clear_and_send_keys](#_clear_and_send_keys)
+### [\_clear_and_send_keys](#_clear_and_send_keys)
 
-### [ \_switch_to_window](#_switch_to_window)
+### [\_switch_to_window](#_switch_to_window)
 
-### [ \_wait_for_text_present](#_wait_for_text_present)
+### [\_wait_for_text_present](#_wait_for_text_present)
 
-### [ \_wait_for_text_visible](#_wait_for_text_visible)
+### [\_wait_for_text_visible](#_wait_for_text_visible)
 
-### [ \_check_element_within_pixels](#_check_element_within_pixels)
+### [\_check_element_within_pixels](#_check_element_within_pixels)
 
 ## [7 - Hints and tips](#tips)
 
-### [ Single quote vs Double quote](#tips)
+### [Single quote vs Double quote](#tips)
 
-### [ Need more quotes!](#more_quotes)
+### [Need more quotes!](#more_quotes)
 
-### [ Page load timeout](#page_load_timeout)
+### [Page load timeout](#page_load_timeout)
 
-### [ Switch to iframe example](#switch_iframe)
+### [Switch to iframe example](#switch_iframe)
 
-### [ Set window size to emulate Mobile view port](#set_window_size)
+### [Set window size to emulate Mobile view port](#set_window_size)
 
-### [ Execute a JavaScript snippet](#javascript_snippet)
+### [Execute a JavaScript snippet](#javascript_snippet)
 
-### [ XPATH snippets](#xpath_snippets)
+### [XPATH snippets](#xpath_snippets)
 
 <a name="overview"></a>
 
@@ -455,8 +455,8 @@ functions heavily rely on JavaScript for parsing the DOM.
 Will look for some text in the page source, and enter a value to found element. In this example
 the element is found using the place holder text.
 
-```
-selenium:               _keys_to_element('Job title, skill or company','WebDriver Jobs')
+```yml
+selenium: _keys_to_element('Job title, skill or company','WebDriver Jobs')
 ```
 
 <br />
@@ -834,10 +834,10 @@ As per `Phase 1`, however `class three` text is searched.
 
 Commonly when we send keys to an element we want to blank out any existing text first. This helper does that.
 
-Refer to the Selenium::Remote:::Driver documentation on cpan for descriptions on `target` and `locator`.
+Refer to the `Selenium::Remote:::Driver` documentation on cpan for descriptions on `target` and `locator`.
 
-```
-selenium:               _clear_and_send_keys('candidateProfileDetails_txtPostCode','id','WC1X 8TG')
+```yml
+selenium: _clear_and_send_keys('candidateProfileDetails_txtPostCode','id','WC1X 8TG')
 ```
 
 <br />
@@ -848,7 +848,7 @@ selenium:               _clear_and_send_keys('candidateProfileDetails_txtPostCod
 
 \_switch_to_window(`window number`)
 
-For working with multiple tabs / windows. Refer to the Selenium::Remote:::Driver documentation on cpan.
+For working with multiple tabs / windows. Refer to the `Selenium::Remote:::Driver` documentation on cpan.
 
 ```yml
 selenium: _switch_to_window(0)
@@ -954,8 +954,8 @@ Found sought text visible after 3.8 seconds
 If you know an element you appear at a particular location on the page, you can assert that it does
 appear there. A threshold can be specified.
 
-```
-selenium:               _check_element_within_pixels('Edit profile','link_text',860,549,40)
+```yml
+selenium: _check_element_within_pixels('Edit profile','link_text',860,549,40)
 ```
 
 Check that the element identified by the link text 'Edit profile' appears at 860,549 - or within 40 pixels of that location.
