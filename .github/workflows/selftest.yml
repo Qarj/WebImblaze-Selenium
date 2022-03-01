@@ -73,9 +73,6 @@ jobs:
             - name: Check WebImblaze version
               run: perl $GITHUB_WORKSPACE/WebImblaze/wi.pl --version
 
-            - name: Self test WebImblaze
-              run: perl $GITHUB_WORKSPACE/WebImblaze/wi.pl $GITHUB_WORKSPACE/WebImblaze/selftest/all_core.test
-
             - name: Make selenium folder
               run: mkdir $HOME/selenium
 
@@ -117,6 +114,9 @@ jobs:
             - name: Check Chrome version
               run: chrome --version
 
+            - name: Self test WebImblaze-Selenium
+              run: perl $GITHUB_WORKSPACE/WebImblaze/wi.pl $GITHUB_WORKSPACE/WebImblaze-Selenium/selftest/all_selenium.test
+
             - name: Archive test report
               if: always()
               uses: actions/upload-artifact@v2
@@ -137,7 +137,7 @@ jobs:
 
             - name: Zip substeps test output
               if: always()
-              run: zip -r output-substeps.zip $GITHUB_WORKSPACE/WebImblaze/selftest/output
+              run: zip -r output-substeps.zip $GITHUB_WORKSPACE/WebImblaze-Selenium/selftest/output
 
             - name: Archive substeps test output
               if: always()
