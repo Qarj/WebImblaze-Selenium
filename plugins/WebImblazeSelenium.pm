@@ -190,6 +190,7 @@ sub start_selenium_browser { ## no critic(ProhibitExcessComplexity) # start brow
     push @_chrome_args, '--ignore-certificate-errors';
     push @_chrome_args, 'browser-test';
     push @_chrome_args, 'no-default-browser-check';
+    push @_chrome_args, '--no-first-run';
     push @_chrome_args, '--no-sandbox';
     push @_chrome_args, '--disable-setuid-sandbox';
     push @_chrome_args, '--load-extension='.$main::this_script_folder_full.main::slash_me('plugins/blocker');
