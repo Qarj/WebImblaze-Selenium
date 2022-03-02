@@ -114,12 +114,16 @@ jobs:
               with:
                   run: perl WebImblaze/wi.pl ../WebImblaze-Selenium/selftest/all_selenium.test
 
+            - name: Remove chromedriver from results
+              if: always()
+              run: rm WebImblaze-Selenium/selftest/output/chromedriver
+
             - name: Archive test report
               if: always()
               uses: actions/upload-artifact@v2
               with:
                   name: html-results-report
-                  path: "$GITHUB_WORKSPACE/WebImblaze/output/Results.html"
+                  path: WebImblaze/output/Results.html
 
             - name: Zip main test output
               if: always()
