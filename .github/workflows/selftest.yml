@@ -110,7 +110,9 @@ jobs:
               run: which google-chrome
 
             - name: Self test
-              run: perl "$GITHUB_WORKSPACE/WebImblaze/wi.pl" "$GITHUB_WORKSPACE/WebImblaze-Selenium/selftest/all_selenium.test"
+              uses: GabrielBB/xvfb-action@v1
+              with:
+                  run: perl "$GITHUB_WORKSPACE/WebImblaze/wi.pl" "$GITHUB_WORKSPACE/WebImblaze-Selenium/selftest/all_selenium.test"
 
             - name: Archive test report
               if: always()

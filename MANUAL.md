@@ -30,7 +30,7 @@
 
 ## [4 - Configuration](#config)
 
-### [ Block urls](#blocker)
+### [Block urls](#blocker)
 
 ## [5 - Helper Functions - Locators for Testers](#locators)
 
@@ -206,7 +206,7 @@ If you follow the following pattern, you can debug the problem much more quickly
 
 1. Comment out the test steps after the error and run the tests with the `--keep-session` option
 
-```
+```sh
 perl wi.pl tests/test_case_file.xml --keep-session
 ```
 

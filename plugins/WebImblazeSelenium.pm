@@ -18,7 +18,7 @@ use File::Copy qw(copy), qw(move);
 use Socket qw( PF_INET SOCK_STREAM INADDR_ANY sockaddr_in );
 
 our ($selresp, $driver, $selenium_port);
-my $user_data_dir = '';
+my $user_data_dir = q{};
 my $attempts_since_last_locate_success = 0;
 
 #-----------------------------------------------------------
@@ -38,7 +38,7 @@ sub selenium {  # send Selenium command and read response
             my $_command = $main::case{$_};
             undef $selresp;
             my $_selenium_exception;
-            eval { $selresp = eval "$_command"; if ($@) { $_selenium_exception = $@; } }; ## no critic(ProhibitStringyEval)
+            eval { $selresp = eval "$_command"; if ($@) { $_selenium_exception = $@; } };
 
             if (defined $selresp) {
                 if (($selresp =~ m/(^|=)HASH\b/) || ($selresp =~ m/(^|=)ARRAY\b/)) {

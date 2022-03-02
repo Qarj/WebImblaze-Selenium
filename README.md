@@ -314,7 +314,7 @@ The [WebImblaze-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the 
     java -jar c:/selenium/selenium-server-3-standalone.jar --version
     ```
 
-    Be sure to also install the Java 8 runtime as well - https://ninite.com/ makes this easy.
+    Be sure to also install the Java 8 runtime as well - [Ninite](https://ninite.com/) makes this easy.
 
 ### Mac
 
