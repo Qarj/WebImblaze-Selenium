@@ -149,3 +149,5 @@ jobs:
                   name: substeps-test-output
                   path: output-substeps.zip
 # https://stackoverflow.com/questions/70341964/running-selenium-webdriver-in-github-actions-for-unit-tests
+# https://github.com/actions/virtual-environments/blob/main/images/linux/scripts/installers/google-chrome.sh
+# https://github.com/marketplace/actions/setup-chromedriver
