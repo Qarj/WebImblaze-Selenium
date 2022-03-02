@@ -112,7 +112,7 @@ jobs:
             - name: Self test
               uses: GabrielBB/xvfb-action@v1
               with:
-                  run: perl "$GITHUB_WORKSPACE/WebImblaze/wi.pl" "$GITHUB_WORKSPACE/WebImblaze-Selenium/selftest/all_selenium.test"
+                  run: perl WebImblaze/wi.pl WebImblaze-Selenium/selftest/all_selenium.test
 
             - name: Archive test report
               if: always()
