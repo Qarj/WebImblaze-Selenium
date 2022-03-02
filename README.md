@@ -1,5 +1,8 @@
 # WebImblaze-Selenium 0.7.1
 
+[![GitHub Super-Linter](https://github.com/Qarj/WebImblaze-Selenium/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
+![Self test](https://github.com/Qarj-Selenium/WebImblaze/workflows/Self%20test/badge.svg)
+
 WebImblaze, the project found at [https://github.com/Qarj/WebImblaze](https://github.com/Qarj/WebImblaze), can also drive Selenium using the Chrome browser.
 
 You have the choice of using the Selenium Server (which I find to be more robust), or you can drive ChromeDriver directly (Java not required!).

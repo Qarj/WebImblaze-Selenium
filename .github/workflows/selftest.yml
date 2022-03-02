@@ -85,11 +85,8 @@ jobs:
             - name: Can we access it as latest?
               run: echo "$latest"
 
-            - name: Download the latest release of chromedriver
-              run: wget -N "https://chromedriver.storage.googleapis.com/$latest/chromedriver_linux64.zip" -O "$HOME/selenium/chromedriver_linux64.zip"
-
-            - name: Unzip chromedriver
-              run: cd "$HOME/selenium" && unzip -o chromedriver_linux64.zip -d .
+            - name: Make a copy of chromedriver
+              run: cp /usr/bin/chromedriver "$HOME/selenium"
 
             - name: Run chromedriver binary to check version
               run: cd "$HOME/selenium" && ./chromedriver --version
@@ -106,18 +103,13 @@ jobs:
                   distribution: "zulu"
                   java-version: "8"
 
-            - name: Install Google Chrome
-              uses: browser-actions/setup-chrome@latest
-              with:
-                  chrome-version: stable
-
             - name: Check Chrome version
-              run: chrome --version
+              run: google-chrome --version
 
-            - name: Check where Chrome is
-              run: which chrome
+            - name: Check where Google Chrome is
+              run: which google-chrome
 
-            - name: Self test WebImblaze-Selenium
+            - name: Self test
               run: perl "$GITHUB_WORKSPACE/WebImblaze/wi.pl" "$GITHUB_WORKSPACE/WebImblaze-Selenium/selftest/all_selenium.test"
 
             - name: Archive test report
