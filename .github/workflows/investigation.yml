@@ -34,3 +34,12 @@ jobs:
 
             - name: What is in /usr/local/bin
               run: ls -asl /usr/local/bin
+
+            - name: What is in /usr/bin
+              run: ls -asl /usr/bin
+
+            - name: See Google Chrome version
+              run: google-chrome --version
+
+            - name: See chromedriver version
+              run: chromedriver --version
