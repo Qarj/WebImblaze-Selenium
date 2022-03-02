@@ -8,11 +8,6 @@ jobs:
         name: Self test
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout code of this repo
-              uses: actions/checkout@v2
-              with:
-                  path: WebImblaze-Selenium
-
             - name: What is the current folder
               run: pwd
 
@@ -30,18 +25,6 @@ jobs:
 
             - name: All files in "$HOME/work"
               run: ls -asl "$HOME/work"
-
-            - name: All files in "$HOME/work/WebImblaze-Selenium"
-              run: ls -asl "$HOME/work/WebImblaze-Selenium"
-
-            - name: All files in "$GITHUB_WORKSPACE"
-              run: ls -asl "$GITHUB_WORKSPACE"
-
-            - name: All files in "$GITHUB_WORKSPACE/WebImblaze"
-              run: ls -asl "$GITHUB_WORKSPACE/WebImblaze"
-
-            - name: All files in "$GITHUB_WORKSPACE/WebImblaze-Selenium"
-              run: ls -asl "$GITHUB_WORKSPACE/WebImblaze-Selenium"
 
             - name: Chromedriver?
               run: which chromedriver
