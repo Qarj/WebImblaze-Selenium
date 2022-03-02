@@ -80,7 +80,7 @@ jobs:
               run: wget http://chromedriver.storage.googleapis.com/LATEST_RELEASE -O "$HOME/selenium/LATEST_RELEASE"
 
             - name: Set env variable of latest release
-              run: latest=$(cat $HOME/selenium/LATEST_RELEASE) && echo $latest && echo "latest=$latest" >> "$GITHUB_ENV"
+              run: latest=$(cat "$HOME/selenium/LATEST_RELEASE") && echo "$latest" && echo "latest=$latest" >> "$GITHUB_ENV"
 
             - name: Can we access it as latest?
               run: echo "$latest"

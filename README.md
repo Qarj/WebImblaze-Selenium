@@ -7,7 +7,7 @@ WebImblaze, the project found at [https://github.com/Qarj/WebImblaze](https://gi
 
 You have the choice of using the Selenium Server (which I find to be more robust), or you can drive ChromeDriver directly (Java not required!).
 
-### Linux
+## Linux Installation
 
 After installing WebImblaze to `$HOME/git/WebImblaze`, clone this plugin project
 
@@ -76,7 +76,7 @@ sudo dpkg -i google-chrome-stable_current_amd64.deb
 **_Important_** - Run Chrome at least once and choose whether you want it to be the default browser or not.
 You can then close it or leave it open. If you don't do this, then it will hang when you try to run a test with ChromeDriver.
 
-```
+```sh
 google-chrome
 ```
 
@@ -263,7 +263,7 @@ perl wi.pl examples/misc/selenium.test --driver chrome
 ### Resources for creating your own tests
 
 You can see the many Selenium commands you can use by checking the documentation for the Perl bindings:
-http://search.cpan.org/perldoc/Selenium::Remote::Driver
+[CPAN](http://search.cpan.org/perldoc/Selenium::Remote::Driver)
 
 There are further examples in the `examples` and `selftest/substeps` folders of this project.
 
@@ -292,7 +292,7 @@ The [WebImblaze-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the 
 
     This will install the latest version of Selenium::Remote::Driver - 1.37 at the time of writing.
 
-4. Obtain chromedriver.exe from https://sites.google.com/a/chromium.org/chromedriver/ and place it in `C:/selenium/`
+4. Obtain chromedriver.exe from [chromedriver](https://sites.google.com/a/chromium.org/chromedriver/) and place it in `C:/selenium/`
 
     ```bat
     mkdir c:\selenium
@@ -304,9 +304,9 @@ The [WebImblaze-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the 
     chromedriver.exe --version
     ```
 
-    7-Zip is easy to install with https://ninite.com/.
+    7-Zip is easy to install with [Ninite](https://ninite.com/).
 
-5. Optional - download latest Selenium Server from https://selenium.dev/downloads/
+5. Optional - download latest Selenium Server from [Selenium Server](https://selenium.dev/downloads/)
    and place it in `C:/selenium`, give it the generic name `selenium-server-3-standalone.jar`
 
     ```bat
@@ -318,7 +318,7 @@ The [WebImblaze-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the 
 
 ### Mac
 
-First install WebImblaze https://github.com/Qarj/WebImblaze
+First install WebImblaze [WebImblaze](https://github.com/Qarj/WebImblaze)
 
 Install Chrome, run it and decide whether you want it to be the default browser or not.
 
@@ -356,7 +356,7 @@ Obtain latest Selenium Standalone 3 Server and put it in `/usr/local/bin/seleniu
 wget -N https://bit.ly/2TlkRyu -O /usr/local/bin/selenium/selenium-server-3-standalone.jar
 ```
 
-Install `OpenJDK 8 (LTS)` from https://adoptopenjdk.net/
+Install `OpenJDK 8 (LTS)` from [OpenJDK](https://adoptopenjdk.net/)
 
 After opening and installing the `.pkg` file, check Java is working
 
@@ -488,9 +488,9 @@ perl wi.pl ../WebImblaze-Selenium/selftest/all_selenium.test
 
 ### search-image.py (Windows Only)
 
-To use the searchimage parameter (see manual), you need to install the dependencies for the search-image.py plugin. (The plugin itself is already installed in the plugins folder of the WebImblaze project at https://github.com/Qarj/WebImblaze)
+To use the searchimage parameter (see manual), you need to install the dependencies for the search-image.py plugin. The plugin itself is already installed in the plugins folder of the WebImblaze project at [WebImblaze](https://github.com/Qarj/WebImblaze).
 
-See https://github.com/Qarj/search-image for full installation instructions.
+See [WebImblaze](https://github.com/Qarj/search-image) for full installation instructions.
 
 To test that it works, run the following. If all test steps pass, then everything is setup OK.
 

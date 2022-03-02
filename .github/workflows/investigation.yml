@@ -43,3 +43,6 @@ jobs:
 
             - name: See chromedriver version
               run: chromedriver --version
+
+            - name: See where gnome-terminal is
+              run: which gnome-terminal

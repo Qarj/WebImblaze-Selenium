@@ -22,11 +22,11 @@
 
 ## [3 - Parameters to control Selenium WebDriver Test Execution](#parameters)
 
-### [ searchimage searchimage1 ... searchimage5](#searchimage)
+### [searchimage searchimage1 ... searchimage5](#searchimage)
 
-### [ userdatadir](#userdatadir)
+### [userdatadir](#userdatadir)
 
-### [ verifytext](#verifytext)
+### [verifytext](#verifytext)
 
 ## [4 - Configuration](#config)
 
@@ -80,7 +80,7 @@
 
 ### [Single quote vs Double quote](#tips)
 
-### [Need more quotes!](#more_quotes)
+### [Need more quotes](#more_quotes)
 
 ### [Page load timeout](#page_load_timeout)
 
@@ -111,7 +111,7 @@ Typically Selenium just responds with `1` for a command to do something - e.g. c
 The example gets a web page, and automatically takes a screenshot which will be saved in the output folder.
 
 Many different commands are supported, to see them all refer to Selenium::Remote::Driver on cpan which
-can be found here: https://metacpan.org/pod/Selenium::Remote::Driver
+can be found here: [CPAN](https://metacpan.org/pod/Selenium::Remote::Driver)
 
 In addition, there are many helper (start with underscore \_) functions built into this plugin that make working with Selenium very easy. See the
 [Helper Functions](#helper) section.
@@ -290,8 +290,8 @@ verifytext: get_active_element,get_all_cookies,get_current_url,get_window_positi
 
 Typically you might just get the current URL, the body text and the page source:
 
-```
-verifytext:             get_current_url,get_body_text,get_page_source
+```yml
+verifytext: get_current_url,get_body_text,get_page_source
 ```
 
 <br />
@@ -660,7 +660,7 @@ function isElementInViewport(el) {
 }
 ```
 
-See the `Recommended by John Resig` solution here: http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport
+See the `Recommended by John Resig` solution here: [Stack Overflow](http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport)
 
 It works pretty well but not in all cases. If it does work for your scenario, then it should work consistently.
 
@@ -828,7 +828,7 @@ As per `Phase 1`, however `class three` text is searched.
 
 <a name="_clear_and_send_keys"></a>
 
-#### \_clear_and_send_keys
+### \_clear_and_send_keys
 
 \_clear_and_send_keys(`target`, `locator`, `keys`)
 
@@ -844,7 +844,7 @@ selenium: _clear_and_send_keys('candidateProfileDetails_txtPostCode','id','WC1X 
 
 <a name="_switch_to_window"></a>
 
-#### \_switch_to_window
+### \_switch_to_window
 
 \_switch_to_window(`window number`)
 
@@ -865,7 +865,7 @@ selenium: $driver->switch_to_window('Homepage')
 
 <a name="_wait_for_text_present"></a>
 
-#### \_wait_for_text_present
+### \_wait_for_text_present
 
 \_wait_for_text_present(`search text`, `timeout`)
 
@@ -905,7 +905,7 @@ Did not find sought text in page source after 1.6 seconds
 
 <a name="_wait_for_text_visible"></a>
 
-#### \_wait_for_text_visible
+### \_wait_for_text_visible
 
 \_wait_for_text_visible(`search text`,[`timeout`,`target`,`locator`])
 
@@ -947,7 +947,7 @@ Found sought text visible after 3.8 seconds
 
 <a name="_check_element_within_pixels"></a>
 
-#### \_check_element_within_pixels
+### \_check_element_within_pixels
 
 \_check_element_within_pixels(`target`, `id`, `x baseline`, `y baseline`, `pixel threshold`)
 
@@ -962,7 +962,7 @@ Check that the element identified by the link text 'Edit profile' appears at 860
 
 The response log will contain a message like the following that you can assert against:
 
-```
+```txt
 Pixel threshold check passed - Edit profile is 0,0 (x,y) pixels removed from baseline of 860,549; actual was 860,549
 ```
 
@@ -1004,7 +1004,7 @@ selenium1: _keys_to_element_after("E-mail","john\@example.com")
 
 <a name="more_quotes"></a>
 
-### Need more quotes!
+### Need more quotes
 
 In some cases due to complex CSS locators, you might find yourself running out of quotes.
 
