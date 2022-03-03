@@ -1,6 +1,5 @@
 step:                   Set variables
 varFEATURE:             _click
 varCONFIG_FILE:         config.xml
-shell:                  echo NOP
 
 include:                ./../WebImblaze-Selenium/selftest/helpers/selenium_server_runner.test

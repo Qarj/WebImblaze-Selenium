@@ -36,12 +36,12 @@ sub _copy_file {
     my $_dest_file = $_dest_folder_path.$_source_file;
 
     copy $_source_file, $_dest_file;
-    
+
     my @_files = glob($_dest_file);
     my $_modified;
     foreach my $_file (@_files) {
-        $_modified = strftime("%d/%m/%Y %H:%M:%S",localtime((stat ($_file))[9]));
+        $_modified = strftime('%d/%m/%Y %H:%M:%S',localtime((stat ($_file))[9]));
         print "$_file [$_modified]\n";
     }
-    
+    return;
 }

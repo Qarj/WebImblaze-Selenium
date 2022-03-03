@@ -7,7 +7,7 @@
         <wic>webinject-check.azurewebsites.net</wic> <!-- WEBIMBLAZE-CHECK web site base url --> 
     </userdefined> 
     <autoassertions> 
-       <autoassertion1>^((?!HTTP Error 404.0 . Not Found).)*$|||Page not found error</autoassertion1> 
+       <autoassertion1>HTTP Error 404.0 . Not Found|||Page not found error</autoassertion1> 
     </autoassertions> 
     <smartassertions> 
        <smartassertion1>Set\-Cookies: |||Cache\-Control: private|Cache\-Control: no\-cache|||Must have a Cache-Control of private or no-cache when a cookie is set</smartassertion1> 
@@ -17,8 +17,8 @@
         <selenium-binary>C:\selenium\selenium-server-3-standalone.jar</selenium-binary>
     </windows>
     <linux>
-        <chromedriver-binary>/usr/local/bin/selenium/chromedriver</chromedriver-binary>
-        <selenium-binary>/usr/local/bin/selenium/selenium-server-3-standalone.jar</selenium-binary>
+        <chromedriver-binary>$ENV{"HOME"}/selenium/chromedriver</chromedriver-binary>
+        <selenium-binary>$ENV{"HOME"}/selenium/selenium-server-3-standalone.jar</selenium-binary>
     </linux>
     <useragent>Selenium thru WebImblaze</useragent>
 </root> 
