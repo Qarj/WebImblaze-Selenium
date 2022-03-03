@@ -1,4 +1,4 @@
-# Manual for WebImblaze-Selenium version 0.7.1
+# Manual for WebImblaze-Selenium version 0.7.2
 
 ## [1 - Overview](#overview)
 
@@ -242,7 +242,7 @@ perl wi.pl tests/test_case_file.xml
 ### searchimage searchimage1 ... searchimage5
 
 Requires search-image plugin. The plugin itself is already installed, however there are dependencies on Python and other libraries. Setup
-instructions can be found here: https://github.com/Qarj/search-image
+instructions can be found here: [Search Image](https://github.com/Qarj/search-image)
 
 Searches the WebDriver Selenium screenshot for a specified sub image. A small tolerance is allowed in case
 the image cannot be found exactly. This is useful if the baseline image is captured in one browser version /

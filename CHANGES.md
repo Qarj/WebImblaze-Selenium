@@ -4,6 +4,10 @@
 
 ## Release History
 
+### Version 0.7.2 - Mar 3, 2022
+
+-   enabled GitHub Actions, got the self test passing again
+
 ### Version 0.7.1 - Dec 1, 2020
 
 -   \_get_element now returns offsetLeft and offsetTop which is the x, y for where the element is on the page

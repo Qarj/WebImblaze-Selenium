@@ -19,6 +19,7 @@ verbose  = %f:%l:%c [%s %p] %m near '%r'\n
 [-RegularExpressions::ProhibitEnumeratedClasses]
 [-RegularExpressions::ProhibitSingleCharAlternation]
 [-RegularExpressions::RequireLineBoundaryMatching]
+[-Subroutines::ProhibitManyArgs]
 [-Subroutines::ProhibitUnusedPrivateSubroutines]
 [-Subroutines::ProtectPrivateSubs]
 [-TestingAndDebugging::ProhibitNoWarnings]
