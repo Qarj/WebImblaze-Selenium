@@ -10,7 +10,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '0.7.1';
+$VERSION = '0.7.2';
 
 use utf8;
 use Time::HiRes 'time','sleep';
@@ -18,7 +18,7 @@ use File::Copy qw(copy), qw(move);
 use Socket qw( PF_INET SOCK_STREAM INADDR_ANY sockaddr_in );
 
 our ($selresp, $driver, $selenium_port);
-my $user_data_dir = '';
+my $user_data_dir = q{};
 my $attempts_since_last_locate_success = 0;
 
 #-----------------------------------------------------------
@@ -38,7 +38,7 @@ sub selenium {  # send Selenium command and read response
             my $_command = $main::case{$_};
             undef $selresp;
             my $_selenium_exception;
-            eval { $selresp = eval "$_command"; if ($@) { $_selenium_exception = $@; } }; ## no critic(ProhibitStringyEval)
+            eval { $selresp = eval "$_command"; if ($@) { $_selenium_exception = $@; } };
 
             if (defined $selresp) {
                 if (($selresp =~ m/(^|=)HASH\b/) || ($selresp =~ m/(^|=)ARRAY\b/)) {
@@ -190,6 +190,7 @@ sub start_selenium_browser { ## no critic(ProhibitExcessComplexity) # start brow
     push @_chrome_args, '--ignore-certificate-errors';
     push @_chrome_args, 'browser-test';
     push @_chrome_args, 'no-default-browser-check';
+    push @_chrome_args, '--no-first-run';
     push @_chrome_args, '--no-sandbox';
     push @_chrome_args, '--disable-setuid-sandbox';
     push @_chrome_args, '--load-extension='.$main::this_script_folder_full.main::slash_me('plugins/blocker');
@@ -523,8 +524,10 @@ sub _start_windows_process {
 sub _start_linux_process {
     my ($_command) = @_;
 
-    my $_gnome_terminal = qq{(gnome-terminal -e "$_command" &)}; #
-    my $_result = `$_gnome_terminal`;
+    # my $_gnome_terminal = qq{(gnome-terminal -e "$_command" &)}; #
+    # my $_result = `$_gnome_terminal`;
+    my $_nohup_bash = qq{(nohup bash -c "$_command" > /dev/null 2>&1 &)}; #
+    my $_result = `$_nohup_bash`;
 
     return;
 }
@@ -1086,8 +1089,8 @@ sub _wait_visible { # usage: _wait_visible(anchor|||instance,timeout);
 
     $main::results_stdout .= "WAIT VISIBLE IN VIEWPORT: [$_anchor_parms] TIMEOUT[$_timeout]\n";
 
-    my $_search_expression = '@_response = _get_element($_target);'; ## no critic(RequireInterpolationOfMetachars)
-    my $_found_expression = 'if ($__response =~ m/inViewport\[1]/) { return q|true|; }  else { return; }'; ## no critic(RequireInterpolationOfMetachars)
+    my $_search_expression = '@_response = _get_element($_target);';
+    my $_found_expression = 'if ($__response =~ m/inViewport\[1]/) { return q|true|; }  else { return; }';
 
     return _wait_for_item_present($_search_expression, $_found_expression, $_timeout, 'element visible', 'NA', $_anchor_parms);
 
@@ -1104,10 +1107,10 @@ sub _wait_for_item_present {
     my $_found_it;
 
     while ( (($_timestart + $_timeout) > time) && (not $_found_it) ) {
-        eval { eval "$_search_expression"; }; ## no critic(ProhibitStringyEval)
+        eval { eval "$_search_expression"; };
         foreach my $__response (@_response) {
             # if ($_message_fragment eq 'element visible') { print "__response:$__response\n";}
-            if (eval { eval "$_found_expression";} ) { ## no critic(ProhibitStringyEval)
+            if (eval { eval "$_found_expression";} ) {
                 $_found_it = 'true';
             }
         }
@@ -1138,8 +1141,8 @@ sub _wait_not_visible { # usage: _wait_not_visible(anchor|||instance,timeout);
 
     $main::results_stdout .= "WAIT NOT VISIBLE IN VIEWPORT: [$_anchor_parms] TIMEOUT[$_timeout]\n";
 
-    my $_search_expression = '@_response = _get_element($_anchor_parms);'; ## no critic(RequireInterpolationOfMetachars)
-    my $_found_expression = 'if ($__response =~ m/inViewport\[1]/) { return q|true|; }  else { return; }'; ## no critic(RequireInterpolationOfMetachars)
+    my $_search_expression = '@_response = _get_element($_anchor_parms);';
+    my $_found_expression = 'if ($__response =~ m/inViewport\[1]/) { return q|true|; }  else { return; }';
 
     return _wait_for_item_not_present($_search_expression, $_found_expression, $_timeout, 'element visible', 'NA', $_anchor_parms);
 
@@ -1156,10 +1159,10 @@ sub _wait_for_item_not_present { # should be named _helper_wait_for_item_not_pre
     my $_found_it = 'true';
 
     while ( (($_timestart + $_timeout) > time) && ($_found_it) ) {
-        eval { eval "$_search_expression"; }; ## no critic(ProhibitStringyEval)
+        eval { eval "$_search_expression"; };
         foreach my $__response (@_response) {
             # if ($_message_fragment eq 'element visible') { print "__response:$__response\n";}
-            if (not eval { eval "$_found_expression";} ) { ## no critic(ProhibitStringyEval)
+            if (not eval { eval "$_found_expression";} ) {
                 undef $_found_it;
             }
         }
@@ -1455,8 +1458,8 @@ sub _wait_for_text_present { # usage: _wait_for_text_present('Search Text',Timeo
 
     $main::results_stdout .= "SEARCHTEXT:$_search_text\n";
 
-    my $_search_expression = '@_response = $driver->get_page_source();'; ## no critic(RequireInterpolationOfMetachars)
-    my $_found_expression = 'if ($__response =~ m{$_search_text}si) { return q|true|; }  else { return; }'; ## no critic(RequireInterpolationOfMetachars)
+    my $_search_expression = '@_response = $driver->get_page_source();';
+    my $_found_expression = 'if ($__response =~ m{$_search_text}si) { return q|true|; }  else { return; }';
 
     return _wait_for_item_present($_search_expression, $_found_expression, $_timeout, 'text in page source', $_search_text);
 
@@ -1474,8 +1477,8 @@ sub _wait_for_text_visible { # usage: _wait_for_text_visible('Search Text', time
 
     $main::results_stdout .= "VISIBLE SEARCH TEXT:$_search_text\n";
 
-    my $_search_expression = '@_response = $driver->find_element($_target,$_locator)->get_text();'; ## no critic(RequireInterpolationOfMetachars)
-    my $_found_expression = 'if ($__response =~ m{$_search_text}si) { return q|true|; }  else { return; }'; ## no critic(RequireInterpolationOfMetachars)
+    my $_search_expression = '@_response = $driver->find_element($_target,$_locator)->get_text();';
+    my $_found_expression = 'if ($__response =~ m{$_search_text}si) { return q|true|; }  else { return; }';
 
     return _wait_for_item_present($_search_expression, $_found_expression, $_timeout, 'text visible', $_search_text, $_target, $_locator);
 

@@ -1,36 +1,36 @@
-# Manual for WebImblaze-Selenium version 0.7.1
+# Manual for WebImblaze-Selenium version 0.7.2
 
 ## [1 - Overview](#overview)
 
 ## [2 - `wi.pl` command line options for WebImblaze-Selenium plugin](#options)
 
-### [ --driver](#driver)
+### [--driver](#driver)
 
-### [ --chromedriver-binary](#chromedriver-binary)
+### [--chromedriver-binary](#chromedriver-binary)
 
-### [ --selenium-binary](#selenium-binary)
+### [--selenium-binary](#selenium-binary)
 
-### [ --selenium-host](#selenium-host)
+### [--selenium-host](#selenium-host)
 
-### [ --selenium-port](#selenium-port)
+### [--selenium-port](#selenium-port)
 
-### [ --headless](#headless)
+### [--headless](#headless)
 
-### [ --keep-session](#keep-session)
+### [--keep-session](#keep-session)
 
-### [ --resume-session](#resume-session)
+### [--resume-session](#resume-session)
 
 ## [3 - Parameters to control Selenium WebDriver Test Execution](#parameters)
 
-### [ searchimage searchimage1 ... searchimage5](#searchimage)
+### [searchimage searchimage1 ... searchimage5](#searchimage)
 
-### [ userdatadir](#userdatadir)
+### [userdatadir](#userdatadir)
 
-### [ verifytext](#verifytext)
+### [verifytext](#verifytext)
 
 ## [4 - Configuration](#config)
 
-### [ Block urls](#blocker)
+### [Block urls](#blocker)
 
 ## [5 - Helper Functions - Locators for Testers](#locators)
 
@@ -38,60 +38,59 @@
 
 ### [`Locators for Testers` helper functions full details](#full_details)
 
-### [ \_keys_to_element](#_keys_to_element)
+### [\_keys_to_element](#_keys_to_element)
 
-### [ \_set_dropdown](#_set_dropdown)
+### [\_set_dropdown](#_set_dropdown)
 
-### [ \_keys_to_element_after](#_keys_to_element_after)
+### [\_keys_to_element_after](#_keys_to_element_after)
 
-### [ \_keys_to_element_before](#_keys_to_element_before)
+### [\_keys_to_element_before](#_keys_to_element_before)
 
-### [ \_click](#_click)
+### [\_click](#_click)
 
-### [ \_click_after](#_click_after)
+### [\_click_after](#_click_after)
 
-### [ \_click_before](#_click_before)
+### [\_click_before](#_click_before)
 
-### [ \_get_element](#_get_element)
+### [\_get_element](#_get_element)
 
-### [ \_wait_visible](#_wait_visible)
+### [\_wait_visible](#_wait_visible)
 
-### [ \_wait_not_visible](#_wait_not_visible)
+### [\_wait_not_visible](#_wait_not_visible)
 
-### [ \_scroll_to](#_scroll_to)
+### [\_scroll_to](#_scroll_to)
 
-### [ \_move_to](#_move_to)
+### [\_move_to](#_move_to)
 
-### [ Locators for Testers - Heuristics full details](#heuristics)
+### [Locators for Testers - Heuristics full details](#heuristics)
 
 ## [6 - Helper Functions - Other](#helper)
 
-### [ \_clear_and_send_keys](#_clear_and_send_keys)
+### [\_clear_and_send_keys](#_clear_and_send_keys)
 
-### [ \_switch_to_window](#_switch_to_window)
+### [\_switch_to_window](#_switch_to_window)
 
-### [ \_wait_for_text_present](#_wait_for_text_present)
+### [\_wait_for_text_present](#_wait_for_text_present)
 
-### [ \_wait_for_text_visible](#_wait_for_text_visible)
+### [\_wait_for_text_visible](#_wait_for_text_visible)
 
-### [ \_check_element_within_pixels](#_check_element_within_pixels)
+### [\_check_element_within_pixels](#_check_element_within_pixels)
 
 ## [7 - Hints and tips](#tips)
 
-### [ Single quote vs Double quote](#tips)
+### [Single quote vs Double quote](#tips)
 
-### [ Need more quotes!](#more_quotes)
+### [Need more quotes](#more_quotes)
 
-### [ Page load timeout](#page_load_timeout)
+### [Page load timeout](#page_load_timeout)
 
-### [ Switch to iframe example](#switch_iframe)
+### [Switch to iframe example](#switch_iframe)
 
-### [ Set window size to emulate Mobile view port](#set_window_size)
+### [Set window size to emulate Mobile view port](#set_window_size)
 
-### [ Execute a JavaScript snippet](#javascript_snippet)
+### [Execute a JavaScript snippet](#javascript_snippet)
 
-### [ XPATH snippets](#xpath_snippets)
-
+### [XPATH snippets](#xpath_snippets)
 
 <a name="overview"></a>
 
@@ -99,9 +98,9 @@
 
 A minimal Selenium example looks like the following:
 
-```
-step:                   Get Totaljobs Home Page
-selenium:               $driver->get("https://www.totaljobs.com")
+```yml
+step: Get Totaljobs Home Page
+selenium: $driver->get("https://www.totaljobs.com")
 ```
 
 The method is specified as `selenium` and this is used in conjunction with `command` to drive Selenium.
@@ -112,18 +111,18 @@ Typically Selenium just responds with `1` for a command to do something - e.g. c
 The example gets a web page, and automatically takes a screenshot which will be saved in the output folder.
 
 Many different commands are supported, to see them all refer to Selenium::Remote::Driver on cpan which
-can be found here: https://metacpan.org/pod/Selenium::Remote::Driver
+can be found here: [CPAN](https://metacpan.org/pod/Selenium::Remote::Driver)
 
 In addition, there are many helper (start with underscore \_) functions built into this plugin that make working with Selenium very easy. See the
 [Helper Functions](#helper) section.
 
 Here is an example that includes an assertion:
 
-```
-step:                   Get Totaljobs Home Page
-selenium:               $driver->get("https://www.totaljobs.com")
-verifytext:             get_current_url,get_body_text,get_page_source
-verifypositive:         a job you love
+```yml
+step: Get Totaljobs Home Page
+selenium: $driver->get("https://www.totaljobs.com")
+verifytext: get_current_url,get_body_text,get_page_source
+verifypositive: a job you love
 ```
 
 Here you can see that we also get the body text and page source. WebImblaze then can use this to perform a standard
@@ -150,7 +149,7 @@ Option `--chromedriver-binary` must also be used.
 ### --chromedriver-binary
 Location of the ChromeDriver binary, example:
 
-```
+```sh
 --chromedriver-binary C:\selenium\chromedriver.exe
 ```
 
@@ -159,7 +158,7 @@ Location of the ChromeDriver binary, example:
 ### --selenium-binary
 Location of the Selenium Standalone Server binary, example:
 
-```
+```sh
 --selenium-binary C:\selenium-server\selenium-server-standalone-3.11.0.jar
 ```
 
@@ -207,7 +206,7 @@ If you follow the following pattern, you can debug the problem much more quickly
 
 1. Comment out the test steps after the error and run the tests with the `--keep-session` option
 
-```
+```sh
 perl wi.pl tests/test_case_file.xml --keep-session
 ```
 
@@ -216,7 +215,7 @@ Selenium Server and the Chrome browser will be left open at the end of the run.
 2. Create another test case file with an attempt to fix the problem, starting from the current state
    then run as follows:
 
-```
+```sh
 perl wi.pl tests/debug_test_case_file.xml --resume-session --keep-session
 ```
 
@@ -228,7 +227,7 @@ the problem does not work and you need to try again.
    uncomment all the steps you commented out. You can then run as normal to make sure the full
    workflow now works:
 
-```
+```sh
 perl wi.pl tests/test_case_file.xml
 ```
 
@@ -243,14 +242,14 @@ perl wi.pl tests/test_case_file.xml
 ### searchimage searchimage1 ... searchimage5
 
 Requires search-image plugin. The plugin itself is already installed, however there are dependencies on Python and other libraries. Setup
-instructions can be found here: https://github.com/Qarj/search-image
+instructions can be found here: [Search Image](https://github.com/Qarj/search-image)
 
 Searches the WebDriver Selenium screenshot for a specified sub image. A small tolerance is allowed in case
 the image cannot be found exactly. This is useful if the baseline image is captured in one browser version /
 operating system, but tested on another.
 
-```
-searchimage:            examples\search_images\menu_hamburger.png
+```yml
+searchimage: examples\search_images\menu_hamburger.png
 ```
 
 Specify the file path relative to the WebImblaze root folder.
@@ -266,7 +265,7 @@ create a new one.
 
 This feature enables the same profile to be used for future tests.
 
-```
+```yml
 step:                   Switch to the Admin persona
 userdatadir:            {SYS_TEMP}Admin_Persona
 restartbrowser:         true
@@ -285,14 +284,14 @@ If you want to parseresponse, then you will need to use this feature to get some
 
 Multiple items can be separated with commas. Example:
 
-```
-verifytext:             get_active_element,get_all_cookies,get_current_url,get_window_position,get_body_text,get_page_source
+```yml
+verifytext: get_active_element,get_all_cookies,get_current_url,get_window_position,get_body_text,get_page_source
 ```
 
 Typically you might just get the current URL, the body text and the page source:
 
-```
-verifytext:             get_current_url,get_body_text,get_page_source
+```yml
+verifytext: get_current_url,get_body_text,get_page_source
 ```
 
 <br />
@@ -333,11 +332,11 @@ what to do based on the visible text.
 
 Look at this example:
 
-```
-step:                   Get CWJobs home page and fill out search form
-selenium1:              $driver->get("https://www.cwjobs.co.uk/")
-selenium2:              _keys_to_element_after('What','Automated Testing')
-selenium3:              _keys_to_element_after('Where','London')
+```yml
+step: Get CWJobs home page and fill out search form
+selenium1: $driver->get("https://www.cwjobs.co.uk/")
+selenium2: _keys_to_element_after('What','Automated Testing')
+selenium3: _keys_to_element_after('Where','London')
 ```
 
 The search form on this website looks like this:
@@ -352,9 +351,9 @@ In fact this is the most common scenario, the label will be immediately before c
 
 After we fill out the search form, we will want to submit it. We can do this as follows:
 
-```
-step:                   Click Search
-selenium1:              _click('Search')
+```yml
+step: Click Search
+selenium1: _click('Search')
 ```
 
 `_click` found an element with the text `Search` and clicked it. The Search button.
@@ -370,8 +369,8 @@ is different!
 
 And if there were two `What` input fields fields for some reason? You could target the second one as follows:
 
-```
-selenium2:              _keys_to_element_after('What|||2','Automated Testing')
+```yml
+selenium2: _keys_to_element_after('What|||2','Automated Testing')
 ```
 
 This simply says to use the second match. Most of the time you will not need to do this.
@@ -380,8 +379,8 @@ So how can we select a radius in the drop down combo box (refer back to the sear
 
 This can be done as follows:
 
-```
-selenium4:              _keys_to_element_after('Where','20 miles','SELECT')
+```yml
+selenium4: _keys_to_element_after('Where','20 miles','SELECT')
 ```
 
 Here an additional parameter is introduced, called the `element`. By default we send keys to `INPUT` elements. (Think
@@ -394,8 +393,8 @@ interact with. In this case, as a last resort, the heuristics will look at the e
 So lets say you had a hamburger icon for the menu (often the case for mobile websites) and in the page source you
 discovered it had a name="hamburger_icon", you could target it as follows:
 
-```
-selenium1:              _click('hamburger_icon')
+```yml
+selenium1: _click('hamburger_icon')
 ```
 
 <br />
@@ -456,8 +455,8 @@ functions heavily rely on JavaScript for parsing the DOM.
 Will look for some text in the page source, and enter a value to found element. In this example
 the element is found using the place holder text.
 
-```
-selenium:               _keys_to_element('Job title, skill or company','WebDriver Jobs')
+```yml
+selenium: _keys_to_element('Job title, skill or company','WebDriver Jobs')
 ```
 
 <br />
@@ -468,7 +467,7 @@ selenium:               _keys_to_element('Job title, skill or company','WebDrive
 
 \_set_dropdown(`target`,`text`)
 
-```
+```xml
 <h4>Set Date Range</h4>
 <select name="DateRange">
     <optgroup label="Preset Date">
@@ -480,32 +479,32 @@ selenium:               _keys_to_element('Job title, skill or company','WebDrive
 
 Will set the dropdown option found by target to the displayed text option.
 
-```
-selenium:               _set_dropdown('DateRange','Last 30 days')
+```yml
+selenium: _set_dropdown('DateRange','Last 30 days')
 ```
 
 or
 
-```
-selenium:               _set_dropdown('Preset Date','Last 30 days')
+```yml
+selenium: _set_dropdown('Preset Date','Last 30 days')
 ```
 
 You can also set via the option value.
 
-```
-selenium:               _set_dropdown('DateRange','days|30')
+```yml
+selenium: _set_dropdown('DateRange','days|30')
 ```
 
 It is even possible to target via the option text.
 
-```
-selenium:               _set_dropdown('Last 30 days','Last 30 days')
+```yml
+selenium: _set_dropdown('Last 30 days','Last 30 days')
 ```
 
 You can set via partial text too.
 
-```
-selenium:               _set_dropdown('Preset Date','Last 30')
+```yml
+selenium: _set_dropdown('Preset Date','Last 30')
 ```
 
 <br />
@@ -518,14 +517,14 @@ selenium:               _set_dropdown('Preset Date','Last 30')
 
 Will look for some text in the page source, and enter a value to the following INPUT tag.
 
-```
-selenium:               _keys_to_element_after('What','WebDriver Jobs')
+```yml
+selenium: _keys_to_element_after('What','WebDriver Jobs')
 ```
 
 You can set drop downs this way too.
 
-```
-selenium:               _keys_to_element_after('Set Date Range','Last 7 days','SELECT')
+```yml
+selenium: _keys_to_element_after('Set Date Range','Last 7 days','SELECT')
 ```
 
 <br />
@@ -547,14 +546,14 @@ Works just like `_keys_to_element_after` but will search for a matching element 
 Clicks the first element on the page with Yes in it somewhere. Exact matches are prioritised over partial matches.
 Element text is prioritised over attribute values.
 
-```
-selenium:               _click('Yes')
+```yml
+selenium: _click('Yes')
 ```
 
 Clicks the second instance that matches `Yes`.
 
-```
-selenium:               _click('Yes|||2')
+```yml
+selenium: _click('Yes|||2')
 ```
 
 <br />
@@ -573,8 +572,8 @@ This means any tag named `INPUT`, `BUTTON`, `SELECT` or `A` (link) is a match.
 
 `1` means first match.
 
-```
-selenium:               _click_after('Yes|||2','BUTTON')
+```yml
+selenium: _click_after('Yes|||2','BUTTON')
 ```
 
 Clicks the first button after the second instance that matches `Yes`.
@@ -604,13 +603,13 @@ The information includes the element attributes, the text, and if the element is
 
 If applicable the currently selected drop down option is returned.
 
-```
-selenium:               _get_element('Company Billing Cycle|||2')
+```yml
+selenium: _get_element('Company Billing Cycle|||2')
 ```
 
 This example might return something like:
 
-```
+```txt
 Located tag SELECT WITH[Company Billing Cycle] OK (exact match)
  name="cmp_billing_cycle" class="form-control input-lg"
  Element Text [_NULL_]
@@ -637,15 +636,15 @@ down the page (out of the currently scrolled to area). Or it might be completely
 
 Waits for the element designated by the anchor to be visible in the current view port. Default timeout is 5 seconds.
 
-```
-selenium:               _wait_visible('txtJobTitle', 10)
+```yml
+selenium: _wait_visible('txtJobTitle', 10)
 ```
 
 Will wait up to 10 seconds for element with attribute `txtJobTitle` to become visible in the view port.
 
 Responses to assert against
 
-```
+```txt
 Found sought element visible
 Did not find sought element visible
 ```
@@ -653,21 +652,15 @@ Did not find sought element visible
 The determination of whether an element is visible in the view port is something of a black art. It is done
 using this function found on stack overflow:
 
-```JavaScript
-function isElementInViewport (el) {
-
+```js
+function isElementInViewport(el) {
     var rect = el.getBoundingClientRect();
 
-    return (
-        rect.top >= 0 &&
-        rect.left >= 0 &&
-        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
-        rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
-    );
+    return rect.top >= 0 && rect.left >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) /*or $(window).height() */ && rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */;
 }
 ```
 
-See the `Recommended by John Resig` solution here: http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport
+See the `Recommended by John Resig` solution here: [Stack Overflow](http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport)
 
 It works pretty well but not in all cases. If it does work for your scenario, then it should work consistently.
 
@@ -697,7 +690,7 @@ Uses the JavaScript element.scrollIntoView method to scroll the element targeted
 
 Important note - this command is currently broken. Refer to this comment in version 1.36 of `Selenium::Remote::Driver`.
 
-```
+```txt
 Compatibility:
    Due to limitations in the Webdriver 3 API, mouse movements have to be executed 'lazily' e.g. only right before a click() event occurs.
    This is because there is no longer any persistent mouse location state; mouse movements are now totally atomic.
@@ -712,8 +705,8 @@ It isn't clear what the comment means, but in practice it doesn't work. Use `_sc
 Moves the mouse to the element targeted by the anchor. Uses the Selenium command of the same name once the
 target has been found.
 
-```
-selenium:               _move_to('Yes|||2',320,200)
+```yml
+selenium: _move_to('Yes|||2',320,200)
 ```
 
 Moves to an x offset of 320 and a y offset of 200 from the 2nd element with anchor `Yes`.
@@ -738,7 +731,7 @@ The third class are _all other attributes_.
 
 Consider the following fragment the DOM for a web page:
 
-```
+```xml
 <label for="location">Where</label>
 ```
 
@@ -746,7 +739,7 @@ In this case the text between the tags is `Where`.
 
 Consider this more complex example:
 
-```
+```xml
 <h2><span class="brand-highlight">10,545</span> job ads for <span class="brand-highlight">766</span> companies</h2>
 ```
 
@@ -762,7 +755,7 @@ The text for the second `span` element is `766`.
 
 Elements marked as hidden are ignored.
 
-```
+```xml
 <div type="hidden" class="password" id="confirm_password">Please confirm your password</div>
 ```
 
@@ -782,7 +775,7 @@ These attributes are `value`, `placeholder` and `title`.
 
 Consider this DOM fragment:
 
-```
+```xml
 <input class="search-location" type="search" name="LTxt" placeholder="Town, city or postcode" id="txt_location">
 ```
 
@@ -798,7 +791,7 @@ and is not displayed on the web page. However we need a way of locating elements
 
 Consider this DOM fragment:
 
-```
+```xml
 <input class="search-location" type="search" name="LTxt" placeholder="Town, city or postcode" id="txt_location">
 ```
 
@@ -835,44 +828,44 @@ As per `Phase 1`, however `class three` text is searched.
 
 <a name="_clear_and_send_keys"></a>
 
-#### \_clear_and_send_keys
+### \_clear_and_send_keys
 
 \_clear_and_send_keys(`target`, `locator`, `keys`)
 
 Commonly when we send keys to an element we want to blank out any existing text first. This helper does that.
 
-Refer to the Selenium::Remote:::Driver documentation on cpan for descriptions on `target` and `locator`.
+Refer to the `Selenium::Remote:::Driver` documentation on cpan for descriptions on `target` and `locator`.
 
-```
-selenium:               _clear_and_send_keys('candidateProfileDetails_txtPostCode','id','WC1X 8TG')
+```yml
+selenium: _clear_and_send_keys('candidateProfileDetails_txtPostCode','id','WC1X 8TG')
 ```
 
 <br />
 
 <a name="_switch_to_window"></a>
 
-#### \_switch_to_window
+### \_switch_to_window
 
 \_switch_to_window(`window number`)
 
-For working with multiple tabs / windows. Refer to the Selenium::Remote:::Driver documentation on cpan.
+For working with multiple tabs / windows. Refer to the `Selenium::Remote:::Driver` documentation on cpan.
 
-```
-selenium:               _switch_to_window(0)
+```yml
+selenium: _switch_to_window(0)
 ```
 
 Note that if you know the window's name, you don't need to use this helper, you can use the Selenium
 command directly:
 
-```
-selenium:               $driver->switch_to_window('Homepage')
+```yml
+selenium: $driver->switch_to_window('Homepage')
 ```
 
 <br />
 
 <a name="_wait_for_text_present"></a>
 
-#### \_wait_for_text_present
+### \_wait_for_text_present
 
 \_wait_for_text_present(`search text`, `timeout`)
 
@@ -880,31 +873,31 @@ Waits for the `search text` to be found in the page source. Waits until the `tim
 
 When the search text is found, a message will be written to the response log `Found sought text present`.
 
-```
-selenium:               _wait_for_text_present('Job title',10)
+```yml
+selenium: _wait_for_text_present('Job title',10)
 ```
 
 Wait up to 10 seconds for `Job title` to appear in the page source.
 
 Full example:
 
-```
-step:                   Click 'Connect to Dropbox' button
-selenium1:              $driver->find_element("lnkDropBox","id")->click()
-selenium2:              _wait_for_text_present('Sign in to Dropbox',15)
-verifytext:             get_current_url,get_body_text
-verifypositive:         Found sought text
+```yml
+step: Click 'Connect to Dropbox' button
+selenium1: $driver->find_element("lnkDropBox","id")->click()
+selenium2: _wait_for_text_present('Sign in to Dropbox',15)
+verifytext: get_current_url,get_body_text
+verifypositive: Found sought text
 ```
 
 When this is run, you might get a response like this:
 
-```
+```txt
 Found sought text in page source after 1.6 seconds
 ```
 
 or:
 
-```
+```txt
 Did not find sought text in page source after 1.6 seconds
 ```
 
@@ -912,7 +905,7 @@ Did not find sought text in page source after 1.6 seconds
 
 <a name="_wait_for_text_visible"></a>
 
-#### \_wait_for_text_visible
+### \_wait_for_text_visible
 
 \_wait_for_text_visible(`search text`,[`timeout`,`target`,`locator`])
 
@@ -920,14 +913,14 @@ Did not find sought text in page source after 1.6 seconds
 `target` defaults to 'body'
 `locator` defaults to 'tag_name'
 
-```
-selenium:               _wait_for_text_visible('Job title')
+```yml
+selenium: _wait_for_text_visible('Job title')
 ```
 
 Waits up to 5 seconds for `Job title` to be found in the body text.
 
-```
-selenium:               _wait_for_text_visible(q|my profile and CV|,25,q|label[for='candidateProfile']|,q|css|)
+```yml
+selenium: _wait_for_text_visible(q|my profile and CV|,25,q|label[for='candidateProfile']|,q|css|)
 ```
 
 Waits up to 25 seconds for `my profile and CV` to be found using the given css locator.
@@ -935,18 +928,18 @@ Waits up to 25 seconds for `my profile and CV` to be found using the given css l
 The following example shows how you can get WebImblaze to wait up to a maximum of 25 seconds
 for the text `Sign in` to appear.
 
-```
-step:                   Get Totaljobs Home Page
-selenium1:              $driver->get("https://www.totaljobs.com")
-selenium2:              _wait_for_text_visible('Sign in',25)
-verifytext:             get_current_url,get_body_text
-verifypositive:         a job you love
-verifypositive1:        Found sought text
+```yml
+step: Get Totaljobs Home Page
+selenium1: $driver->get("https://www.totaljobs.com")
+selenium2: _wait_for_text_visible('Sign in',25)
+verifytext: get_current_url,get_body_text
+verifypositive: a job you love
+verifypositive1: Found sought text
 ```
 
 In the response log you will see a message like the following that you can assert against:
 
-```
+```txt
 Found sought text visible after 3.8 seconds
 ```
 
@@ -954,22 +947,22 @@ Found sought text visible after 3.8 seconds
 
 <a name="_check_element_within_pixels"></a>
 
-#### \_check_element_within_pixels
+### \_check_element_within_pixels
 
 \_check_element_within_pixels(`target`, `id`, `x baseline`, `y baseline`, `pixel threshold`)
 
 If you know an element you appear at a particular location on the page, you can assert that it does
 appear there. A threshold can be specified.
 
-```
-selenium:               _check_element_within_pixels('Edit profile','link_text',860,549,40)
+```yml
+selenium: _check_element_within_pixels('Edit profile','link_text',860,549,40)
 ```
 
 Check that the element identified by the link text 'Edit profile' appears at 860,549 - or within 40 pixels of that location.
 
 The response log will contain a message like the following that you can assert against:
 
-```
+```txt
 Pixel threshold check passed - Edit profile is 0,0 (x,y) pixels removed from baseline of 860,549; actual was 860,549
 ```
 
@@ -987,38 +980,38 @@ includes giving special meaning to certain characters that denote variables. `$`
 
 So it is generally better to write the commands as follows:
 
-```
-selenium1:              _keys_to_element_after('E-mail','john@example.com')
+```yml
+selenium1: _keys_to_element_after('E-mail','john@example.com')
 ```
 
 In this example WebImblaze will not get tripped up by the `@` symbol in the email address.
 
 If you had written
 
-```
-selenium1:              _keys_to_element_after("E-mail","john@example.com")
+```yml
+selenium1: _keys_to_element_after("E-mail","john@example.com")
 ```
 
 Perl would expect a variable `@example` to exist and would throw an error when it couldn't find it.
 
 There is always the option of escaping the special characters with a backslash:
 
-```
-selenium1:              _keys_to_element_after("E-mail","john\@example.com")
+```yml
+selenium1: _keys_to_element_after("E-mail","john\@example.com")
 ```
 
 <br />
 
 <a name="more_quotes"></a>
 
-### Need more quotes!
+### Need more quotes
 
 In some cases due to complex CSS locators, you might find yourself running out of quotes.
 
 Fortunately with Perl you can make up your own quotes as in this example:
 
-```
-selenium:               _wait_for_text_visible(q|my profile and CV|,25,q|label[for='candidateProfile']|,q|css|)
+```yml
+selenium: _wait_for_text_visible(q|my profile and CV|,25,q|label[for='candidateProfile']|,q|css|)
 ```
 
 Just use a `q` then immediately following the character you want to act as a quote.
@@ -1032,8 +1025,8 @@ Just use a `q` then immediately following the character you want to act as a quo
 By default WebImblaze sets the Selenium page load timeout to 30 seconds. You can change it
 to a different value as follows.
 
-```
-selenium:               $driver->set_timeout('page load', 5_000)
+```yml
+selenium: $driver->set_timeout('page load', 5_000)
 ```
 
 Changes page load timeout to 5 seconds.
@@ -1048,22 +1041,21 @@ depend on it at all - for example, banner ads and tracking tags.
 
 ### Switch to iframe example
 
-```
-selenium:               $driver->switch_to_frame($driver->find_element(q|iframe[title='Third party frame']|,'css'))
+```yml
+selenium: $driver->switch_to_frame($driver->find_element(q|iframe[title='Third party frame']|,'css'))
 ```
 
 I have found sometimes xpath works when css fails (possible chromedriver related error)
 
-```
-selenium:               $driver->switch_to_frame($driver->find_element(q|//iframe[@title='accessibility title']|, 'xpath'));
+```yml
+selenium: $driver->switch_to_frame($driver->find_element(q|//iframe[@title='accessibility title']|, 'xpath'));
 ```
 
 It is possible to switch to an inner iframe in the same manner
 
+```yml
+selenium: $driver->switch_to_frame($driver->find_element(q|//iframe[@title='Canvas IFrame for application .']|, 'xpath'));
 ```
-selenium:               $driver->switch_to_frame($driver->find_element(q|//iframe[@title='Canvas IFrame for application .']|, 'xpath'));
-```
-
 
 <br />
 
@@ -1071,8 +1063,8 @@ selenium:               $driver->switch_to_frame($driver->find_element(q|//ifram
 
 ### Set window size to emulate Mobile view port
 
-```
-selenium1:              $driver->set_window_size(960, 340)
+```yml
+selenium1: $driver->set_window_size(960, 340)
 ```
 
 The pixels down is given first, then across.
@@ -1085,8 +1077,8 @@ The pixels down is given first, then across.
 
 You can execute some JavaScript to interact with the page.
 
-```
-selenium:               $driver->execute_script(q|return analytics.Campaign;|)
+```yml
+selenium: $driver->execute_script(q|return analytics.Campaign;|)
 ```
 
 Will return the value of the variable `analytics.Campaign`.
@@ -1098,20 +1090,25 @@ The JavaScript can be many lines long if required.
 ### XPATH snippets
 
 Xpath with multiple conditions
+
+```yml
+selenium: $driver->find_element(qq|//input[\@type='email' and \@name='login_email']|,qq|xpath|)->send_keys('webinject@googlemail.com')
 ```
-selenium:   $driver->find_element(qq|//input[\@type='email' and \@name='login_email']|,qq|xpath|)->send_keys('webinject@googlemail.com')
-```
+
 Element that is selected (needed when individual values are not unique)
-```
+
+```xml
 <input class="text-input-input autofocus" type="email" name="login_email" id="pyxl256037789906648953" />
 ```
- 
+
 Next input element following element text 'First Name:' - leading and trailing spaces removed
-```
+
+```txt
 //*/text()[normalize-space(.)='First Name:']/parent::*/following::input
 ```
 
 Return parent element containing text
-```
+
+```txt
 //*[text()[contains(.,'recovery email address')]]
 ```

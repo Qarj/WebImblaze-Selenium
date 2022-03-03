@@ -1,7 +1,6 @@
 step:                   Set variables
 varCONFIG_FILE:         config.xml
 varFEATURE:             _wait_visible
-shell:                  echo NOP
 
 include:                ./../WebImblaze-Selenium/selftest/helpers/selenium_server_runner.test
 
