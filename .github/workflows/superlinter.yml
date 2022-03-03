@@ -20,7 +20,7 @@ jobs:
                   CSS_FILE_NAME: ./.github/linters/.stylelintrc.json
                   DEFAULT_BRANCH: main
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  JAVASCRIPT_DEFAULT_STYLE: prettier
+                  JAVASCRIPT_DEFAULT_STYLE: standard
                   LINTER_RULES_PATH: /
                   MARKDOWN_CONFIG_FILE: ./.github/linters/.markdown-lint.yml
                   NATURAL_LANGUAGE_CONFIG_FILE: ./.github/linters/.textlintrc.json
