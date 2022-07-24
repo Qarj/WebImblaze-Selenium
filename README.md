@@ -233,12 +233,12 @@ Results at: output/Results.html
 
 If your WebImblaze/output folder was empty before running the test, you'll now see 10 files there:
 
--   `10.png`, `20.png`, `30.png` - automatic screen shots taken after each test step was executed
--   `10.html`, `20.html`, `30.html` - a html file showing the individual results for each test step (including the screen shot)
--   `Results.html` - a html version of the output to the console, it links to each individual test step
--   `results.xml` - an xml version of the results, needed by the optional WebImblaze-Framework
--   `http.txt` - verbose log of raw WebImblaze http test output
--   `_chromedriver.log`
+- `10.png`, `20.png`, `30.png` - automatic screen shots taken after each test step was executed
+- `10.html`, `20.html`, `30.html` - a html file showing the individual results for each test step (including the screen shot)
+- `Results.html` - a html version of the output to the console, it links to each individual test step
+- `results.xml` - an xml version of the results, needed by the optional WebImblaze-Framework
+- `http.txt` - verbose log of raw WebImblaze http test output
+- `_chromedriver.log`
 
 If not using WebImblaze-Framework, then double click on `output/Results.html` to view
 the test results in a browser. Click on a step number hyperlink to see the individual
@@ -273,48 +273,48 @@ The [WebImblaze-Selenium Manual - MANUAL.md](MANUAL.md) has full details on the 
 
 1. After installing WebImblaze to `C:\git`, clone this plugin project
 
-    ```bat
-    cd C:/git
-    git clone https://github.com/Qarj/WebImblaze-Selenium.git
-    ```
+   ```bat
+   cd C:/git
+   git clone https://github.com/Qarj/WebImblaze-Selenium.git
+   ```
 
 2. Copy `WebImblaze-Selenium.pm` and `blocker` folder into `WebImblaze/plugins`
 
-    ```bat
-    perl WebImblaze-Selenium/plugins/update.pl
-    ```
+   ```bat
+   perl WebImblaze-Selenium/plugins/update.pl
+   ```
 
 3. Open a command prompt as an administrator and issue the following command:
 
-    ```bat
-    cpan Selenium::Remote::Driver
-    ```
+   ```bat
+   cpan Selenium::Remote::Driver
+   ```
 
-    This will install the latest version of Selenium::Remote::Driver - 1.37 at the time of writing.
+   This will install the latest version of Selenium::Remote::Driver - 1.37 at the time of writing.
 
 4. Obtain chromedriver.exe from [chromedriver](https://sites.google.com/a/chromium.org/chromedriver/) and place it in `C:/selenium/`
 
-    ```bat
-    mkdir c:\selenium
-    cd /D c:/selenium
-    curl -O  http://chromedriver.storage.googleapis.com/LATEST_RELEASE
-    set /p latest=<LATEST_RELEASE
-    curl -O https://chromedriver.storage.googleapis.com/%latest%/chromedriver_win32.zip
-    "C:\Program Files\7-Zip\7z.exe" x chromedriver_win32.zip -o"C:\selenium" -r -y
-    chromedriver.exe --version
-    ```
+   ```bat
+   mkdir c:\selenium
+   cd /D c:/selenium
+   curl -O  http://chromedriver.storage.googleapis.com/LATEST_RELEASE
+   set /p latest=<LATEST_RELEASE
+   curl -O https://chromedriver.storage.googleapis.com/%latest%/chromedriver_win32.zip
+   "C:\Program Files\7-Zip\7z.exe" x chromedriver_win32.zip -o"C:\selenium" -r -y
+   chromedriver.exe --version
+   ```
 
-    7-Zip is easy to install with [Ninite](https://ninite.com/).
+   7-Zip is easy to install with [Ninite](https://ninite.com/).
 
 5. Optional - download latest Selenium Server from [Selenium Server](https://selenium.dev/downloads/)
    and place it in `C:/selenium`, give it the generic name `selenium-server-3-standalone.jar`
 
-    ```bat
-    curl --location --output c:/selenium/selenium-server-3-standalone.jar https://bit.ly/2TlkRyu
-    java -jar c:/selenium/selenium-server-3-standalone.jar --version
-    ```
+   ```bat
+   curl --location --output c:/selenium/selenium-server-3-standalone.jar https://bit.ly/2TlkRyu
+   java -jar c:/selenium/selenium-server-3-standalone.jar --version
+   ```
 
-    Be sure to also install the Java 8 runtime as well - [Ninite](https://ninite.com/) makes this easy.
+   Be sure to also install the Java 8 runtime as well - [Ninite](https://ninite.com/) makes this easy.
 
 ### Mac
 
@@ -345,9 +345,11 @@ sudo chmod 777 selenium
 
 wget http://chromedriver.storage.googleapis.com/LATEST_RELEASE -P selenium
 latest=$(cat selenium/LATEST_RELEASE)
-wget -N https://chromedriver.storage.googleapis.com/$latest/chromedriver_mac64.zip -P selenium
-unzip -o selenium/chromedriver_mac64.zip -d selenium
+wget -N https://chromedriver.storage.googleapis.com/$latest/chromedriver_mac64_m1.zip -P selenium
+unzip -o selenium/chromedriver_mac64_m1.zip -d selenium
 selenium/chromedriver --version
+.
+ChromeDriver 103.0.5060.134 (8ec6fce403b3feb0869b0732eda8bd95011d333c-refs/branch-heads/5060@{#1262})
 ```
 
 Obtain latest Selenium Standalone 3 Server and put it in `/usr/local/bin/selenium`
@@ -400,7 +402,7 @@ Selenium server version: 3.141.59, revision: e82be7d358
 Install perlbrew
 
 ```sh
-curl -L https://install.perlbrew.pl | bash
+\curl -L https://install.perlbrew.pl | bash
 ```
 
 Append `source ~/perl5/perlbrew/etc/bashrc` to bash profile and run it now also
@@ -414,7 +416,76 @@ Init perlbrew and switch shell to latest stable perl
 
 ```sh
 sudo perlbrew init
-sudo perlbrew install --switch stable
+sudo perlbrew install-patchperl
+sudo perlbrew --notest install stable
+.
+Fetching perl 5.36.0 as /Users/user.name/perl5/perlbrew/dists/perl-5.36.0.tar.gz
+Download https://cpan.metacpan.org/src/5.0/perl-5.36.0.tar.gz to /Users/user.name/perl5/perlbrew/dists/perl-5.36.0.tar.gz
+Installing /Users/user.name/perl5/perlbrew/build/perl-5.36.0/perl-5.36.0 into ~/perl5/perlbrew/perls/perl-5.36.0
+
+This could take a while. You can run the following command on another shell to track the status:
+
+  tail -f ~/perl5/perlbrew/build.perl-5.36.0.log
+```
+
+Assuming it was perl 5.36.0 that was installed, switch to it for your account
+
+```sh
+perlbrew switch 5.36.0
+```
+
+Install openssl
+
+```sh
+brew install openssl
+.
+==> Caveats
+==> openssl@3
+A CA file has been bootstrapped using certificates from the system
+keychain. To add additional certificates, place .pem files in
+  /opt/homebrew/etc/openssl@3/certs
+
+and run
+  /opt/homebrew/opt/openssl@3/bin/c_rehash
+
+openssl@3 is keg-only, which means it was not symlinked into /opt/homebrew,
+because macOS provides LibreSSL.
+
+If you need to have openssl@3 first in your PATH, run:
+  echo 'export PATH="/opt/homebrew/opt/openssl@3/bin:$PATH"' >> /Users/user.name/.bash_profile
+
+For compilers to find openssl@3 you may need to set:
+  export LDFLAGS="-L/opt/homebrew/opt/openssl@3/lib"
+  export CPPFLAGS="-I/opt/homebrew/opt/openssl@3/include"
+
+For pkg-config to find openssl@3 you may need to set:
+  export PKG_CONFIG_PATH="/opt/homebrew/opt/openssl@3/lib/pkgconfig"
+
+==> lima
+Bash completion has been installed to:
+  /opt/homebrew/etc/bash_completion.d
+==> nginx
+Docroot is: /opt/homebrew/var/www
+
+The default port has been set in /opt/homebrew/etc/nginx/nginx.conf to 8080 so that
+nginx can run without sudo.
+
+nginx will load all files in /opt/homebrew/etc/nginx/servers/.
+
+To restart nginx after an upgrade:
+  brew services restart nginx
+Or, if you don't want/need a background service you can just run:
+  /opt/homebrew/opt/nginx/bin/nginx -g daemon off;
+```
+
+Append to end of `.bash_profile` and restart shell
+
+```sh
+# openssl
+export PATH="/opt/homebrew/opt/openssl@3/bin:$PATH"
+export LDFLAGS="-L/opt/homebrew/opt/openssl@3/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/openssl@3/include"
+export PKG_CONFIG_PATH="/opt/homebrew/opt/openssl@3/lib/pkgconfig"
 ```
 
 Install the packages needed for WebImblaze in the perlbrew sub system
@@ -422,6 +493,7 @@ Install the packages needed for WebImblaze in the perlbrew sub system
 ```sh
 sudo cpan XML::Simple
 sudo cpan Math::Random::ISAAC
+sudo cpan XML::LibXML
 sudo cpan IO::Socket::SSL
 sudo cpan LWP::Protocol::https
 ```
