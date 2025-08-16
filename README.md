@@ -22,16 +22,18 @@ Copy `WebImblaze-Selenium.pm` into `WebImblaze\plugins` by running `update.pl`
 perl $HOME/git/WebImblaze-Selenium/plugins/update.pl
 ```
 
-Now obtain latest version of ChromeDriver and place in `$HOME/selenium`
+Now obtain ChromeDriver for your version of Chrome, (see Help/About Google Chrome) and place in `$HOME/selenium`
+
+Reference: https://developer.chrome.com/docs/chromedriver/downloads
 
 ```sh
 mkdir $HOME/selenium
 cd $HOME/selenium
-wget http://chromedriver.storage.googleapis.com/LATEST_RELEASE -O LATEST_RELEASE
-latest=$(cat LATEST_RELEASE)
-wget -N https://chromedriver.storage.googleapis.com/$latest/chromedriver_linux64.zip -O chromedriver_linux64.zip
+latest=139.0.7258.127
+wget -N https://storage.googleapis.com/chrome-for-testing-public/$latest/linux64/chromedriver-linux64.zip -O chromedriver_linux64.zip
 sudo apt install unzip
 unzip -o chromedriver_linux64.zip -d .
+cp ./chromedriver-linux64/chromedriver .
 ./chromedriver --version
 ```
 
